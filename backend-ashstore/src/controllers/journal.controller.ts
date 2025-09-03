@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { tryCatch } from "@/utils/tryCatch";
+import { tryCatch } from "../utils/tryCatch";
 
 const JournalController = {
     // Get all journal entries with filtering and pagination

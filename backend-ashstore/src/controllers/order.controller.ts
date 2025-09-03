@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { tryCatch } from "@/utils/tryCatch";
+import { tryCatch } from "../utils/tryCatch";
 
 const OrderController = {
     // Get all orders with filtering and pagination

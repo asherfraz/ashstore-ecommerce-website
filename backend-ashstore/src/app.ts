@@ -2,14 +2,14 @@ import 'module-alias/register';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import express, { Express, Request, Response } from 'express';
-import { PORT, NODE_ENV, FRONTEND_URL } from "@/config/dotenvx";
+import { PORT, NODE_ENV, FRONTEND_URL } from "./config/dotenvx";
 import morgan from 'morgan';
 import connectToDatabase from './dbConnect';
 import errorHandler from './middlewares/errorHandler';
 import userRoutes from './routes/user.routes';
-// import helmet from 'helmet';
-import { getCurrentReqLocation } from './middlewares/getCurrentReqLocation';
+import helmet from 'helmet';
 // import rateLimit from 'express-rate-limit';
+import { getCurrentReqLocation } from './middlewares/getCurrentReqLocation';
 
 
 
@@ -18,7 +18,7 @@ connectToDatabase();
 const app: Express = express();
 
 // Help secure Express apps by setting HTTP response headers.
-// app.use(helmet());
+app.use(helmet());
 // Enable this if you're behind a reverse proxy like Nginx or on Heroku/Vercel
 // app.set('trust proxy', true);
 app.use(morgan('dev'));
@@ -74,8 +74,6 @@ app.get('/', async (req: Request, res: Response) => {
         message: "Welcome to AshStore backend APIs Server!",
         frontend: process.env.FRONTEND_URL,
         currentIP: req.ip,
-        // currentip: locationData.dns?.ip,
-        // networkProvider: locationData.dns?.geo,
         location: location,
     });
 });

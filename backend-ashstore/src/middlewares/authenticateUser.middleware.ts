@@ -1,7 +1,7 @@
-import User from "@/models/user.model";
+import User from "../models/user.model";
 import { Request, Response, NextFunction } from "express";
-import JWTService from "@/services/JWT.service";
-import { IUser } from "@/types/user.types";
+import JWTService from "../services/JWT.service";
+import { IUser } from "../types/user.types";
 
 const authenticateUser = async (req: Request, res: Response, next: NextFunction) => {
     const { accessToken, refreshToken } = req.cookies;

@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { IJournal, IJournalEntry } from "@/types/journal.types";
+import { IJournal, IJournalEntry } from "../types/journal.types";
 
 const JournalEntrySchema = new Schema<IJournalEntry>({
     title: { type: String, required: true },

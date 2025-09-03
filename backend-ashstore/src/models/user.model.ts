@@ -1,6 +1,5 @@
-import { IAddress, IPaymentMethod, IUser } from "@/types";
+import { IAddress, IPaymentMethod, IUser } from "../types";
 import mongoose, { Schema } from "mongoose";
-
 
 
 const AddressSchema = new Schema<IAddress>({

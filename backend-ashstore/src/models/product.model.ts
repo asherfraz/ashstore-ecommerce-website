@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { IProduct, IProductVariant, IProductReview } from "@/types/product.types";
+import { IProduct, IProductVariant, IProductReview } from "../types/product.types";
 
 const ProductVariantSchema = new Schema<IProductVariant>({
     size: { type: String, required: true },

@@ -13,7 +13,7 @@ import { JwtPayload } from "jsonwebtoken";
 import { sendAccountVerificationEmail, sendLoginNotificationEmail, sendPasswordResetEmail, sendTwoFactorAuthOTPEmail, sendWelcomeEmail } from "./email.controller";
 import { OAuth2Client } from "google-auth-library";
 import { getCurrentReqLocation } from "../middlewares/getCurrentReqLocation";
-import { generateTwoFactorOTP } from "@/services/otp.service";
+import { generateTwoFactorOTP } from "../services/otp.service";
 
 
 // const { sendLoginNotificationEmail, sendWelcomeEmail, sendPasswordResetEmail, sendPasswordChangedNotificationEmail } = require('./email.controller');

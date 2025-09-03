@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { IOrder, IOrderItem, IShippingInformation, IPaymentInformation } from "@/types/order.types";
+import { IOrder, IOrderItem, IShippingInformation, IPaymentInformation } from "../types/order.types";
 
 const OrderItemSchema = new Schema<IOrderItem>({
     productId: { type: String, required: true },

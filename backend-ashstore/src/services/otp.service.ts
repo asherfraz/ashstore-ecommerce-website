@@ -1,6 +1,6 @@
 import crypto from "crypto";
-import { IUser } from "@/types/user.types";
-import { sendTwoFactorAuthOTPEmail } from "@/controllers/email.controller";
+import { IUser } from "../types/user.types";
+import { sendTwoFactorAuthOTPEmail } from "../controllers/email.controller";
 
 
 interface OTPResult {

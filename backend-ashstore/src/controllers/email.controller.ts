@@ -1,6 +1,6 @@
 import { EMAIL_USER, FRONTEND_URL } from './../config/dotenvx';
-import { IUser } from "@/types";
-import transporter from "@/config/emailConfig";
+import { IUser } from "../types";
+import transporter from "../config/emailConfig";
 import path from "path";
 import fs from "fs"
 
