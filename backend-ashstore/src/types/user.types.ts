@@ -27,7 +27,7 @@ export interface IPaymentMethod {
 
 // user schema
 export interface IUser extends Document {
-    _id: Types.ObjectId;
+    _id: string;
     firstName: string;
     lastName: string;
     name?: string;
