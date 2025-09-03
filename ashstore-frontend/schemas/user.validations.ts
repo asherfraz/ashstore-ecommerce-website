@@ -16,9 +16,12 @@ export const password = z
     .max(24, "Password must be at most 24 characters")
     .trim();
 
-export const userType = z.enum(["buyer", "seller", "both", "admin"], {
-    required_error: "Select a user type",
-});
+
+export const userType = z
+    .enum(["buyer", "seller", "both", "admin"])
+    .refine((val) => val, {
+        message: "Select a user type",
+    });
 
 
 export const identifier = z

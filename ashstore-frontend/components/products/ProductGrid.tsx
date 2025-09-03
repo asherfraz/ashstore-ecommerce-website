@@ -4,18 +4,19 @@ import * as React from "react";
 import ProductCard, { Product } from "./ProductCard";
 import { Button } from "@/components/ui/button";
 import { AiOutlineProduct } from "react-icons/ai";
+import Link from "next/link";
 
 type Props = {
 	products: Product[];
 };
 
 export default function ProductGrid({ products }: Props) {
+	const [wishlist, setWishlist] = React.useState<string[]>([]);
+	const [cart, setCart] = React.useState<string[]>([]);
+
 	if (!products || products.length === 0) {
 		return <NoProducts />;
 	}
-
-	const [wishlist, setWishlist] = React.useState<string[]>([]);
-	const [cart, setCart] = React.useState<string[]>([]);
 
 	function handleToggleWishlist(productId: string) {
 		setWishlist(
@@ -66,8 +67,8 @@ function NoProducts() {
 				No products found
 			</h3>
 			<p className="max-w-lg text-sm text-muted-foreground">
-				We couldn't find any products that match your filters. Try clearing or
-				adjusting your filters, or search for another item.
+				We couldn&apos;t find any products that match your filters. Try clearing
+				or adjusting your filters, or search for another item.
 			</p>
 
 			<div className="mt-2 flex gap-2">
@@ -75,7 +76,7 @@ function NoProducts() {
 					Clear filters
 				</Button>
 				<Button asChild>
-					<a href="/">Go to homepage</a>
+					<Link href="/">Go to homepage</Link>
 				</Button>
 			</div>
 		</div>

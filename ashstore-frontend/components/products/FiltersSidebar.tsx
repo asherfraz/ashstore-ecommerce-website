@@ -109,7 +109,7 @@ export default function FiltersSidebar({
 	// Helpers for rendering slider background
 	const minPercent = ((priceMin - min) / (max - min)) * 100;
 	const maxPercent = ((priceMax - min) / (max - min)) * 100;
-	const sliderTrackBackground = `linear-gradient(90deg, theme(colors.muted) 0%, theme(colors.muted) ${minPercent}%, var(--tw-ring-color, rgb(20 20 20 / 1)) ${minPercent}%, var(--tw-ring-color, rgb(20 20 20 / 1)) ${maxPercent}%, theme(colors.muted) ${maxPercent}%, theme(colors.muted) 100%)`;
+	// const sliderTrackBackground = `linear-gradient(90deg, theme(colors.muted) 0%, theme(colors.muted) ${minPercent}%, var(--tw-ring-color, rgb(20 20 20 / 1)) ${minPercent}%, var(--tw-ring-color, rgb(20 20 20 / 1)) ${maxPercent}%, theme(colors.muted) ${maxPercent}%, theme(colors.muted) 100%)`;
 
 	// Ensure thumbs don't cross
 	function onMinChange(v: number) {

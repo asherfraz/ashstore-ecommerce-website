@@ -79,7 +79,7 @@ const VerifyAccountPage: React.FC = () => {
 		};
 		verifyAccountToken();
 		console.log("Tokens: ", { userId, token });
-	}, [token, dispatch, router]);
+	}, [userId, token, dispatch, router]);
 
 	const handleResendVerification = async () => {
 		setIsResending(true);

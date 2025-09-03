@@ -1,5 +1,5 @@
 import axiosApi from "./axiosInstance";
-import { IProduct } from "@/next-env";
+import { IProduct } from "@/types/types";
 
 // Get all products
 export const getAllProducts = async (params?: Record<string, string>) => {

@@ -9,7 +9,7 @@ import { Button } from "../ui/button";
 
 import { ChevronRightCircle, ShoppingCartIcon } from "lucide-react";
 import { MdMenu, MdMenuOpen } from "react-icons/md";
-import { LuLogIn, LuUser } from "react-icons/lu";
+import { LuLogIn } from "react-icons/lu";
 import { FaRegHeart } from "react-icons/fa6";
 
 import {
@@ -49,9 +49,7 @@ export default function Navbar({
 	const dispatch = useDispatch();
 	const [menuOpen, setMenuOpen] = useState(false);
 
-	const { isAuthenticated, user } = useSelector(
-		(state: RootState) => state.user
-	);
+	const { user } = useSelector((state: RootState) => state.user);
 
 	const handleLogOut = async () => {
 		// Perform logout logic here

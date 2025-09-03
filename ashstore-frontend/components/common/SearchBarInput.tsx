@@ -2,7 +2,6 @@ import { useId } from "react";
 import { SearchIcon } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 export default function Component() {
 	const id = useId();

@@ -9,7 +9,7 @@ interface CategoryCardProps {
 export default function CategoryCard({
 	image,
 	title,
-	href,
+	href = "#",
 }: CategoryCardProps) {
 	return (
 		<Link href={href} className="flex flex-col gap-3 pb-3">

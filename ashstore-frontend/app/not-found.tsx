@@ -22,8 +22,8 @@ export default function NotFound() {
 				Oops! Something went wrong.
 			</h1>
 			<p className="text-lg text-center">
-				We're sorry, but it seems like there was an issue loading this page.
-				Please try again or return to the homepage.
+				We&apos;re sorry, but it seems like there was an issue loading this
+				page. Please try again or return to the homepage.
 			</p>
 			<br />
 			<Button className="mt-4" onClick={() => router.push("/")}>

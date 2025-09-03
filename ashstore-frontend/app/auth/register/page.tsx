@@ -20,7 +20,7 @@ import Lottie from "lottie-react";
 import registerIllustration from "@/public/animations/Login_animation.json";
 import { register } from "@/api/userApis";
 import toast from "react-hot-toast";
-import { BackendResponse, IUser } from "@/types/types";
+import { BackendResponse } from "@/types/types";
 import { useDispatch } from "react-redux";
 import { registerSchema } from "@/schemas/user.validations";
 import { useRouter } from "next/navigation";

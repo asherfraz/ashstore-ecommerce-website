@@ -9,11 +9,9 @@ import {
 	Megaphone,
 	Settings,
 	HelpCircle,
-	BarChart3,
 	Percent,
 	User,
 } from "lucide-react";
-import { NavDocuments } from "@/components/ui/admin-dashboard/nav-documents";
 import { NavMain } from "@/components/ui/admin-dashboard/nav-main";
 import { NavSecondary } from "@/components/ui/admin-dashboard/nav-secondary";
 import { NavUser } from "@/components/ui/admin-dashboard/nav-user";

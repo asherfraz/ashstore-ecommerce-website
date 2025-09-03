@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { type Icon } from "@tabler/icons-react";
+import { LucideIcon } from "lucide-react";
 
 import {
 	SidebarGroup,
@@ -13,26 +13,33 @@ import {
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+
 import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from "../collapsible";
+
 import { ChevronRight } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-export function NavSecondary({
-	items,
-	...props
-}: {
-	items: {
+type NavItem = {
+	title: string;
+	url: string;
+	icon: LucideIcon;
+	items?: {
 		title: string;
 		url: string;
-		icon: Icon;
-		items?: { title: string; url: string }[];
 	}[];
-} & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+};
+
+interface NavSecondaryProps
+	extends React.ComponentPropsWithoutRef<typeof SidebarGroup> {
+	items: NavItem[];
+}
+
+export function NavSecondary({ items, ...props }: NavSecondaryProps) {
 	const pathname = usePathname();
 
 	const isActive = (url: string) =>
@@ -41,18 +48,6 @@ export function NavSecondary({
 	return (
 		<SidebarGroup {...props}>
 			<SidebarGroupContent>
-				{/* <SidebarMenu>
-					{items.map((item) => (
-						<SidebarMenuItem key={item.title}>
-							<SidebarMenuButton asChild>
-								<a href={item.url}>
-									<item.icon />
-									<span>{item.title}</span>
-								</a>
-							</SidebarMenuButton>
-						</SidebarMenuItem>
-					))}
-				</SidebarMenu> */}
 				<SidebarMenu>
 					{items.map((item) => {
 						const active = isActive(item.url);
@@ -73,13 +68,16 @@ export function NavSecondary({
 													: "hover:bg-muted"
 											}`}
 										>
-											{item.icon && <item.icon />}
-											<Link href={item.url} className="flex items-center gap-2">
+											<Link
+												href={item.url}
+												className="flex items-center gap-2 w-full"
+											>
+												{item.icon && <item.icon className="shrink-0" />}
 												<span>{item.title}</span>
+												{item.items && (
+													<ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+												)}
 											</Link>
-											{item.items && (
-												<ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
-											)}
 										</SidebarMenuButton>
 									</CollapsibleTrigger>
 

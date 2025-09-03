@@ -32,7 +32,7 @@ export function ProtectedWithAuth<P extends object>(
 				router.replace("/");
 				return;
 			}
-		}, [isAuthenticated, user, adminOnly, redirectUrl, router]);
+		}, [isAuthenticated, user, router]);
 
 		// While checking auth, show nothing
 		if (!isAuthenticated || (adminOnly && !user?.isAdmin)) {

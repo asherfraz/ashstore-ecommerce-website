@@ -11,7 +11,7 @@ export default function BlogCard({
 	image,
 	title,
 	description,
-	href,
+	href = "#",
 }: BlogCardProps) {
 	return (
 		<Link href={href} className="flex flex-col gap-3 pb-3">

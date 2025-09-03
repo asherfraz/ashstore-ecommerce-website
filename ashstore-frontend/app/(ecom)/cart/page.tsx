@@ -133,8 +133,8 @@ export default function CartPage() {
 												Your cart is empty
 											</h3>
 											<p className="max-w-md text-sm text-muted-foreground">
-												Looks like you haven't added any items to your cart yet.
-												Start shopping to fill it up!
+												Looks like you haven&lsquo;t added any items to your
+												cart yet. Start shopping to fill it up!
 											</p>
 										</div>
 										<Button asChild className="mt-4">

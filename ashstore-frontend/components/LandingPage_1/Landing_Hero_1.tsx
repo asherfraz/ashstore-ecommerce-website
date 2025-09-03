@@ -46,8 +46,8 @@ export default function Landing_Hero_1() {
 				loop: true,
 			}}
 			className="w-full h-full min-h-[480px] overflow-hidden"
-			onMouseEnter={plugin.current.stop}
-			onMouseLeave={plugin.current.play}
+			onMouseLeave={() => plugin.current.play()}
+			onMouseEnter={() => plugin.current.stop()}
 		>
 			<CarouselContent>
 				{slides.map((slide, index) => (

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { OrderProcessingOverlay } from "@/components/common";
 import Image from "next/image";
-import { useRouter, useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 interface OrderItem {
 	id: string;
@@ -23,7 +23,7 @@ interface OrderDetails {
 	items: OrderItem[];
 }
 
-// Mock order data - replace with actual data from API/state
+// Mock order data
 const mockOrderData: OrderDetails = {
 	orderNumber: "#123456789",
 	orderDate: "July 26, 2024",
@@ -56,17 +56,19 @@ const mockOrderData: OrderDetails = {
 	],
 };
 
-interface OrderConfirmationPageProps {
-	params: {
-		orderId: string;
-	};
-}
+// interface OrderConfirmationPageProps {
+// 	params: {
+// 		orderId: string;
+// 	};
+// }
 
-export default function OrderConfirmationPage({
-	params,
-}: OrderConfirmationPageProps) {
+// export default function OrderConfirmationPage({
+// 	params,
+// }: OrderConfirmationPageProps) {
+export default function OrderConfirmationPage() {
 	const router = useRouter();
-	const { orderId } = params;
+	const { orderId } = useParams();
+
 	const [showCelebration, setShowCelebration] = useState(true);
 	const [showConfetti, setShowConfetti] = useState(true);
 	const [orderData, setOrderData] = useState<OrderDetails | null>(null);
@@ -169,15 +171,10 @@ export default function OrderConfirmationPage({
 						{error || `We couldn't find an order with ID: ${orderId}`}
 					</p>
 					<div className="flex gap-4 justify-center">
-						<Button
-							onClick={() => router.push("/account/orders")}
-							variant="outline"
-						>
+						<Button onClick={handleViewMyOrders} variant="outline">
 							View My Orders
 						</Button>
-						<Button onClick={() => router.push("/marketplace")}>
-							Continue Shopping
-						</Button>
+						<Button onClick={handleContinueShopping}>Continue Shopping</Button>
 					</div>
 				</div>
 			</div>

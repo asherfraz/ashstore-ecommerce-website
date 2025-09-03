@@ -1,6 +1,5 @@
 import Landing_Section from "./Landing_Section";
 import CTA_Newsletter from "../common/CTA_Newsletter";
-import Landing_Hero from "./Landing_Hero";
 import Landing_DealOfTheWeek from "./Landing_DealOfTheWeek";
 import BlogCard from "./Landing_BlogCard";
 import CategoryCard from "./Landing_CategoryCard";

@@ -84,7 +84,8 @@ export function CheckoutFlow() {
 		setCurrentStep(4);
 	};
 
-	const handlePlaceOrder = (data) => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const handlePlaceOrder = (data: any) => {
 		// Handle the final order placement
 		console.log("Order placed:", { ...checkoutData, review: data });
 		// You can add order submission logic here

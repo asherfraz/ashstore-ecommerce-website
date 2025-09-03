@@ -1,14 +1,17 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { Switch } from "../ui/switch";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
 
 export default function ThemeToggle() {
-	const { theme, setTheme, systemTheme } = useTheme();
+	const { theme, setTheme } = useTheme();
+	// const { theme, setTheme, systemTheme } = useTheme();
 
 	// console.log("Current theme:", theme, " , System theme:", systemTheme);
+
+	const handleToggle = () => {
+		if (!theme) return; // Prevent undefined comparison
+		setTheme(theme === "light" ? "dark" : "light");
+	};
 
 	return (
 		// <button
@@ -34,7 +37,7 @@ export default function ThemeToggle() {
 					strokeWidth={1.5}
 					stroke="currentColor"
 					className="size-6 hover:p-0.5 text-white cursor-pointer hover:bg-amber-200 hover:text-amber-500 rounded-full transition-bg duration-150 ease-in-out"
-					onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+					onClick={handleToggle}
 				>
 					<path
 						strokeLinecap="round"
@@ -50,7 +53,7 @@ export default function ThemeToggle() {
 					strokeWidth={1.5}
 					stroke="black"
 					className="size-6 hover:p-0.5 text-black/50 cursor-pointer hover:bg-gray-200 hover:text-gray-500 rounded-full transition-bg duration-150 ease-in-out"
-					onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+					onClick={handleToggle}
 				>
 					<path
 						strokeLinecap="round"

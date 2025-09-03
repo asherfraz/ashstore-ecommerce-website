@@ -4,7 +4,6 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import ProductCard, { Product } from "@/components/products/ProductCard";
 import { AiOutlineProduct } from "react-icons/ai";
-import { ProtectedWithAuth } from "@/components/auth/ProtectedWithAuth";
 
 // Mock data for wishlist products
 const mockWishlist: Product[] = [
