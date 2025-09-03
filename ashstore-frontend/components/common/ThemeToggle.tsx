@@ -1,0 +1,64 @@
+"use client";
+
+import { useTheme } from "next-themes";
+import { Switch } from "../ui/switch";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+
+export default function ThemeToggle() {
+	const { theme, setTheme, systemTheme } = useTheme();
+
+	// console.log("Current theme:", theme, " , System theme:", systemTheme);
+
+	return (
+		// <button
+		// 	onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+		// 	className="p-2 border rounded"
+		// >
+		// 	Toggle Theme (Current: {theme})
+		// </button>
+
+		// <div className="flex items-center space-x-2">
+		// 	<Switch
+		// 		id="theme-changer"
+		// 		onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+		// 	/>
+		// 	{/* <Label htmlFor="theme-changer">Theme</Label> */}
+		// </div>
+		<div className="hidden md:flex items-center">
+			{theme === "dark" ? (
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					strokeWidth={1.5}
+					stroke="currentColor"
+					className="size-6 hover:p-0.5 text-white cursor-pointer hover:bg-amber-200 hover:text-amber-500 rounded-full transition-bg duration-150 ease-in-out"
+					onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+				>
+					<path
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
+					/>
+				</svg>
+			) : (
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					strokeWidth={1.5}
+					stroke="black"
+					className="size-6 hover:p-0.5 text-black/50 cursor-pointer hover:bg-gray-200 hover:text-gray-500 rounded-full transition-bg duration-150 ease-in-out"
+					onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+				>
+					<path
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z"
+					/>
+				</svg>
+			)}
+		</div>
+	);
+}

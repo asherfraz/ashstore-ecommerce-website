@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AshStore - Welcome Email</title>
+    <!-- Internal CSS for Email -->
+    <style>
+        body {
+            background-color: #f3f4f6;
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 672px;
+            margin: 40px auto;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(to right, #dbeafe, #d1d5db, #dbeafe);
+            padding: 40px 24px;
+            text-align: center;
+        }
+
+        .hero-logo {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            background: #ffffff;
+            padding: 8px;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            margin-bottom: 16px;
+        }
+
+        .hero h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #111827;
+            margin: 0;
+        }
+
+        .hero p {
+            margin-top: 8px;
+            color: #4b5563;
+            font-size: 15px;
+        }
+
+        /* Body */
+        .body {
+            padding: 32px;
+            color: #1f2937;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .body p {
+            margin: 12px 0;
+        }
+
+        .highlight-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .highlight-card p {
+            margin: 8px 0;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .cta {
+            display: inline-block;
+            background: #2563eb;
+            color: #ffffff !important;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 12px 20px;
+            border-radius: 0.5rem;
+            margin-top: 16px;
+        }
+
+        .cta:hover {
+            background: #1e40af;
+        }
+
+        .verify-btn {
+            display: inline-block;
+            background: #16a34a;
+            color: #ffffff !important;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            padding: 14px 24px;
+            border-radius: 0.5rem;
+            margin-top: 24px;
+        }
+
+        .verify-btn:hover {
+            background: #15803d;
+        }
+
+        .warning {
+            font-size: 14px;
+            color: #b91c1c;
+            margin-top: 12px;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .footer {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            background: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+            padding: 32px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 16px;
+                padding: 0px;
+            }
+
+            .hero {
+                padding: 24px 16px;
+            }
+
+            .body {
+                padding: 16px;
+            }
+
+            .footer {
+                padding: 16px;
+            }
+        }
+
+        .footer-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-align: center;
+        }
+
+        .footer-logo {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .footer-logo p {
+            color: #6b7280;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .footer-social {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-social img {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        .footer-contact {
+            font-size: 13px;
+            color: #6b7280;
+            text-align: center;
+        }
+
+        /* Rights */
+        .rights {
+            background: #111827;
+            color: #9ca3af;
+            text-align: center;
+            font-size: 12px;
+            padding: 24px;
+        }
+
+        .rights a {
+            color: #60a5fa;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-logo">
+                <img src="https://raw.githubusercontent.com/asherfraz/asherfraz/refs/heads/main/media/3_htlogo.png"
+                    alt="AshStore Logo" height="64" />
+            </div>
+            <h2>Welcome to AshStore 🎉</h2>
+            <p>Thanks for joining our fashion community!</p>
+        </div>
+
+        <!-- Main Body -->
+        <div class="body">
+            <p>Hello <strong>{{name}}</strong>,</p>
+            <p>We’re thrilled to welcome you to <strong>AshStore</strong> – your go-to destination for premium clothing
+                and accessories.</p>
+
+            <div class="highlight-card">
+                <p>✨ Explore our exclusive collections curated just for you.</p>
+                <p>🛒 Enjoy a seamless shopping experience with the latest trends.</p>
+                <p><strong>Signup Time:</strong> {{time}}</p>
+                <a href="{{frontend}}" class="cta">Start Shopping</a>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="{{verifyLink}}" class="verify-btn">Verify Your Account</a>
+                <p class="warning">⚠ If you don’t verify your account within 7 days, it will be permanently deleted.</p>
+            </div>
+
+            <p>If you have any questions, our team is always here to help.</p>
+            <p>Happy Shopping! 💙</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-inner">
+
+                <!-- Logo + Tagline -->
+                <div class="footer-logo">
+                    <img src="https://raw.githubusercontent.com/asherfraz/asherfraz/refs/heads/main/media/3_htlogo.png"
+                        alt="AshStore Logo" height="40" />
+                    <p>Premium Clothing • Think Different</p>
+                </div>
+
+                <!-- Social Icons -->
+                <div class="footer-social">
+                    <a href="https://facebook.com/ashstore" target="_blank" rel="noopener">
+                        <img src="https://react.email/static/facebook-logo.png" alt="Facebook" />
+                    </a>
+                    <a href="https://x.com/ashstore" target="_blank" rel="noopener">
+                        <img src="https://react.email/static/x-logo.png" alt="X" />
+                    </a>
+                    <a href="https://instagram.com/ashstore" target="_blank" rel="noopener">
+                        <img src="https://react.email/static/instagram-logo.png" alt="Instagram" />
+                    </a>
+                </div>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="footer-contact">
+                <p>123 AshStore, Islamabad, PK 44000</p>
+                <p>asherfraz@gmail.com | +92-314-9205220</p>
+            </div>
+        </div>
+
+        <!-- Rights -->
+        <div class="rights">
+            <p>Developed by <a href="https://asherfraz.com/">asherfraz.com</a></p>
+            <p>© 2025 AshStore. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>
