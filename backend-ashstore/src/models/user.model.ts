@@ -12,7 +12,7 @@ const AddressSchema = new Schema<IAddress>({
     country: { type: String, default: "Pakistan" },
     // phoneNumber: { type: String, required: true },
     isDefault: { type: Boolean, default: false },
-}, { _id: false });
+}, { _id: true });
 
 
 const PaymentMethodSchema = new Schema<IPaymentMethod>({
@@ -23,7 +23,7 @@ const PaymentMethodSchema = new Schema<IPaymentMethod>({
     phoneNumber: { type: String },
     transactionId: { type: String },
     isDefault: { type: Boolean, default: false },
-}, { _id: false });
+}, { _id: true });
 
 
 const UserSchema = new Schema<IUser>(

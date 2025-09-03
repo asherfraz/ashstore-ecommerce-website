@@ -7,9 +7,9 @@ import morgan from 'morgan';
 import connectToDatabase from './dbConnect';
 import errorHandler from '@/middlewares/errorHandler';
 import userRoutes from '@/routes/user.routes';
-import helmet from 'helmet';
+// import helmet from 'helmet';
 import { getCurrentReqLocation } from './middlewares/getCurrentReqLocation';
-import rateLimit from 'express-rate-limit';
+// import rateLimit from 'express-rate-limit';
 
 
 
@@ -18,7 +18,7 @@ connectToDatabase();
 const app: Express = express();
 
 // Help secure Express apps by setting HTTP response headers.
-app.use(helmet());
+// app.use(helmet());
 // Enable this if you're behind a reverse proxy like Nginx or on Heroku/Vercel
 // app.set('trust proxy', true);
 app.use(morgan('dev'));
@@ -33,27 +33,28 @@ app.use(cors({
     credentials: true,
 }));
 
-const limiter = rateLimit({
-    // retry after 10 minutes
-    windowMs: 10 * 60 * 1000, // 10 minutes
-    limit: 100, // Limit each IP to 100 requests per `window` (here, per 10 minutes).
-    standardHeaders: 'draft-8', // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
-    legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
-    ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
-    // store: ... , // Redis, Memcached, etc. See below.
-    message: {
-        status: 429,
-        message: "Too many requests from this IP, please try again later.",
-        success: false,
-    }
-})
+// const limiter = rateLimit({
+//     // retry after 10 minutes
+//     windowMs: 10 * 60 * 1000, // 10 minutes
+//     limit: 100, // Limit each IP to 100 requests per `window` (here, per 10 minutes).
+//     standardHeaders: 'draft-8', // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
+//     legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+//     ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
+//     // store: ... , // Redis, Memcached, etc. See below.
+//     message: {
+//         status: 429,
+//         message: "Too many requests from this IP, please try again later.",
+//         success: false,
+//     }
+// })
 
 // // Apply the rate limiting middleware to all requests.
 // app.use(limiter)
+// app.use('/api/v1/user', limiter, userRoutes);
 
 
 // REST API routes
-app.use('/api/v1/user', limiter, userRoutes);
+app.use('/api/v1/user', userRoutes);
 // app.use('/api/v1/admin', adminRoutes);
 // app.use('/api/v1/product', productRoutes);
 // app.use('/api/v1/order', orderRoutes);
@@ -65,7 +66,7 @@ app.use('/api/v1/user', limiter, userRoutes);
 app.use(errorHandler);
 
 // Api health check
-app.get('/', limiter, async (req: Request, res: Response) => {
+app.get('/', async (req: Request, res: Response) => {
     // const exactLocationData = getCurrentReqLocation(locationData.dns?.ip);
     const location = await getCurrentReqLocation(1, req);
 

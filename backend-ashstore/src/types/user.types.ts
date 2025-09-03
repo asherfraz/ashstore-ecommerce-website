@@ -1,8 +1,8 @@
-import { NODE_ENV } from './../config/dotenvx';
 import { Document, Types } from "mongoose";
 
 // Address Schema & Type
 export interface IAddress {
+    _id?: Types.ObjectId;
     addressLine1: string;
     addressLine2?: string;
     city: string;
@@ -15,6 +15,7 @@ export interface IAddress {
 
 // Payment Method Schema & Type
 export interface IPaymentMethod {
+    _id?: Types.ObjectId;
     type: "card" | "easypaisa" | "jazzcash";
     cardNumber?: string;
     expirationDate?: string;
@@ -26,7 +27,7 @@ export interface IPaymentMethod {
 
 // user schema
 export interface IUser extends Document {
-    _id: string;
+    _id: Types.ObjectId;
     firstName: string;
     lastName: string;
     name?: string;
