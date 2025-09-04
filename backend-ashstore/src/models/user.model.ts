@@ -123,7 +123,6 @@ UserSchema.pre("findOneAndUpdate", function (next) {
 });
 
 
-//@ts-ignore
 const UserModel = mongoose.models.User || mongoose.model("User", UserSchema, "users");
 
 export default UserModel;
