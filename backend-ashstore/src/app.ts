@@ -1,4 +1,3 @@
-import 'module-alias/register';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import express, { Express, Request, Response } from 'express';
@@ -79,8 +78,9 @@ app.get('/', async (req: Request, res: Response) => {
 });
 
 app.listen(PORT, () => {
+    const date = new Date().toLocaleString();
     console.log(`
-    Date: ${new Date().toLocaleString()}
+    Date: ${date}
     Environment: ${NODE_ENV}
     Frontend: ${FRONTEND_URL}
     Server running on http://localhost:${PORT}`);

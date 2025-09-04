@@ -1,8 +1,8 @@
 import { Document, Types } from "mongoose";
 
 // Address Schema & Type
-export interface IAddress {
-    _id?: Types.ObjectId;
+export interface IAddress extends Document {
+    // _id?: Types.ObjectId;
     addressLine1: string;
     addressLine2?: string;
     city: string;
@@ -14,8 +14,8 @@ export interface IAddress {
 }
 
 // Payment Method Schema & Type
-export interface IPaymentMethod {
-    _id?: Types.ObjectId;
+export interface IPaymentMethod extends Document {
+    // _id?: Types.ObjectId;
     type: "card" | "easypaisa" | "jazzcash";
     cardNumber?: string;
     expirationDate?: string;
@@ -27,7 +27,6 @@ export interface IPaymentMethod {
 
 // user schema
 export interface IUser extends Document {
-    _id: string;
     firstName: string;
     lastName: string;
     name?: string;

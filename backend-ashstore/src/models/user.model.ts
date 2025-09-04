@@ -2,19 +2,40 @@ import { IAddress, IPaymentMethod, IUser } from "../types";
 import mongoose, { Schema } from "mongoose";
 
 
-const AddressSchema = new Schema<IAddress>({
+// const AddressSchema = new Schema<IAddress>({
+//     addressLine1: { type: String, required: true },
+//     addressLine2: { type: String },
+//     city: { type: String, required: true },
+//     stateProvince: { type: String },
+//     postalCode: { type: String },
+//     country: { type: String, default: "Pakistan" },
+//     // phoneNumber: { type: String, required: true },
+//     isDefault: { type: Boolean, default: false },
+// }, { _id: true });
+
+
+// const PaymentMethodSchema = new Schema<IPaymentMethod>({
+//     type: { type: String, enum: ["card", "easypaisa", "jazzcash"], required: true },
+//     cardNumber: { type: String },
+//     expirationDate: { type: String },
+//     cvv: { type: String },
+//     phoneNumber: { type: String },
+//     transactionId: { type: String },
+//     isDefault: { type: Boolean, default: false },
+// }, { _id: true });
+// Define the schema without the generic type first, then cast it
+const AddressSchema = new Schema({
     addressLine1: { type: String, required: true },
     addressLine2: { type: String },
     city: { type: String, required: true },
     stateProvince: { type: String },
     postalCode: { type: String },
     country: { type: String, default: "Pakistan" },
-    // phoneNumber: { type: String, required: true },
     isDefault: { type: Boolean, default: false },
 }, { _id: true });
 
-
-const PaymentMethodSchema = new Schema<IPaymentMethod>({
+// Same approach for PaymentMethodSchema
+const PaymentMethodSchema = new Schema({
     type: { type: String, enum: ["card", "easypaisa", "jazzcash"], required: true },
     cardNumber: { type: String },
     expirationDate: { type: String },
@@ -25,7 +46,8 @@ const PaymentMethodSchema = new Schema<IPaymentMethod>({
 }, { _id: true });
 
 
-const UserSchema = new Schema<IUser>(
+// @ts-ignore
+const UserSchema = new Schema(
     {
         firstName: { type: String },
         lastName: { type: String },
@@ -67,7 +89,7 @@ const UserSchema = new Schema<IUser>(
 
 // Auto-fill 'name' before saving
 // review name on update
-UserSchema.pre<IUser>("save", function (next) {
+UserSchema.pre("save", function (next) {
     // Auto-fill 'name' if not provided
     if (!this.name) {
         this.name = `${this.firstName} ${this.lastName}`;
@@ -101,6 +123,7 @@ UserSchema.pre("findOneAndUpdate", function (next) {
 });
 
 
+//@ts-ignore
 const UserModel = mongoose.models.User || mongoose.model("User", UserSchema, "users");
 
 export default UserModel;

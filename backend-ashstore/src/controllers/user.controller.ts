@@ -70,7 +70,7 @@ const UserController = {
 
 
             // Store the refresh token in the database
-            await JWTService.storeRefreshToken(newUser._id, refreshToken);
+            await JWTService.storeRefreshToken((newUser._id) as string, refreshToken);
 
         } catch (error) {
             console.error('Error creating user:', error);
