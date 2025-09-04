@@ -12,7 +12,7 @@ import { IUser } from "../types";
 import { JwtPayload } from "jsonwebtoken";
 import { sendAccountVerificationEmail, sendLoginNotificationEmail, sendPasswordResetEmail, sendTwoFactorAuthOTPEmail, sendWelcomeEmail } from "./email.controller";
 import { OAuth2Client } from "google-auth-library";
-import { getCurrentReqLocation } from "../middlewares/getCurrentReqLocation";
+import { getCurrentReqLocation } from "../services/getCurrentReqLocation";
 import { generateTwoFactorOTP } from "../services/otp.service";
 
 
@@ -70,7 +70,7 @@ const UserController = {
 
 
             // Store the refresh token in the database
-            await JWTService.storeRefreshToken((newUser._id) as string, refreshToken);
+            await JWTService.storeRefreshToken((newUser._id).toString(), refreshToken);
 
         } catch (error) {
             console.error('Error creating user:', error);
