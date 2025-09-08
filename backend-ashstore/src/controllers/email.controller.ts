@@ -10,6 +10,8 @@ const twoFactorAuthTemplatePath = path.join(__dirname, "../config/emailTemplates
 const accountVerificationTemplatePath = path.join(__dirname, "../config/emailTemplates/accountVerificationEmail.html");
 const passwordResetTemplatePath = path.join(__dirname, "../config/emailTemplates/passwordResetEmail.html");
 const passwordChangedNotificationTemplatePath = path.join(__dirname, "../config/emailTemplates/passwordChangedNotificationEmail.html");
+const newAddressAddedNotificationTemplatePath = path.join(__dirname, "../config/emailTemplates/newAddressAddedNotificationEmail.html");
+const newPaymentMethodAddedNotificationTemplatePath = path.join(__dirname, "../config/emailTemplates/newPaymentMethodAddedNotificationEmail.html");
 
 function formatDateTime(date: Date): string {
   const options: any = {
@@ -119,7 +121,7 @@ function sendTwoFactorAuthOTPEmail(user: IUser, otp: string, expiryMinutes: numb
   sendEmail(user.email, subject, html);
 }
 
-//** PENDING **//
+//** Done **//
 function sendAccountVerificationEmail(user: IUser, verifyLink: string, location: { ip?: string; geo?: string; device?: string }) {
   const subject = "Verify Your Email - AshStore Ecommerce Website";
   const html = fs.readFileSync(accountVerificationTemplatePath, "utf-8")
@@ -134,6 +136,71 @@ function sendAccountVerificationEmail(user: IUser, verifyLink: string, location:
   sendEmail(user.email, subject, html);
 }
 
+//** Done **//
+function sendAddressAddedEmail(name: string, email: string, location: { ip?: string; geo?: string; device?: string }, newAddress: any) {
+  const subject = "New Shipping Address Added to Your AshStore Account";
+  const html = fs.readFileSync(newAddressAddedNotificationTemplatePath, "utf-8")
+    .replace("{{name}}", name)
+    .replace("{{email}}", email)
+    .replace("{{time}}", currentDateTime)
+    .replace("{{location}}", `${location.ip} - ${location.geo}` || "Unknown Location")
+    .replace("{{device}}", location.device || "Unknown Device")
 
-export { sendEmail, sendPasswordResetEmail, sendWelcomeEmail, sendLoginNotificationEmail, sendPasswordChangedNotificationEmail, sendTwoFactorAuthOTPEmail, sendAccountVerificationEmail };
+    .replace("{{isDefault}}", (newAddress.isDefault ? "Yes" : "No"))
+    .replace("{{addressLine1}}", newAddress.addressLine1 || "- ")
+    .replace("{{addressLine2}}", newAddress.addressLine2 || "- ")
+    .replace("{{city}}", newAddress.city || "- ")
+    .replace("{{state}}", newAddress.stateProvince || "- ")
+    .replace("{{zipCode}}", newAddress.postalCode || "- ")
+    .replace("{{country}}", newAddress.country || "-")
+
+    .replace("{{accountSettingsLink}}", `${FRONTEND_URL}/user/account/address-info`);
+
+  sendEmail(email, subject, html);
+}
+//** PENDING **//
+function sendPaymentMethodAddedEmail(name: string, email: string, location: { ip?: string; geo?: string; device?: string }, newPaymentMethod: any) {
+  let paymentData: any;
+
+  if (newPaymentMethod.type === "card") {
+    paymentData = {
+      "Card Number ": newPaymentMethod.cardNumber || "-",
+      "Expiration Date ": newPaymentMethod.expirationDate || "-",
+    }
+  }
+  else if (newPaymentMethod.type === "easypaisa" || newPaymentMethod.type === "jazzcash") {
+    paymentData = {
+      "Phone Number ": newPaymentMethod.phoneNumber || "-",
+      "Transaction Id ": newPaymentMethod.transactionId || "-",
+    }
+  }
+  else {
+    return console.debug(`\n>>>:DEBUG	: Invalid Payment Data! Debugging!\n`);
+  }
+
+
+  const paymentDataKeys = Object.keys(paymentData);
+
+  const subject = "New Payment Method Added to Your AshStore Account";
+  const html = fs.readFileSync(newPaymentMethodAddedNotificationTemplatePath, "utf-8")
+    .replace("{{name}}", name)
+    .replace("{{email}}", email)
+    .replace("{{time}}", currentDateTime)
+    .replace("{{location}}", `${location.ip} - ${location.geo}` || "Unknown Location")
+    .replace("{{device}}", location.device || "Unknown Device")
+    .replace("{{isDefault}}", (newPaymentMethod.isDefault ? "Yes" : "No"))
+    .replace("{{paymentType}}", newPaymentMethod.type || "Unknown")
+
+    .replace("{{key1}}", paymentDataKeys[0])
+    .replace("{{key1data}}", paymentData[paymentDataKeys[0]])
+    .replace("{{key2}}", paymentDataKeys[1])
+    .replace("{{key2data}}", paymentData[paymentDataKeys[1]])
+
+    .replace("{{accountSettingsLink}}", `${FRONTEND_URL}/user/account/payment-methods`);
+
+  sendEmail(email, subject, html);
+}
+
+
+export { sendEmail, sendPasswordResetEmail, sendWelcomeEmail, sendLoginNotificationEmail, sendPasswordChangedNotificationEmail, sendTwoFactorAuthOTPEmail, sendAccountVerificationEmail, sendAddressAddedEmail, sendPaymentMethodAddedEmail };
 

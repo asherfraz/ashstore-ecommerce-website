@@ -44,15 +44,6 @@ export const addressSchema = z.object({
     isDefault: z.boolean().default(false),
 });
 
-// export const paymentMethodSchema = z.object({
-//     type: z.enum(['card', 'easypaisa', 'jazzcash']),
-//     cardNumber: z.string().CreditCard().optional().or(z.literal('')),
-//     expirationDate: z.string().optional().or(z.literal('')),
-//     cvv: z.string().optional().or(z.literal('')),
-//     phoneNumber: z.string().optional().or(z.literal('')),
-//     transactionId: z.string().optional().or(z.literal('')),
-//     isDefault: z.boolean(),
-// });
 
 export const paymentMethodSchema = z.object({
     type: z.enum(['card', 'easypaisa', 'jazzcash']),
@@ -123,8 +114,6 @@ export const paymentMethodSchema = z.object({
         }
     }
 });
-
-
 
 
 export const identifier = z

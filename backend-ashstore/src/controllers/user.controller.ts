@@ -10,7 +10,7 @@ import { validateAddressUpdateSchema, validateLogin, validatePassword, validateP
 import { tryCatch } from "../utils/tryCatch";
 import { IUser } from "../types";
 import { JwtPayload } from "jsonwebtoken";
-import { sendAccountVerificationEmail, sendLoginNotificationEmail, sendPasswordResetEmail, sendTwoFactorAuthOTPEmail, sendWelcomeEmail } from "./email.controller";
+import { sendAccountVerificationEmail, sendAddressAddedEmail, sendLoginNotificationEmail, sendPasswordResetEmail, sendPaymentMethodAddedEmail, sendTwoFactorAuthOTPEmail, sendWelcomeEmail } from "./email.controller";
 import { OAuth2Client } from "google-auth-library";
 import { getCurrentReqLocation } from "../services/getCurrentReqLocation";
 import { generateTwoFactorOTP } from "../services/otp.service";
@@ -83,7 +83,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+            domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -92,7 +92,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+            domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -178,7 +178,7 @@ const UserController = {
                     sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
                     secure: isProduction, // Only send over HTTPS in production
                     maxAge: 3600 * 1000, // 1 hour
-                    domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+                    domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
                     path: '/', // Optional but recommended
                 });
 
@@ -187,7 +187,7 @@ const UserController = {
                     sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
                     secure: isProduction,
                     maxAge: 3600 * 1000 * 24 * 7, // 7 days
-                    domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+                    domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
                     path: '/', // Optional but recommended
                 });
 
@@ -235,7 +235,7 @@ const UserController = {
                 sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
                 secure: isProduction, // Only send over HTTPS in production
                 maxAge: 3600 * 1000, // 1 hour
-                domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+                domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
                 path: '/', // Optional but recommended
             });
 
@@ -244,7 +244,7 @@ const UserController = {
                 sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
                 secure: isProduction,
                 maxAge: 3600 * 1000 * 24 * 7, // 7 days
-                domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+                domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
                 path: '/', // Optional but recommended
             });
 
@@ -349,7 +349,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+            domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -358,7 +358,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+            domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -448,7 +448,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+            domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -457,7 +457,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+            domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -650,8 +650,6 @@ const UserController = {
     addUserAddress: tryCatch(async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.params.userId;
         const newAddress = req.body;
-        console.debug(`\n>>>:DEBUG	: ADD New Address Debugging!\n`);
-        console.log("Data: ", userId, " - ", newAddress)
 
         // Validate address data using Joi
         const { error } = validateAddressUpdateSchema(req.body);
@@ -666,7 +664,6 @@ const UserController = {
             return next({ status: 404, message: 'User not found!' });
         }
 
-        console.debug(`\n>>>:DEBUG 2	: ADD New Address Debugging!\n`);
         // Check if user already has 5 addresses
         if (user.addresses.length >= 5) {
             return next({
@@ -683,14 +680,16 @@ const UserController = {
             });
         }
 
-
-
         // Add the new address
         user.addresses.push(newAddress);
 
-        console.debug(`\n>>>:DEBUG 3	: ADD New Address Debugging!\n`);
         // Save the user
         await user.save();
+
+        // sending email for new address added
+        const location = await getCurrentReqLocation(1, req);
+
+        sendAddressAddedEmail(user.name as string, user.email as string, location, newAddress);
 
         // Return updated user
         return res.status(200).json({
@@ -844,6 +843,13 @@ const UserController = {
 
         // Save the user
         await user.save();
+
+
+        // sending email for new address added
+        const location = await getCurrentReqLocation(1, req);
+
+        sendPaymentMethodAddedEmail(user.name as string, user.email as string, location, newPaymentMethod);
+
 
         // Return updated user
         return res.status(200).json({
@@ -1095,7 +1101,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+            domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -1104,7 +1110,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+            domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
