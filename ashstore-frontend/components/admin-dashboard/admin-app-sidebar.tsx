@@ -12,9 +12,9 @@ import {
 	Percent,
 	User,
 } from "lucide-react";
-import { NavMain } from "@/components/ui/admin-dashboard/nav-main";
-import { NavSecondary } from "@/components/ui/admin-dashboard/nav-secondary";
-import { NavUser } from "@/components/ui/admin-dashboard/nav-user";
+import { NavMain } from "@/components/admin-dashboard/nav-main";
+import { NavSecondary } from "@/components/admin-dashboard/nav-secondary";
+import { NavUser } from "@/components/admin-dashboard/nav-user";
 import {
 	Sidebar,
 	SidebarContent,

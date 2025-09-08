@@ -1,4 +1,4 @@
-import { SectionCards } from "@/components/ui/admin-dashboard/section-cards";
+import { SectionCards } from "@/components/admin-dashboard/section-cards";
 
 export default function AdminSettingsPage() {
 	return (

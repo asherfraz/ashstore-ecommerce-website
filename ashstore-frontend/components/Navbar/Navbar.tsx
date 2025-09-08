@@ -7,7 +7,12 @@ import ThemeToggle from "../common/ThemeToggle";
 import SearchBarInput from "../common/SearchBarInput";
 import { Button } from "../ui/button";
 
-import { ChevronRightCircle, ShoppingCartIcon } from "lucide-react";
+import {
+	ChevronRightCircle,
+	LayoutDashboard,
+	Settings,
+	ShoppingCartIcon,
+} from "lucide-react";
 import { MdMenu, MdMenuOpen } from "react-icons/md";
 import { LuLogIn } from "react-icons/lu";
 import { FaRegHeart } from "react-icons/fa6";
@@ -35,6 +40,7 @@ import { logout } from "@/api/userApis";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { RootState } from "@/redux/store";
+import { useAuth } from "@/hooks/useAuth";
 
 type NavbarProps = {
 	isLoggedIn?: boolean;
@@ -49,7 +55,7 @@ export default function Navbar({
 	const dispatch = useDispatch();
 	const [menuOpen, setMenuOpen] = useState(false);
 
-	const { user } = useSelector((state: RootState) => state.user);
+	const { user } = useAuth();
 
 	const handleLogOut = async () => {
 		// Perform logout logic here
@@ -90,11 +96,22 @@ export default function Navbar({
 
 					{/* Right side */}
 					<div className="flex items-center gap-4">
-						{/* Theme toggle */}
-						<div className="flex items-center gap-2">
-							<span className="hidden md:block">Theme:</span>
-							<ThemeToggle />
-						</div>
+						<nav className="hidden md:flex  items-center gap-6">
+							<Link href="/marketplace" className="hover:text-foreground">
+								Shop
+							</Link>
+							<Link href="/new-arrivals" className="hover:text-foreground">
+								New Arrivals
+							</Link>
+							<Link href="/sale" className="hover:text-foreground">
+								Sale
+							</Link>
+							{/* Theme toggle */}
+							<div className="flex items-center gap-2">
+								<span className="hidden md:block">Theme:</span>
+								<ThemeToggle />
+							</div>
+						</nav>
 
 						{isLoggedIn ? (
 							<DropdownMenu>
@@ -286,14 +303,19 @@ export default function Navbar({
 									<DropdownMenuSeparator />
 									<DropdownMenuGroup>
 										<DropdownMenuItem
-											onClick={() => router.push("/admin/account/profile")}
+											onClick={() => router.push("/user/dashboard")}
 										>
-											<IconUserCircle /> Account
+											<LayoutDashboard /> Dashboard
 										</DropdownMenuItem>
 										<DropdownMenuItem
-											onClick={() => router.push("/admin/settings")}
+											onClick={() => router.push("/user/dashboard")}
 										>
-											<IconNotification /> Notifications
+											<IconUserCircle /> Profile
+										</DropdownMenuItem>
+										<DropdownMenuItem
+											onClick={() => router.push("/user/dashboard")}
+										>
+											<Settings /> Settings
 										</DropdownMenuItem>
 									</DropdownMenuGroup>
 									<DropdownMenuSeparator />
@@ -436,14 +458,19 @@ export default function Navbar({
 										<DropdownMenuSeparator />
 										<DropdownMenuGroup>
 											<DropdownMenuItem
-												onClick={() => router.push("/admin/account/profile")}
+												onClick={() => router.push("/user/dashboard")}
 											>
-												<IconUserCircle /> Account
+												<LayoutDashboard /> Dashboard
 											</DropdownMenuItem>
 											<DropdownMenuItem
-												onClick={() => router.push("/admin/settings")}
+												onClick={() => router.push("/user/dashboard")}
 											>
-												<IconNotification /> Notifications
+												<IconUserCircle /> Profile
+											</DropdownMenuItem>
+											<DropdownMenuItem
+												onClick={() => router.push("/user/dashboard")}
+											>
+												<Settings /> Settings
 											</DropdownMenuItem>
 										</DropdownMenuGroup>
 										<DropdownMenuSeparator />

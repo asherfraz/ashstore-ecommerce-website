@@ -46,6 +46,7 @@ export interface IUser {
 
 // Address Schema & Type
 export interface IAddress {
+    _id: string;
     addressLine1: string;
     addressLine2?: string;
     city: string;
@@ -57,12 +58,13 @@ export interface IAddress {
 
 // Payment Method Schema & Type
 export interface IPaymentMethod {
+    _id: string;
     type: "card" | "easypaisa" | "jazzcash";
     cardNumber?: string;
     expirationDate?: string;
     cvv?: string;
-    phoneNumber?: string;
     transactionId?: string;
+    phoneNumber?: string;
     isDefault?: boolean;
 }
 

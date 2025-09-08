@@ -8,23 +8,49 @@ const authenticateUser = async (req: Request, res: Response, next: NextFunction)
 
     try {
         if (!accessToken && !refreshToken) {
-            return next({ status: 401, message: 'No tokens provided' });
+            return next({ status: 401, message: 'Authentication required' });
         }
 
-        const decoded = JWTService.verifyAccessToken(accessToken);
-        const user = await User.findById<IUser>(decoded.userId);
+        let user: IUser | null = null;
+
+        // First, try to verify the access token
+        if (accessToken) {
+            const decoded = JWTService.verifyAccessToken(accessToken);
+            user = await User.findById<IUser>(decoded.userId);
+
+            if (user) {
+                // @ts-ignore - We'll extend the Request type to include user
+                req.user = user;
+                return next();
+            }
+        }
+
+        // If access token is invalid/expired, try to refresh using the refresh token
+        if (refreshToken) {
+            const decodedRefresh = JWTService.verifyRefreshToken(refreshToken);
+            user = await User.findById<IUser>(decodedRefresh.userId);
+
+            if (user) {
+                // @ts-ignore - We'll extend the Request type to include user
+                req.user = user;
+                return next();
+            }
+        }
+
 
         if (!user) {
-            return next({ status: 401, message: 'User not found!' });
+            // Clear invalid tokens
+            res.clearCookie('accessToken');
+            res.clearCookie('refreshToken');
+            return next({ status: 401, message: 'User not found' });
         }
 
-        // @ts-ignore
-        req.user = user;
-        next();
+        // If we reach here, no valid tokens were provided
+        return next({ status: 401, message: 'Authentication required' });
 
     } catch (error: any) {
         console.error(`[Auth Error] ${error.message}`);
-        next({ status: 401, message: 'Unauthorized access!' });
+        return next({ status: 401, message: 'Unauthorized access!' });
     }
 };
 

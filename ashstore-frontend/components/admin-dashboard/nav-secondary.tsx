@@ -18,7 +18,7 @@ import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
-} from "../collapsible";
+} from "../ui/collapsible";
 
 import { ChevronRight } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -28,6 +28,7 @@ type NavItem = {
 	title: string;
 	url: string;
 	icon: LucideIcon;
+	isActive?: true;
 	items?: {
 		title: string;
 		url: string;
@@ -42,7 +43,7 @@ interface NavSecondaryProps
 export function NavSecondary({ items, ...props }: NavSecondaryProps) {
 	const pathname = usePathname();
 
-	const isActive = (url: string) =>
+	const isActiveURL = (url: string) =>
 		pathname === url || pathname.startsWith(url + "/");
 
 	return (
@@ -50,12 +51,12 @@ export function NavSecondary({ items, ...props }: NavSecondaryProps) {
 			<SidebarGroupContent>
 				<SidebarMenu>
 					{items.map((item) => {
-						const active = isActive(item.url);
+						const active = isActiveURL(item.url);
 						return (
 							<Collapsible
 								key={item.title}
 								asChild
-								defaultOpen={active}
+								defaultOpen={item.isActive}
 								className="group/collapsible"
 							>
 								<SidebarMenuItem>
@@ -74,10 +75,10 @@ export function NavSecondary({ items, ...props }: NavSecondaryProps) {
 											>
 												{item.icon && <item.icon className="shrink-0" />}
 												<span>{item.title}</span>
-												{item.items && (
-													<ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
-												)}
 											</Link>
+											{item.items && (
+												<ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+											)}
 										</SidebarMenuButton>
 									</CollapsibleTrigger>
 
@@ -85,7 +86,7 @@ export function NavSecondary({ items, ...props }: NavSecondaryProps) {
 										<CollapsibleContent>
 											<SidebarMenuSub>
 												{item.items.map((sub) => {
-													const subActive = isActive(sub.url);
+													const subActive = isActiveURL(sub.url);
 													return (
 														<SidebarMenuSubItem key={sub.title}>
 															<SidebarMenuSubButton

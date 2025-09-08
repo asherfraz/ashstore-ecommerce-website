@@ -2,11 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import User from "../models/user.model";
 import { RefreshToken } from "../models";
 import { IRefreshToken } from "../models/token.model";
-import { BCRYPT_SALT_ROUNDS, FRONTEND_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from '../config/dotenvx';
+import { BCRYPT_SALT_ROUNDS, FRONTEND_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NODE_ENV } from '../config/dotenvx';
 import bcrypt from 'bcrypt';
 import JWTService from '../services/JWT.service';
 import hasBlankPassword from '../middlewares/hasBlankPassword';
-import { validateLogin, validatePassword, validateRegistration, validateUpdateUser, validateUserOTP } from "../validators/user.validator";
+import { validateAddressUpdateSchema, validateLogin, validatePassword, validatePaymentMethodSchema, validateRegistration, validateUpdateUser, validateUserOTP } from "../validators/user.validator";
 import { tryCatch } from "../utils/tryCatch";
 import { IUser } from "../types";
 import { JwtPayload } from "jsonwebtoken";
@@ -25,7 +25,7 @@ const oAuth2Client = new OAuth2Client(
     'postmessage' // Required for code exchange
 );
 
-// TODO - Add Email Services
+const isProduction = NODE_ENV === 'production';
 
 const UserController = {
     createUserUsingEmail: tryCatch(async (req: Request, res: Response, next: NextFunction) => {
@@ -80,15 +80,20 @@ const UserController = {
         // Set cookies for access and refresh tokens
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            sameSite: 'none', // Allow cross-site requests
-            secure: true, // Uncomment this line if using HTTPS in production
-            maxAge: 3600 * 1000 // 1 hour
+            sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
+            secure: isProduction, // Only send over HTTPS in production
+            maxAge: 3600 * 1000, // 1 hour
+            domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+            path: '/', // Optional but recommended
         });
+
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            sameSite: 'none', // Allow cross-site requests
-            secure: true, // Uncomment this line if using HTTPS in production
-            maxAge: 3600 * 1000 * 24 * 7 // 7 days
+            sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
+            secure: isProduction,
+            maxAge: 3600 * 1000 * 24 * 7, // 7 days
+            domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+            path: '/', // Optional but recommended
         });
 
 
@@ -170,15 +175,20 @@ const UserController = {
                 // Set cookies for access and refresh tokens
                 res.cookie('accessToken', accessToken, {
                     httpOnly: true,
-                    sameSite: 'none',
-                    secure: true,
-                    maxAge: 3600 * 1000 // 1 hour
+                    sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
+                    secure: isProduction, // Only send over HTTPS in production
+                    maxAge: 3600 * 1000, // 1 hour
+                    domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+                    path: '/', // Optional but recommended
                 });
+
                 res.cookie('refreshToken', refreshToken, {
                     httpOnly: true,
-                    sameSite: 'none',
-                    secure: true,
-                    maxAge: 3600 * 1000 * 24 * 7 // 7 days
+                    sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
+                    secure: isProduction,
+                    maxAge: 3600 * 1000 * 24 * 7, // 7 days
+                    domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+                    path: '/', // Optional but recommended
                 });
 
                 // Send login notification email
@@ -222,15 +232,20 @@ const UserController = {
             // Set cookies for access and refresh tokens
             res.cookie('accessToken', accessToken, {
                 httpOnly: true,
-                sameSite: 'none',
-                secure: true,
-                maxAge: 3600 * 1000 // 1 hour
+                sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
+                secure: isProduction, // Only send over HTTPS in production
+                maxAge: 3600 * 1000, // 1 hour
+                domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+                path: '/', // Optional but recommended
             });
+
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
-                sameSite: 'none',
-                secure: true,
-                maxAge: 3600 * 1000 * 24 * 7 // 7 days
+                sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
+                secure: isProduction,
+                maxAge: 3600 * 1000 * 24 * 7, // 7 days
+                domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+                path: '/', // Optional but recommended
             });
 
             // Send welcome email
@@ -289,7 +304,6 @@ const UserController = {
         // Check if email is verified
         if (!user.isVerified) {
             // Optionally resend verification email
-            // await sendVerificationEmail(user);
             return next({
                 status: 403,
                 message: 'Please verify your email address before logging in'
@@ -303,10 +317,6 @@ const UserController = {
             if (!otpResult.success) {
                 return next({ status: 400, message: otpResult.message });
             }
-            // TODO - if not verified send verification email
-            // if (!user.isVerified) {
-            //     sendVerificationEmail(user);
-            // }
 
             return res.status(200).json({
                 success: true,
@@ -332,18 +342,24 @@ const UserController = {
             return next();
         }
 
+
         // Set cookies for access and refresh tokens
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            sameSite: 'none', // Allow cross-site requests
-            secure: true, // Uncomment this line if using HTTPS in production
-            maxAge: 3600 * 1000 // 1 hour
+            sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
+            secure: isProduction, // Only send over HTTPS in production
+            maxAge: 3600 * 1000, // 1 hour
+            domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+            path: '/', // Optional but recommended
         });
+
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            sameSite: 'none', // Allow cross-site requests
-            secure: true, // Uncomment this line if using HTTPS in production
-            maxAge: 3600 * 1000 * 24 * 7 // 7 days
+            sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
+            secure: isProduction,
+            maxAge: 3600 * 1000 * 24 * 7, // 7 days
+            domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+            path: '/', // Optional but recommended
         });
 
 
@@ -356,11 +372,6 @@ const UserController = {
         //*** Send login notification email
         const location = await getCurrentReqLocation(1, req);
         sendLoginNotificationEmail(user, location);
-
-        // TODO - if not verified send verification email
-        // if (!user.isVerified) {
-        //     sendVerificationEmail(user);
-        // }
 
         return res.status(200).json({
             success: true,
@@ -434,15 +445,20 @@ const UserController = {
         // Set cookies for new tokens
         res.cookie('accessToken', newAccessToken, {
             httpOnly: true,
-            sameSite: 'none', // Allow cross-site requests
-            secure: true, // Uncomment this line if using HTTPS in production
-            maxAge: 3600 * 1000 // 1 hour
+            sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
+            secure: isProduction, // Only send over HTTPS in production
+            maxAge: 3600 * 1000, // 1 hour
+            domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+            path: '/', // Optional but recommended
         });
+
         res.cookie('refreshToken', newRefreshToken, {
             httpOnly: true,
-            sameSite: 'none', // Allow cross-site requests
-            secure: true, // Uncomment this line if using HTTPS in production
-            maxAge: 3600 * 1000 * 24 * 7 // 7 days
+            sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
+            secure: isProduction,
+            maxAge: 3600 * 1000 * 24 * 7, // 7 days
+            domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+            path: '/', // Optional but recommended
         });
 
         const user = await User.findById<IUser>(payload.userId);
@@ -628,6 +644,310 @@ const UserController = {
         return res.status(200).json({ success: true, message: 'User updated successfully', user, auth: true });
 
     }),
+
+
+    // User Address Management Api's
+    addUserAddress: tryCatch(async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req.params.userId;
+        const newAddress = req.body;
+        console.debug(`\n>>>:DEBUG	: ADD New Address Debugging!\n`);
+        console.log("Data: ", userId, " - ", newAddress)
+
+        // Validate address data using Joi
+        const { error } = validateAddressUpdateSchema(req.body);
+        if (error) {
+            return next(error);
+        }
+
+        // Handle if Addresses Array is empty
+        // Find user
+        const user = await User.findById<IUser>(userId);
+        if (!user) {
+            return next({ status: 404, message: 'User not found!' });
+        }
+
+        console.debug(`\n>>>:DEBUG 2	: ADD New Address Debugging!\n`);
+        // Check if user already has 5 addresses
+        if (user.addresses.length >= 5) {
+            return next({
+                status: 400,
+                message: 'Maximum limit of 5 addresses reached. Please delete an existing address before adding a new one.'
+            });
+        }
+
+        // Handle default address logic
+        if (newAddress.isDefault) {
+            // Set all other addresses to non-default
+            user.addresses.forEach(addr => {
+                addr.isDefault = false;
+            });
+        }
+
+
+
+        // Add the new address
+        user.addresses.push(newAddress);
+
+        console.debug(`\n>>>:DEBUG 3	: ADD New Address Debugging!\n`);
+        // Save the user
+        await user.save();
+
+        // Return updated user
+        return res.status(200).json({
+            success: true,
+            message: 'Address added successfully',
+            user,
+            auth: true
+        });
+    }),
+    updateUserAddress: tryCatch(async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req.params.userId;
+        const addressId = req.params.addressId;
+        const updates = req.body;
+
+        // Validate address data using Joi
+        const { error } = validateAddressUpdateSchema(req.body);
+        if (error) {
+            return next(error);
+        }
+
+        // Find user
+        const user = await User.findById<IUser>(userId);
+        if (!user) {
+            return next({ status: 404, message: 'User not found!' });
+        }
+
+        // Check if user already has 5 addresses (for new address creation)
+        // This check is more relevant for adding new addresses rather than updating existing ones
+        // If you have a separate endpoint for adding addresses, you should add this check there
+        if (req.method === 'POST' && user.addresses.length >= 5) {
+            return next({
+                status: 400,
+                message: 'Maximum limit of 5 addresses reached. Please delete an existing address before adding a new one.'
+            });
+        }
+
+        // Find the address to update
+        const addressIndex = user.addresses.findIndex(
+            addr => addr._id.toString() === addressId
+        );
+
+        if (addressIndex === -1) {
+            return next({ status: 404, message: 'Address not found!' });
+        }
+
+        // Handle default address logic
+        if (updates.isDefault) {
+            // Set all other addresses to non-default
+            user.addresses.forEach((addr, index) => {
+                if (index !== addressIndex) {
+                    addr.isDefault = false;
+                }
+            });
+        }
+
+        // Update the address
+        user.addresses[addressIndex] = {
+            ...user.addresses[addressIndex].toObject(),
+            ...updates
+        };
+
+        // Save the user
+        await user.save();
+
+        // Return updated user
+        return res.status(200).json({
+            success: true,
+            message: 'Address updated successfully',
+            user,
+            auth: true
+        });
+    }),
+    deleteUserAddress: tryCatch(async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req.params.userId;
+        const addressId = req.params.addressId;
+
+        // Find user
+        const user = await User.findById<IUser>(userId);
+        if (!user) {
+            return next({ status: 404, message: 'User not found!' });
+        }
+
+        // Find the address to delete
+        const addressIndex = user.addresses.findIndex(
+            addr => addr._id.toString() === addressId
+        );
+
+        if (addressIndex === -1) {
+            return next({ status: 404, message: 'Address not found!' });
+        }
+
+        const wasDefault = user.addresses[addressIndex].isDefault;
+
+        // Remove the address
+        user.addresses.splice(addressIndex, 1);
+
+        // If we deleted the default address and there are other addresses,
+        // set the first address as default
+        if (wasDefault && user.addresses.length > 0) {
+            user.addresses[0].isDefault = true;
+        }
+
+        // Save the user
+        await user.save();
+
+        // Return updated user
+        return res.status(200).json({
+            success: true,
+            message: 'Address deleted successfully',
+            user,
+            auth: true
+        });
+    }),
+
+
+    // User Address Management Api's
+    addUserPaymentMethod: tryCatch(async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req.params.userId;
+        const newPaymentMethod = req.body;
+
+        // Validate payment method data
+        const { error } = validatePaymentMethodSchema(req.body);
+        if (error) {
+            return next(error);
+        }
+
+        // Find user
+        const user = await User.findById<IUser>(userId);
+        if (!user) {
+            return next({ status: 404, message: 'User not found!' });
+        }
+
+        // Check if user already has 5 payment methods
+        if (user.paymentMethods && user.paymentMethods.length >= 5) {
+            return next({
+                status: 400,
+                message: 'Maximum limit of 5 payment methods reached. Please delete an existing payment method before adding a new one.'
+            });
+        }
+
+        // Handle default payment method logic
+        if (newPaymentMethod.isDefault) {
+            // Set all other payment methods to non-default
+            user.paymentMethods.forEach(pm => {
+                pm.isDefault = false;
+            });
+        }
+
+        // Add the new payment method
+        user.paymentMethods.push(newPaymentMethod);
+
+        // Save the user
+        await user.save();
+
+        // Return updated user
+        return res.status(200).json({
+            success: true,
+            message: 'Payment method added successfully',
+            user,
+            auth: true
+        });
+    }),
+    updateUserPaymentMethod: tryCatch(async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req.params.userId;
+        const paymentId = req.params.paymentId;
+        const updates = req.body;
+
+        // Validate payment method data
+        const { error } = validatePaymentMethodSchema(req.body);
+        if (error) {
+            return next(error);
+        }
+
+        // Find user
+        const user = await User.findById<IUser>(userId);
+        if (!user) {
+            return next({ status: 404, message: 'User not found!' });
+        }
+
+        // Find the payment method to update
+        const paymentIndex = user.paymentMethods.findIndex(
+            pm => pm._id.toString() === paymentId
+        );
+
+        if (paymentIndex === -1) {
+            return next({ status: 404, message: 'Payment method not found!' });
+        }
+
+        // Handle default payment method logic
+        if (updates.isDefault) {
+            // Set all other payment methods to non-default
+            user.paymentMethods.forEach((pm, index) => {
+                if (index !== paymentIndex) {
+                    pm.isDefault = false;
+                }
+            });
+        }
+
+        // Update the payment method
+        user.paymentMethods[paymentIndex] = {
+            ...user.paymentMethods[paymentIndex].toObject(),
+            ...updates
+        };
+
+        // Save the user
+        await user.save();
+
+        // Return updated user
+        return res.status(200).json({
+            success: true,
+            message: 'Payment method updated successfully',
+            user,
+            auth: true
+        });
+    }),
+    deleteUserPaymentMethod: tryCatch(async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req.params.userId;
+        const paymentId = req.params.paymentId;
+
+        // Find user
+        const user = await User.findById<IUser>(userId);
+        if (!user) {
+            return next({ status: 404, message: 'User not found!' });
+        }
+
+        // Find the payment method to delete
+        const paymentIndex = user.paymentMethods.findIndex(
+            pm => pm._id.toString() === paymentId
+        );
+
+        if (paymentIndex === -1) {
+            return next({ status: 404, message: 'Payment method not found!' });
+        }
+
+        const wasDefault = user.paymentMethods[paymentIndex].isDefault;
+
+        // Remove the payment method
+        user.paymentMethods.splice(paymentIndex, 1);
+
+        // If we deleted the default payment method and there are other payment methods,
+        // set the first payment method as default
+        if (wasDefault && user.paymentMethods.length > 0) {
+            user.paymentMethods[0].isDefault = true;
+        }
+
+        // Save the user
+        await user.save();
+
+        // Return updated user
+        return res.status(200).json({
+            success: true,
+            message: 'Payment method deleted successfully',
+            user,
+            auth: true
+        });
+    }),
+
     deleteUser: tryCatch(async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.params.id;
         // check if user exists and delete
@@ -772,16 +1092,20 @@ const UserController = {
         // Set cookies
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            maxAge: 60 * 60 * 1000 // 1 hour
+            sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
+            secure: isProduction, // Only send over HTTPS in production
+            maxAge: 3600 * 1000, // 1 hour
+            domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+            path: '/', // Optional but recommended
         });
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+            sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
+            secure: isProduction,
+            maxAge: 3600 * 1000 * 24 * 7, // 7 days
+            domain: isProduction ? FRONTEND_URL : 'localhost', // Set domain in production only
+            path: '/', // Optional but recommended
         });
 
 

@@ -1,6 +1,6 @@
 {
   "name": "backend-ashstore",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A Backend in TypeScript for AshStore - Clothing based Ecommerce web app.",
   "license": "ISC",
   "author": "asherfraz",

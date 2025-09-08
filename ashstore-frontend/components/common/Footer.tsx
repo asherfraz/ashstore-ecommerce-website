@@ -15,9 +15,9 @@ const CATEGORIES = [
 
 const PAGES = [
 	{ name: "Home", link: "/" },
-	{ name: "Shop", link: "/shop" },
-	{ name: "About", link: "/about" },
-	{ name: "Contact", link: "/contact" },
+	{ name: "Shop", link: "/marketplace" },
+	{ name: "About", link: "/about-us" },
+	{ name: "Contact", link: "/contact-us" },
 ];
 
 const SHOPPING = [
@@ -27,7 +27,7 @@ const SHOPPING = [
 ];
 
 const CUSTOMER_CARE = [
-	{ name: "Help Center", link: "/help" },
+	{ name: "Help Center", link: "/help-support" },
 	{ name: "Returns & refund", link: "/returns" },
 	{ name: "Shipping", link: "/shipping" },
 	{ name: "Terms & Conditions", link: "/terms" },

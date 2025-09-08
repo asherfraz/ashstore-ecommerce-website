@@ -1,7 +1,8 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { IconCirclePlusFilled } from "@tabler/icons-react";
+import * as React from "react";
+import { LucideIcon } from "lucide-react";
+
 import {
 	SidebarGroup,
 	SidebarGroupContent,
@@ -12,58 +13,41 @@ import {
 	SidebarMenuSubButton,
 	SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+
 import {
 	Collapsible,
 	CollapsibleContent,
 	CollapsibleTrigger,
-} from "../collapsible";
-import { ChevronRight, LucideIcon } from "lucide-react";
+} from "../ui/collapsible";
+
+import { ChevronRight } from "lucide-react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-export function NavMain({
-	items,
-}: {
-	items: {
+type NavItem = {
+	title: string;
+	url: string;
+	icon: LucideIcon;
+	items?: {
 		title: string;
 		url: string;
-		icon?: LucideIcon;
-		isActive?: boolean;
-		items?: { title: string; url: string }[];
 	}[];
-}) {
+};
+
+interface NavSecondaryProps
+	extends React.ComponentPropsWithoutRef<typeof SidebarGroup> {
+	items: NavItem[];
+}
+
+export function NavSecondary({ items, ...props }: NavSecondaryProps) {
 	const pathname = usePathname();
 
 	const isActive = (url: string) =>
 		pathname === url || pathname.startsWith(url + "/");
 
 	return (
-		<SidebarGroup>
-			<SidebarGroupContent className="flex flex-col gap-2">
-				{/* Quick Create Promotion */}
-				<SidebarMenu>
-					<SidebarMenuItem>
-						<SidebarMenuButton
-							tooltip="Quick Create Promotion"
-							className="bg-primary text-secondary dark:text-foreground hover:bg-primary/90"
-						>
-							<IconCirclePlusFilled />
-							<span>Create Promotion</span>
-						</SidebarMenuButton>
-					</SidebarMenuItem>
-				</SidebarMenu>
-
-				{/* <SidebarMenu>
-					{items.map((item) => (
-						<SidebarMenuItem key={item.title}>
-						<SidebarMenuButton tooltip={item.title}>
-							{item.icon && <item.icon />}
-							<span>{item.title}</span>
-						</SidebarMenuButton>
-						</SidebarMenuItem>
-					))}
-					</SidebarMenu> */}
-
-				{/* Main Navigation */}
+		<SidebarGroup {...props}>
+			<SidebarGroupContent>
 				<SidebarMenu>
 					{items.map((item) => {
 						const active = isActive(item.url);
@@ -71,7 +55,7 @@ export function NavMain({
 							<Collapsible
 								key={item.title}
 								asChild
-								defaultOpen={item.isActive}
+								defaultOpen={active}
 								className="group/collapsible"
 							>
 								<SidebarMenuItem>
@@ -84,13 +68,16 @@ export function NavMain({
 													: "hover:bg-muted"
 											}`}
 										>
-											{item.icon && <item.icon />}
-											<Link href={item.url} className="flex items-center gap-2">
+											<Link
+												href={item.url}
+												className="flex items-center gap-2 w-full"
+											>
+												{item.icon && <item.icon className="shrink-0" />}
 												<span>{item.title}</span>
+												{item.items && (
+													<ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+												)}
 											</Link>
-											{item.items && (
-												<ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
-											)}
 										</SidebarMenuButton>
 									</CollapsibleTrigger>
 

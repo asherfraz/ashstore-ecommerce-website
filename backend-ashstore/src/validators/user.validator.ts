@@ -120,6 +120,44 @@ const updateUserSchema = Joi.object({
     ),
 });
 
+// Joi schema for address validation
+const addressUpdateSchema = Joi.object({
+    addressLine1: Joi.string().min(3).max(100),
+    addressLine2: Joi.string().max(100).allow(''),
+    city: Joi.string().min(2).max(50),
+    stateProvince: Joi.string().max(50).allow(''),
+    postalCode: Joi.string().max(20).allow(''),
+    country: Joi.string().min(2).max(50),
+    isDefault: Joi.boolean(),
+});
+
+// Joi validation schema for payment methods
+const paymentMethodSchema = Joi.object({
+    type: Joi.string().valid('card', 'easypaisa', 'jazzcash').required(),
+    cardNumber: Joi.when('type', {
+        is: 'card',
+        then: Joi.string().creditCard().required(),
+        otherwise: Joi.string().optional().allow('')
+    }),
+    expirationDate: Joi.when('type', {
+        is: 'card',
+        then: Joi.string().pattern(/^(0[1-9]|1[0-2])\/([0-9]{2})$/).required(),
+        otherwise: Joi.string().optional().allow('')
+    }),
+    cvv: Joi.when('type', {
+        is: 'card',
+        then: Joi.string().pattern(/^[0-9]{3,4}$/).required(),
+        otherwise: Joi.string().optional().allow('')
+    }),
+    phoneNumber: Joi.when('type', {
+        is: Joi.valid('easypaisa', 'jazzcash'),
+        then: Joi.string().pattern(/^03[0-9]{9}$/).required(),
+        otherwise: Joi.string().optional().allow('')
+    }),
+    transactionId: Joi.string().optional().allow(''),
+    isDefault: Joi.boolean().default(false)
+});
+
 const passwordSchema = Joi.object({
     oldPassword: Joi.string().min(8).max(24)
         // can be empty if user has no password
@@ -145,6 +183,9 @@ const otpSchema = Joi.object({
     otp: Joi.string().length(6).pattern(/^[0-9]+$/).required()
 });
 
+
+////////////** Above Validation Schemas **////////////////// 
+
 export function validateRegistration(data: Object) {
     return registrationSchema.validate(data, { abortEarly: false });
 }
@@ -159,6 +200,12 @@ export function validatePassword(data: Object) {
 
 export function validateUpdateUser(data: Object) {
     return updateUserSchema.validate(data, { abortEarly: false });
+}
+export function validateAddressUpdateSchema(data: Object) {
+    return addressUpdateSchema.validate(data, { abortEarly: false });
+}
+export function validatePaymentMethodSchema(data: Object) {
+    return paymentMethodSchema.validate(data, { abortEarly: false });
 }
 export function validateUserOTP(data: Object) {
     return otpSchema.validate(data, { abortEarly: false });

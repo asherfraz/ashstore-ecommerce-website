@@ -17,7 +17,19 @@ router.post('/reset-password-email', UserController.resetPasswordEmail);
 router.post('/reset-password/:token', UserController.resetPassword);
 
 router.get("/:id", authenticateUser, UserController.getUserById);
+
 router.patch("/update/:id", authenticateUser, UserController.updateUser);
+// For User Address Handling routes
+router.post("/address/:userId/", authenticateUser, UserController.addUserAddress);
+router.patch("/update/:userId/address/:addressId", authenticateUser, UserController.updateUserAddress);
+router.delete("/:userId/address/:addressId", authenticateUser, UserController.deleteUserAddress);
+
+// For User Payment Methods Handling routes
+router.post("/payment/:userId/", authenticateUser, UserController.addUserPaymentMethod);
+router.patch("/update/:userId/payment/:paymentId", authenticateUser, UserController.updateUserPaymentMethod);
+router.delete("/:userId/payment/:paymentId", authenticateUser, UserController.deleteUserPaymentMethod);
+
+
 router.delete("/delete/:id", authenticateUser, UserController.deleteUser);
 
 //////////* New Routes *////////////////////

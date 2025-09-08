@@ -1,18 +1,18 @@
 "use client";
 
-import { AppSidebar } from "@/components/admin-dashboard/admin-app-sidebar";
-import { SiteHeader } from "@/components/admin-dashboard/site-header";
+import { AppSidebar } from "@/components/user-dashboard/app-sidebar";
+import { SiteHeader } from "@/components/user-dashboard/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ReactNode } from "react";
 import ProtectedByAuth from "@/components/auth/ProtectedByAuth";
 
-export default function AdminDashboardLayout({
+export default function UserDashboardLayout({
 	children,
 }: {
 	children: ReactNode;
 }) {
 	return (
-		<ProtectedByAuth adminOnly={true}>
+		<ProtectedByAuth>
 			<div className="flex min-h-screen bg-background text-foreground">
 				<SidebarProvider
 					style={
