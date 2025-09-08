@@ -6,11 +6,14 @@ const hasBlankPassword = async (userId: string) => {
         if (!user) {
             return null;
         }
-        const hasNoPassword = !user.password || user.password === '';
+
+        // password -  !user.password || user.password.trim() === '' || user.password.length === 0;
+        const hasNoPassword = !user.password || user.password.trim() === '' || user.password.length === 0;
+
         return hasNoPassword;
     } catch (error) {
-        console.error('Error checking user password:', error);
-        throw error;
+        console.error(`Error checking password for user ${userId}:`, error);
+        throw new Error(`Failed to check user password: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
 }
 export default hasBlankPassword;

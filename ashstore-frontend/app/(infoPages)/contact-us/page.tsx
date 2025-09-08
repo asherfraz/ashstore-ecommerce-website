@@ -1,7 +1,3 @@
-import React from "react";
-
-type Props = {};
-
-export default function ContactUsPage({}: Props) {
+export default function ContactUsPage() {
 	return <div>ContactUsPage</div>;
 }

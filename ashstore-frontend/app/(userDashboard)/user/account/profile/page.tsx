@@ -1,13 +1,9 @@
-import { UserAccountDeletion } from "@/components/user-account-management/UserAccountDeletion";
 import { UserAddressInfo } from "@/components/user-account-management/UserAddressInfo";
-import { UserPasswordChange } from "@/components/user-account-management/UserPasswordChange";
 import { UserPaymentMethods } from "@/components/user-account-management/UserPaymentsMethods";
 import { UserPersonalInfo } from "@/components/user-account-management/UserPersonalInfo";
 import React from "react";
 
-type Props = {};
-
-export default function UserProfile({}: Props) {
+export default function UserProfile() {
 	return (
 		<div>
 			<UserPersonalInfo editButtonMode={true} />
@@ -19,17 +15,6 @@ export default function UserProfile({}: Props) {
 			<hr />
 			<br />
 			<UserPaymentMethods />
-			<br />
-			<hr />
-			<br />
-			<UserPasswordChange />
-			<br />
-			<hr />
-			<br />
-			{/* <UserAccountDeletion />
-			<br />
-			<hr />
-			<br /> */}
 		</div>
 	);
 }

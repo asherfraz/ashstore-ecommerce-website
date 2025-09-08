@@ -1,7 +1,3 @@
-import React from "react";
-
-type Props = {};
-
-export default function HelpSupportPage({}: Props) {
+export default function HelpSupportPage() {
 	return <div>HelpSupportPage</div>;
 }

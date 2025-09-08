@@ -2,39 +2,60 @@
 
 import {
 	Card,
-	CardAction,
 	CardContent,
 	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Edit } from "lucide-react";
+import { BadgeCheckIcon, Edit, Save, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "../ui/button";
-import { useState } from "react";
-// import { userHasNoPass } from "@/api/userApis";
+import { useEffect, useState } from "react";
+import {
+	userHasNoPass,
+	changeUserPassword,
+	enableTwoFactorAuth,
+} from "@/api/userApis";
 import { useForm } from "react-hook-form";
-// import { changeUserPassword } from "@/api/userApis";
 import { toast } from "react-hot-toast";
+import { BackendResponse } from "@/types/types";
+import { changePasswordSchema } from "@/schemas/user.validations";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Separator } from "../ui/separator";
+import { Badge } from "../ui/badge";
+import { useDispatch } from "react-redux";
+import { updateUser } from "@/redux/userSlice";
 
-type FormData = {
-	oldPassword?: string;
-	newPassword: string;
-	confirmPassword: string;
-};
+// Define the type based on the schema
+export type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>;
 
 export const UserPasswordChange = () => {
 	const { user } = useAuth();
-	const [isEditMode, setisEditMode] = useState(true);
-	const [hasBlankPassword, setHasBlankPassword] = useState(false);
+	const dispatch = useDispatch();
+	const [isEditMode, setIsEditMode] = useState(true);
+	const [hasBlankPassword, setHasBlankPassword] = useState<boolean>(false);
+	const [isTwoFactorLoading, setIsTwoFactorLoading] = useState(false);
+	const [localTwoFactorStatus, setLocalTwoFactorStatus] = useState(
+		user?.twoFactorEnabled
+	);
 
-	const {
-		handleSubmit,
-		register,
-		reset,
-		getValues,
-		formState: { errors },
-	} = useForm<FormData>({
+	// Update local state when user prop changes
+	useEffect(() => {
+		setLocalTwoFactorStatus(user?.twoFactorEnabled);
+	}, [user?.twoFactorEnabled]);
+
+	const form = useForm<ChangePasswordFormValues>({
+		resolver: zodResolver(changePasswordSchema),
 		defaultValues: {
 			oldPassword: "",
 			newPassword: "",
@@ -42,184 +63,279 @@ export const UserPasswordChange = () => {
 		},
 	});
 
-	// useEffect(() => {
-	// 	const checkUserHasBlankPassword = async () => {
-	// 		const response = await userHasNoPass(user._id);
-	// 		if (response.status === 200) {
-	// 			setHasBlankPassword(response.data.hasNoPassword);
-	// 		} else {
-	// 			setHasBlankPassword(false);
-	// 		}
-	// 	};
-	// 	checkUserHasBlankPassword();
-	// }, []);
+	useEffect(() => {
+		const checkUserHasBlankPassword = async () => {
+			if (!user?._id) return;
 
-	const onSubmit = async (data: FormData) => {
-		console.log("Form submitted with data:", data);
-		// try {
-		// 	const response = await changeUserPassword(user._id, data);
-		// 	if (response.status === 200) {
-		// 		toast.success("Password Changed Successfully!");
-		// 	} else {
-		// 		toast.error(response.response.data.message);
-		// 	}
-		// } catch (error) {
-		// 	console.error("Error Changing Password: ", error);
-		// 	toast.error("Something went Wrong!");
-		// } finally {
-		// 	// reset form data
-		// 	// reset();
-		// 	// reset edit mode
-		// 	setisEditMode(!isEditMode);
-		// }
+			try {
+				const response = (await userHasNoPass(
+					user._id as string
+				)) as BackendResponse;
+
+				if (response?.data?.hasNoPassword) {
+					setHasBlankPassword(response?.data?.hasNoPassword);
+				} else {
+					setHasBlankPassword(false);
+				}
+			} catch (error) {
+				console.error("Error checking password status:", error);
+				setHasBlankPassword(false);
+			}
+		};
+
+		checkUserHasBlankPassword();
+	}, [user]);
+
+	const onSubmit = async (data: ChangePasswordFormValues) => {
+		if (!user?._id) return;
+
+		try {
+			const response = (await changeUserPassword(
+				user._id as string,
+				data
+			)) as BackendResponse;
+
+			if (response?.data?.success) {
+				toast.success("Password changed successfully!");
+				form.reset();
+				setIsEditMode(true);
+			} else {
+				toast.error(
+					response?.response?.data?.message || "Failed to change password"
+				);
+			}
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		} catch (error: any) {
+			console.error("Error changing password:", error);
+			toast.error(error.response?.data?.message || "Something went wrong!");
+		} finally {
+		}
+	};
+
+	const handleCancel = () => {
+		form.reset();
+		setIsEditMode(true);
+	};
+
+	//  function to handle 2FA toggle
+	const handleToggleTwoFactor = async () => {
+		if (!user?._id) return;
+
+		// Optimistically update the UI
+		setLocalTwoFactorStatus(!localTwoFactorStatus);
+		setIsTwoFactorLoading(true);
+
+		try {
+			const response = (await enableTwoFactorAuth(user._id)) as BackendResponse;
+
+			if (response?.data?.success) {
+				toast.success(response?.data?.message);
+				// Update the local state with the actual response if needed
+				dispatch(
+					updateUser({
+						...response.data.user,
+						twoFactorEnabled: response?.data?.twoFactorEnabled,
+					})
+				);
+			} else {
+				// Revert the UI if the API call failed
+				setLocalTwoFactorStatus(user?.twoFactorEnabled);
+				toast.error(
+					response?.response?.data?.message ||
+						"Failed to toggle two-factor authentication"
+				);
+			}
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		} catch (error: any) {
+			// Revert the UI if the API call failed
+			setLocalTwoFactorStatus(user?.twoFactorEnabled);
+			console.error("Error toggling two-factor authentication:", error);
+			toast.error(error.response?.data?.message || "Something went wrong!");
+		} finally {
+			setIsTwoFactorLoading(false);
+		}
 	};
 
 	return (
-		<>
-			<Card>
-				<CardHeader>
-					<CardTitle>Change User Password</CardTitle>
-					<CardAction>
-						<Button
-							className={`${!isEditMode ? "hidden" : "block "}`}
-							variant="outline"
-							onClick={() => setisEditMode(!isEditMode)}
-						>
-							<div className="flex items-center gap-2">
-								<Edit className="mr-2" />
-								<span>Edit</span>
-							</div>
-						</Button>
-					</CardAction>
-				</CardHeader>
-				<CardContent>
-					<div className="flex flex-col justify-center items-start">
-						<form
-							className="max-w-full flex flex-col gap-4"
-							// onSubmit={handleSubmit(onSubmit)}
-						>
-							{!hasBlankPassword && (
-								<div className="w-1/2 flex flex-col space-y-1.5">
-									<label className="text-sm font-medium text-gray-400">
-										Old Password:{" "}
-									</label>
-									<input
-										id="password-old"
-										type="text"
-										className="block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-lg"
-										disabled={isEditMode}
-										placeholder="Enter old password"
-										{...register("oldPassword", {
-											required: !hasBlankPassword && "Old Password is required",
+		<Card>
+			<CardHeader className="flex flex-row items-center justify-between">
+				<CardTitle>Change Password</CardTitle>
+				<Button
+					variant="outline"
+					onClick={() => setIsEditMode(!isEditMode)}
+					className={!isEditMode ? "hidden" : "flex items-center gap-2"}
+				>
+					<Edit className="h-4 w-4" />
+					<span>Change Password</span>
+				</Button>
+			</CardHeader>
+			<CardContent>
+				{/* Change Password Fields */}
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+						{!hasBlankPassword && (
+							<FormField
+								control={form.control}
+								name="oldPassword"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Current Password</FormLabel>
+										<FormControl>
+											<Input
+												type="password"
+												placeholder="Enter your current password"
+												disabled={isEditMode}
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						)}
 
-											pattern: {
-												value:
-													/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,24}$/,
-												message:
-													"Password must be at least 8 and maximum 24 characters long and contain at least one letter, one number, and one special character",
-											},
-										})}
-									/>
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<FormField
+								control={form.control}
+								name="newPassword"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>New Password</FormLabel>
+										<FormControl>
+											<Input
+												type="password"
+												placeholder="Enter new password"
+												disabled={isEditMode}
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
 
-									{errors.oldPassword && (
+							<FormField
+								control={form.control}
+								name="confirmPassword"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Confirm Password</FormLabel>
+										<FormControl>
+											<Input
+												type="password"
+												placeholder="Confirm new password"
+												disabled={isEditMode}
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
+
+						{!isEditMode && (
+							<CardFooter className="flex justify-end gap-4 px-0 pt-6">
+								<Button
+									type="button"
+									variant="outline"
+									onClick={handleCancel}
+									disabled={form.formState.isSubmitting}
+								>
+									<X className="mr-2 h-4 w-4" />
+									Cancel
+								</Button>
+								<Button type="submit" disabled={form.formState.isSubmitting}>
+									{form.formState.isSubmitting ? (
+										"Saving..."
+									) : (
 										<>
-											<span className="text-red-600 font-bold text-sm">
-												{errors.oldPassword.message}
-											</span>
+											<Save className="mr-2 h-4 w-4" />
+											Save Changes
 										</>
 									)}
-								</div>
-							)}
-							<div className="flex justify-start gap-8">
-								<div className="w-1/2 flex flex-col space-y-1.5">
-									<label className="text-sm font-medium text-gray-400">
-										New Password:{" "}
-									</label>
-									<input
-										id="password-new"
-										type="text"
-										className="block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-lg"
-										disabled={isEditMode}
-										placeholder="Enter new password"
-										{...register("newPassword", {
-											required: "New password is required",
-											pattern: {
-												value:
-													/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,24}$/,
-												message:
-													"Password must be at least 8 and maximum 24 characters long and contain at least one letter, one number, and one special character",
-											},
-										})}
-									/>
-									{errors.newPassword && (
-										<>
-											<span className="text-red-600 font-bold text-sm">
-												{errors.newPassword.message}
-											</span>
-										</>
-									)}
-								</div>
-								<div className="w-1/2 flex flex-col space-y-1.5">
-									<label className="text-sm font-medium text-gray-400">
-										Confirm New Password:{" "}
-									</label>
-									<input
-										id="password-confirm"
-										type="text"
-										className="block w-full border disabled:cursor-not-allowed disabled:opacity-50 bg-gray-50 border-gray-300 text-gray-900 focus:border-cyan-500 focus:ring-cyan-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-cyan-500 dark:focus:ring-cyan-500 p-2.5 text-sm rounded-lg"
-										disabled={isEditMode}
-										placeholder="Confirm new password"
-										{...register("confirmPassword", {
-											// confirm password should match new password
-											required: "Confirm password is required",
-											validate: (value) =>
-												value === getValues("newPassword") ||
-												"Passwords do not match",
-											pattern: {
-												value:
-													/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,24}$/,
-												message:
-													"Password must be at least 8 and maximum 24 characters long and contain at least one letter, one number, and one special character",
-											},
-										})}
-									/>
-									{errors.confirmPassword && (
-										<>
-											<span className="text-red-600 font-bold text-sm">
-												{errors.confirmPassword.message}
-											</span>
-										</>
-									)}
-								</div>
+								</Button>
+							</CardFooter>
+						)}
+					</form>
+				</Form>
+
+				<Separator className="my-8" />
+
+				{/* Enable or  Disable Two Factor Authentication */}
+				<div className="bg-card rounded-2xl border">
+					<div className="flex items-center gap-4 px-4 min-h-16 py-2 justify-between">
+						<div className="flex flex-col justify-center">
+							<div className="flex justify-start items-center gap-2">
+								<p className="text-foreground text-base font-medium leading-normal line-clamp-1">
+									Two-Factor Authentication
+								</p>
+								{localTwoFactorStatus ? (
+									<Badge
+										variant="secondary"
+										className="bg-green-500 text-white dark:bg-green-600"
+									>
+										<BadgeCheckIcon className="h-3 w-3 mr-1" />
+										Enabled
+									</Badge>
+								) : (
+									<Badge
+										variant="secondary"
+										className="bg-gray-500 text-white dark:bg-gray-600"
+									>
+										<BadgeCheckIcon className="h-3 w-3 mr-1" />
+										Disabled
+									</Badge>
+								)}
 							</div>
-						</form>
-						<CardFooter className="w-full flex justify-end items-center gap-4">
+							<p className="text-muted-foreground text-sm font-normal leading-normal line-clamp-2">
+								{localTwoFactorStatus
+									? "Two-factor authentication is currently enabled for your account."
+									: "Enable two-factor authentication for enhanced security."}
+							</p>
+						</div>
+						<div className="shrink-0">
 							<Button
-								type="reset"
-								className={`flex justify-center items-center gap-2 ${
-									isEditMode ? "hidden" : "block "
-								}`}
 								variant="outline"
-								onClick={() => {
-									reset();
-									setisEditMode(!isEditMode);
-								}}
+								size="sm"
+								onClick={handleToggleTwoFactor}
+								disabled={isTwoFactorLoading}
+								className="min-w-[80px]"
 							>
-								<span>Cancel</span>
+								{isTwoFactorLoading ? (
+									<>
+										<svg
+											className="animate-spin -ml-1 mr-2 h-4 w-4 text-current"
+											xmlns="http://www.w3.org/2000/svg"
+											fill="none"
+											viewBox="0 0 24 24"
+										>
+											<circle
+												className="opacity-25"
+												cx="12"
+												cy="12"
+												r="10"
+												stroke="currentColor"
+												strokeWidth="4"
+											></circle>
+											<path
+												className="opacity-75"
+												fill="currentColor"
+												d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+											></path>
+										</svg>
+										{localTwoFactorStatus ? "Disabling..." : "Enabling..."}
+									</>
+								) : localTwoFactorStatus ? (
+									"Disable"
+								) : (
+									"Enable"
+								)}
 							</Button>
-							<Button
-								type="submit"
-								className={`flex justify-center items-center gap-2 
-                        hover:bg-green-200 ${isEditMode ? "hidden" : "block "}`}
-								variant="outline"
-								onClick={handleSubmit(onSubmit)}
-							>
-								<span>Save Changes</span>
-							</Button>
-						</CardFooter>
+						</div>
 					</div>
-				</CardContent>
-			</Card>
-		</>
+				</div>
+			</CardContent>
+		</Card>
 	);
 };

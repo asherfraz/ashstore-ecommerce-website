@@ -1,6 +1,7 @@
 
 
 export interface BackendResponse {
+    status?: number,
     data: {
         success: boolean;
         message: string;
@@ -8,6 +9,9 @@ export interface BackendResponse {
         auth: boolean,
         // if 2fa enabled
         userId?: string
+        // checking if current password is not set
+        hasNoPassword?: boolean
+        twoFactorEnabled?: boolean
     };
     response?: {
         data: {

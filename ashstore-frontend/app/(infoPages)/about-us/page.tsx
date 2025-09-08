@@ -1,7 +1,3 @@
-import React from "react";
-
-type Props = {};
-
-export default function AboutUsPage({}: Props) {
+export default function AboutUsPage() {
 	return <div>AboutUsPage</div>;
 }

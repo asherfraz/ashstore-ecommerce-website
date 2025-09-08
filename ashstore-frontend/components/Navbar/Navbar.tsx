@@ -37,9 +37,8 @@ import { useState } from "react";
 import { Label } from "../ui/label";
 import { BackendResponse } from "@/types/types";
 import { logout } from "@/api/userApis";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
-import { RootState } from "@/redux/store";
 import { useAuth } from "@/hooks/useAuth";
 
 type NavbarProps = {
@@ -308,12 +307,12 @@ export default function Navbar({
 											<LayoutDashboard /> Dashboard
 										</DropdownMenuItem>
 										<DropdownMenuItem
-											onClick={() => router.push("/user/dashboard")}
+											onClick={() => router.push("/user/account/profile")}
 										>
 											<IconUserCircle /> Profile
 										</DropdownMenuItem>
 										<DropdownMenuItem
-											onClick={() => router.push("/user/dashboard")}
+											onClick={() => router.push("/user/settings")}
 										>
 											<Settings /> Settings
 										</DropdownMenuItem>
@@ -463,12 +462,12 @@ export default function Navbar({
 												<LayoutDashboard /> Dashboard
 											</DropdownMenuItem>
 											<DropdownMenuItem
-												onClick={() => router.push("/user/dashboard")}
+												onClick={() => router.push("/user/account/profile")}
 											>
 												<IconUserCircle /> Profile
 											</DropdownMenuItem>
 											<DropdownMenuItem
-												onClick={() => router.push("/user/dashboard")}
+												onClick={() => router.push("/user/settings")}
 											>
 												<Settings /> Settings
 											</DropdownMenuItem>

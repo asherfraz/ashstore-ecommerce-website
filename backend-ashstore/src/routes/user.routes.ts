@@ -35,7 +35,7 @@ router.delete("/delete/:id", authenticateUser, UserController.deleteUser);
 //////////* New Routes *////////////////////
 // to enable 2fa option
 // Just to enable 2FA of that user
-router.post('/2fa/enable', authenticateUser, UserController.enableTwoFactorAuth);
+router.post('/2fa/:userId', authenticateUser, UserController.enableTwoFactorAuth);
 // OTP Re-Generation if didn't received
 router.post('/2fa/generate/:id', UserController.generateTwoFactorAuthOTP);
 // OTP Verification

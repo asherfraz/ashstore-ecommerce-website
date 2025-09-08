@@ -50,7 +50,7 @@ import { updateUser } from "@/redux/userSlice";
 import toast from "react-hot-toast";
 import { addressSchema } from "@/schemas/user.validations";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { BackendResponse } from "@/types/types";
+import { BackendResponse, IAddress } from "@/types/types";
 
 // Define the type based on the schema
 export type AddressFormValues = z.infer<typeof addressSchema>;
@@ -67,7 +67,8 @@ export const UserAddressInfo: React.FC = () => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const form = useForm<AddressFormValues>({
-		resolver: zodResolver(addressSchema) as any,
+		// fix error in below line
+		resolver: zodResolver(addressSchema),
 		defaultValues: {
 			addressLine1: "",
 			addressLine2: "",
@@ -157,6 +158,7 @@ export const UserAddressInfo: React.FC = () => {
 					response?.response?.data?.message || "Failed to save address"
 				);
 			}
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {
 			console.error("Error saving address:", error);
 			toast.error(error.response?.data?.message || "Failed to save address");
@@ -205,6 +207,7 @@ export const UserAddressInfo: React.FC = () => {
 					response?.response?.data?.message || "Failed to set default address"
 				);
 			}
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {
 			console.error("Error setting default address:", error);
 			toast.error(
@@ -236,6 +239,7 @@ export const UserAddressInfo: React.FC = () => {
 					response?.response?.data?.message || "Failed to delete address"
 				);
 			}
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {
 			console.error("Error deleting address:", error);
 			toast.error(error.response?.data?.message || "Failed to delete address");
@@ -282,7 +286,7 @@ export const UserAddressInfo: React.FC = () => {
 								</TableRow>
 							</TableHeader>
 							<TableBody>
-								{user.addresses.map((address: any) => (
+								{user.addresses.map((address: IAddress) => (
 									<TableRow key={address._id}>
 										<TableCell>
 											<Checkbox
@@ -310,10 +314,14 @@ export const UserAddressInfo: React.FC = () => {
 										<TableCell className="text-right">
 											<div className="flex justify-end gap-2">
 												<Button
-													variant="outline"
-													size="sm"
-													onClick={() => openEditDialog(address)}
-												>
+												variant="outline"
+												size="sm"
+												onClick={() => openEditDialog({
+												...address,
+												country: address.country || "Pakistan",
+												isDefault: address.isDefault || false
+											})}
+											>
 													<Edit className="h-4 w-4" />
 												</Button>
 												<Button
@@ -354,7 +362,7 @@ export const UserAddressInfo: React.FC = () => {
 						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 								<FormField
-									control={form.control as any}
+									control={form.control}
 									name="addressLine1"
 									render={({ field }) => (
 										<FormItem className="md:col-span-2">
@@ -368,7 +376,7 @@ export const UserAddressInfo: React.FC = () => {
 								/>
 
 								<FormField
-									control={form.control as any}
+									control={form.control}
 									name="addressLine2"
 									render={({ field }) => (
 										<FormItem className="md:col-span-2">
@@ -385,7 +393,7 @@ export const UserAddressInfo: React.FC = () => {
 								/>
 
 								<FormField
-									control={form.control as any}
+									control={form.control}
 									name="city"
 									render={({ field }) => (
 										<FormItem>
@@ -399,7 +407,7 @@ export const UserAddressInfo: React.FC = () => {
 								/>
 
 								<FormField
-									control={form.control as any}
+									control={form.control}
 									name="stateProvince"
 									render={({ field }) => (
 										<FormItem>
@@ -413,7 +421,7 @@ export const UserAddressInfo: React.FC = () => {
 								/>
 
 								<FormField
-									control={form.control as any}
+									control={form.control}
 									name="postalCode"
 									render={({ field }) => (
 										<FormItem>
@@ -432,7 +440,7 @@ export const UserAddressInfo: React.FC = () => {
 								/>
 
 								<FormField
-									control={form.control as any}
+									control={form.control}
 									name="country"
 									render={({ field }) => (
 										<FormItem>
@@ -467,7 +475,7 @@ export const UserAddressInfo: React.FC = () => {
 								/>
 
 								<FormField
-									control={form.control as any}
+									control={form.control}
 									name="isDefault"
 									render={({ field }) => (
 										<FormItem className="flex flex-row items-start space-x-3 space-y-0 md:col-span-2 pt-2">

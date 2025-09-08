@@ -4,12 +4,9 @@ import * as React from "react";
 import {
 	LayoutDashboard,
 	Package,
-	Users,
 	ShoppingBag,
-	Megaphone,
 	Settings,
 	HelpCircle,
-	Percent,
 	User,
 	NotebookText,
 	Info,
@@ -86,7 +83,7 @@ const data = {
 			isActive: true,
 			items: [
 				{ title: "Profile", url: "/user/account/profile" },
-				{ title: "Change Password", url: "/user/account/change-password" },
+				{ title: "Security & 2FA", url: "/user/account/change-password" },
 				{ title: "Address info", url: "/user/account/address-info" },
 				{ title: "Payment Method", url: "/user/account/payment-methods" },
 				{ title: "Delete Account", url: "/user/account/delete" },

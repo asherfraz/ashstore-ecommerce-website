@@ -6,6 +6,7 @@ import { ResetPasswordValues } from "@/app/auth/reset-password/[token]/page";
 import { PersonalInfoValues } from "@/components/user-account-management/UserPersonalInfo";
 import { AddressFormValues } from "@/components/user-account-management/UserAddressInfo";
 import { PaymentMethodFormValues } from "@/components/user-account-management/UserPaymentsMethods";
+import { ChangePasswordFormValues } from "@/components/user-account-management/UserPasswordChange";
 
 
 export const register = async (data: RegisterValues) => {
@@ -70,15 +71,15 @@ export const ResetPassword = async (token: string, data: ResetPasswordValues) =>
 }
 
 //*** Two Factor Auth Apis
-
-export const enableTwoFactorAuth = async () => {
+export const enableTwoFactorAuth = async (userId: string) => {
     try {
-        const response = await axiosApi.post(`/user/2fa/enable`);
+        const response = await axiosApi.post(`/user/2fa/${userId}`);
         return response;
     } catch (error) {
         return error;
     }
 }
+
 export const generateTwoFactorAuthOTP = async (userId: string) => {
     try {
         const response = await axiosApi.post(`/user/2fa/generate/${userId}`);
@@ -114,23 +115,23 @@ export const resendAccountVerificationEmail = async (userId: string, token: stri
 };
 
 
-// export const userHasNoPass = async (userId) => {
-//     try {
-//         const response = await axiosApi.get(`/ user / hasnopassword / ${ userId }`);
-//         return response;
-//     } catch (error) {
-//         return error;
-//     }
-// }
-
-// export const changeUserPassword = async (userId, data) => {
-//     try {
-//         const response = await axiosApi.put(`/ user / change - password / ${ userId }`, data);
-//         return response;
-//     } catch (error) {
-//         return error;
-//     }
-// }
+// Change Password Api's
+export const userHasNoPass = async (userId: string) => {
+    try {
+        const response = await axiosApi.get(`/user/hasnopassword/${userId}`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
+export const changeUserPassword = async (userId: string, data: ChangePasswordFormValues) => {
+    try {
+        const response = await axiosApi.put(`/user/change-password/${userId}`, data);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
 
 export const updateUserById = async (userId: string, data: PersonalInfoValues) => {
     try {
@@ -184,7 +185,6 @@ export const updateUserPaymentMethod = async (userId: string, paymentMethodId: s
         return error;
     }
 }
-
 export const deleteUserPaymentMethod = async (userId: string, paymentMethodIdToDelete: string) => {
     try {
         const response = await axiosApi.delete(`/user/${userId}/payment/${paymentMethodIdToDelete}`);
@@ -194,13 +194,13 @@ export const deleteUserPaymentMethod = async (userId: string, paymentMethodIdToD
     }
 }
 
-// export const deleteUserAccount = async (userId) => {
-//     try {
-//         const response = await axiosApi.delete(`/ user / delete/${userId}`);
-//         return response;
-//     } catch (error) {
-//         return error;
-//     }
-// }
+export const deleteUserAccount = async (userId: string) => {
+    try {
+        const response = await axiosApi.delete(`/user/delete/${userId}`);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
 
 

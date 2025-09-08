@@ -50,7 +50,7 @@ import {
 	deleteUserPaymentMethod,
 	updateUserPaymentMethod,
 } from "@/api/userApis";
-import { BackendResponse } from "@/types/types";
+import { BackendResponse, IPaymentMethod } from "@/types/types";
 
 // Define the type based on the schema
 export type PaymentMethodFormValues = z.infer<typeof paymentMethodSchema>;
@@ -69,7 +69,7 @@ export const UserPaymentMethods: React.FC = () => {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const form = useForm<PaymentMethodFormValues>({
-		resolver: zodResolver(paymentMethodSchema) as any,
+		resolver: zodResolver(paymentMethodSchema),
 		defaultValues: {
 			type: "card",
 			cardNumber: "",
@@ -157,6 +157,8 @@ export const UserPaymentMethods: React.FC = () => {
 					response?.response?.data.message || "Failed to save payment method"
 				);
 			}
+			
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {
 			console.error("Error saving payment method:", error.message);
 			toast.error(
@@ -207,6 +209,7 @@ export const UserPaymentMethods: React.FC = () => {
 						"Failed to set default payment method"
 				);
 			}
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {
 			console.error("Error setting default payment method:", error);
 			toast.error(
@@ -237,6 +240,7 @@ export const UserPaymentMethods: React.FC = () => {
 					response?.response?.data.message || "Failed to delete payment method"
 				);
 			}
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {
 			console.error("Error deleting payment method:", error);
 			toast.error(
@@ -288,7 +292,8 @@ export const UserPaymentMethods: React.FC = () => {
 								</TableRow>
 							</TableHeader>
 							<TableBody>
-								{user.paymentMethods.map((paymentMethod: any) => (
+								{
+								user.paymentMethods.map((paymentMethod: IPaymentMethod) => (
 									<TableRow key={paymentMethod._id}>
 										<TableCell>
 											<Checkbox
@@ -310,8 +315,8 @@ export const UserPaymentMethods: React.FC = () => {
 												{paymentMethod.type === "card" && (
 													<>
 														<span className="font-medium">
-															{formatCardNumber(paymentMethod.cardNumber)}
-														</span>
+													{formatCardNumber(paymentMethod.cardNumber || "")}
+												</span>
 														<span className="text-sm text-muted-foreground">
 															Exp: {paymentMethod.expirationDate || "••/••"}
 														</span>
@@ -334,10 +339,13 @@ export const UserPaymentMethods: React.FC = () => {
 										<TableCell className="text-right">
 											<div className="flex justify-end gap-2">
 												<Button
-													variant="outline"
-													size="sm"
-													onClick={() => openEditDialog(paymentMethod)}
-												>
+												variant="outline"
+												size="sm"
+												onClick={() => openEditDialog({
+													...paymentMethod,
+													isDefault: paymentMethod.isDefault || false
+												})}
+											>
 													<Edit className="h-4 w-4" />
 												</Button>
 												<Button
@@ -381,7 +389,7 @@ export const UserPaymentMethods: React.FC = () => {
 					<Form {...form}>
 						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 							<FormField
-								control={form.control as any}
+								control={form.control}
 								name="type"
 								render={({ field }) => (
 									<FormItem>
@@ -409,7 +417,7 @@ export const UserPaymentMethods: React.FC = () => {
 							{paymentMethodType === "card" && (
 								<>
 									<FormField
-										control={form.control as any}
+										control={form.control}
 										name="cardNumber"
 										render={({ field }) => (
 											<FormItem>
@@ -428,7 +436,7 @@ export const UserPaymentMethods: React.FC = () => {
 									/>
 									<div className="grid grid-cols-2 gap-4">
 										<FormField
-											control={form.control as any}
+											control={form.control}
 											name="expirationDate"
 											render={({ field }) => (
 												<FormItem>
@@ -446,7 +454,7 @@ export const UserPaymentMethods: React.FC = () => {
 											)}
 										/>
 										<FormField
-											control={form.control as any}
+											control={form.control}
 											name="cvv"
 											render={({ field }) => (
 												<FormItem>
@@ -471,7 +479,7 @@ export const UserPaymentMethods: React.FC = () => {
 								paymentMethodType === "jazzcash") && (
 								<>
 									<FormField
-										control={form.control as any}
+										control={form.control}
 										name="phoneNumber"
 										render={({ field }) => (
 											<FormItem>
@@ -489,7 +497,7 @@ export const UserPaymentMethods: React.FC = () => {
 										)}
 									/>
 									<FormField
-										control={form.control as any}
+										control={form.control}
 										name="transactionId"
 										render={({ field }) => (
 											<FormItem>
@@ -511,7 +519,7 @@ export const UserPaymentMethods: React.FC = () => {
 							)}
 
 							<FormField
-								control={form.control as any}
+								control={form.control}
 								name="isDefault"
 								render={({ field }) => (
 									<FormItem className="flex flex-row items-start space-x-3 space-y-0 pt-2">

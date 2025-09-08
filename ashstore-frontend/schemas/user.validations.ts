@@ -36,12 +36,12 @@ export const addressSchema = z.object({
     city: z.string().min(1, "City is required").max(50),
     stateProvince: z.string().min(1, "State/Province is required").max(50).optional().or(z.literal('')),
     postalCode: z.string().min(1, "Postal Code is required").max(20).optional().or(z.literal('')),
-    country: z.string().min(1, "Country is required").max(50).default("PK"),
+    country: z.string().min(1, "Country is required").max(50),
     // Uncomment if you want phone validation
     // phoneNumber: z.string().regex(/^[0-9+\-() ]{7,20}$/, {
     //   message: 'Invalid phone number',
     // }),
-    isDefault: z.boolean().default(false),
+    isDefault: z.boolean(),
 });
 
 
@@ -52,7 +52,7 @@ export const paymentMethodSchema = z.object({
     cvv: z.string().optional().or(z.literal('')),
     phoneNumber: z.string().optional(),
     transactionId: z.string().optional().or(z.literal('')),
-    isDefault: z.boolean().default(false),
+    isDefault: z.boolean(),
 }).superRefine((data, ctx) => {
     if (data.type === 'card') {
         if (!data.cardNumber) {
@@ -152,6 +152,20 @@ export const resetPasswordSchema = z.object({
             path: ["confirmPassword"], // Path where error appears
         }
     );
+
+export const changePasswordSchema = z.object({
+    oldPassword: password.optional().or(z.literal('')),
+    newPassword: password,
+    confirmPassword: z.string() // Start with string validation
+})
+    .refine(
+        (data) => data.newPassword === data.confirmPassword,
+        {
+            message: "Confirm Password must match!",
+            path: ["confirmPassword"], // Path where error appears
+        }
+    );
+
 
 export const profileUpdateSchema = z.object({
     firstName, lastName, phone,

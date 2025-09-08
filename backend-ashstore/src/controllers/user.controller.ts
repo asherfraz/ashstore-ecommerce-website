@@ -983,28 +983,31 @@ const UserController = {
 
     // *** Advanced Methods for Ecommerce User ***
     enableTwoFactorAuth: tryCatch(async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req.params.userId;
 
-        // Safely access user with type assertion
-        // @ts-ignore
-        const user = req?.user as IUser;
-
-        if (!user) {
+        if (!userId) {
             return next({ status: 404, message: 'User not found!' });
         }
 
         try {
             // Need to fetch the user from DB to save changes
-            const dbUser = await User.findById(user._id);
+            const dbUser = await User.findById<IUser>(userId);
             if (!dbUser) {
                 return next({ status: 404, message: 'User not found!' });
             }
 
-            dbUser.twoFactorEnabled = true;
+            // if (dbUser.twoFactorEnabled)
+            //     dbUser.twoFactorEnabled = false;
+            // dbUser.twoFactorEnabled = true;
+
+            dbUser.twoFactorEnabled = !dbUser.twoFactorEnabled;
+
             await dbUser.save();
 
             return res.status(200).json({
                 success: true,
-                message: 'Two-factor authentication enabled',
+                message: `Two-factor authentication ${dbUser.twoFactorEnabled ? 'enabled' : 'disabled'}`,
+                twoFactorEnabled: dbUser.twoFactorEnabled
             });
         } catch (error) {
             return next({ status: 500, message: 'Internal Server Error' });

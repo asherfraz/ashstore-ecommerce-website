@@ -3,12 +3,21 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { useRouter } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
+import toast from "react-hot-toast";
 
 export default function UserSettingsPage() {
+	const router = useRouter();
 	const [marketingEmails, setMarketingEmails] = useState(false);
 	const [orderUpdates, setOrderUpdates] = useState(false);
 	const [inventoryAlerts, setInventoryAlerts] = useState(false);
-	const [smsNotifications, setSmsNotifications] = useState(false);
+	// const [smsNotifications, setSmsNotifications] = useState(false);
+
+	const handleNewsletterMarketingEmail = () => {
+		setMarketingEmails(!marketingEmails);
+		toast.success("Newsletter changed!");
+	};
 
 	return (
 		<div className="layout-content-container flex flex-col max-w-full flex-1">
@@ -28,7 +37,7 @@ export default function UserSettingsPage() {
 				<div className="flex items-center gap-4  px-4 min-h-16 py-2 justify-between">
 					<div className="flex flex-col justify-center">
 						<p className="text-foreground text-base font-medium leading-normal line-clamp-1">
-							Marketing Emails
+							Newsletter & Marketing Emails
 						</p>
 						<p className="text-muted-foreground text-sm font-normal leading-normal line-clamp-2">
 							Receive updates on new products, promotions, and sales.
@@ -38,7 +47,7 @@ export default function UserSettingsPage() {
 						<Switch
 							id="marketing-emails"
 							checked={marketingEmails}
-							onCheckedChange={setMarketingEmails}
+							onCheckedChange={handleNewsletterMarketingEmail}
 							aria-label="Toggle marketing emails"
 						/>
 					</div>
@@ -55,6 +64,7 @@ export default function UserSettingsPage() {
 					</div>
 					<div className="shrink-0">
 						<Switch
+							disabled
 							id="order-updates"
 							checked={orderUpdates}
 							onCheckedChange={setOrderUpdates}
@@ -74,6 +84,7 @@ export default function UserSettingsPage() {
 					</div>
 					<div className="shrink-0">
 						<Switch
+							disabled
 							id="inventory-alerts"
 							checked={inventoryAlerts}
 							onCheckedChange={setInventoryAlerts}
@@ -119,11 +130,11 @@ export default function UserSettingsPage() {
 							Choose your preferred language for all communications.
 						</p>
 					</div>
-					<div className="shrink-0">
+					<Badge className="shrink-0" variant={"outline"}>
 						<p className="text-foreground text-base font-normal leading-normal">
 							English
 						</p>
-					</div>
+					</Badge>
 				</div>
 			</div>
 
@@ -144,7 +155,11 @@ export default function UserSettingsPage() {
 						</p>
 					</div>
 					<div className="shrink-0">
-						<Button variant="outline" size="sm">
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => router.push("/user/account/profile")}
+						>
 							Edit
 						</Button>
 					</div>
@@ -161,7 +176,11 @@ export default function UserSettingsPage() {
 						</p>
 					</div>
 					<div className="shrink-0">
-						<Button variant="outline" size="sm">
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => router.push("/user/account/change-password")}
+						>
 							Edit
 						</Button>
 					</div>
@@ -177,7 +196,11 @@ export default function UserSettingsPage() {
 						</p>
 					</div>
 					<div className="shrink-0">
-						<Button variant="destructive" size="sm">
+						<Button
+							variant="destructive"
+							size="sm"
+							onClick={() => router.push("/user/account/delete")}
+						>
 							Close
 						</Button>
 					</div>

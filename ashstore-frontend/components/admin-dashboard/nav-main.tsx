@@ -1,7 +1,6 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { IconCirclePlusFilled } from "@tabler/icons-react";
 import {
 	SidebarGroup,
 	SidebarGroupContent,

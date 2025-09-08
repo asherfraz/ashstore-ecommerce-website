@@ -22,7 +22,7 @@ import {
 	DialogTitle,
 	DialogFooter,
 } from "@/components/ui/dialog";
-import { User, Edit } from "lucide-react";
+import { Edit, BadgeCheckIcon, BadgeInfoIcon } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { updateUser } from "@/redux/userSlice";
 import { useDispatch } from "react-redux";
@@ -34,6 +34,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import capitalizeWords from "@/helpers/capitalizeWords";
 import { Separator } from "../ui/separator";
 import { Table, TableBody, TableCell, TableRow } from "../ui/table";
+import { Badge } from "../ui/badge";
 
 export type PersonalInfoValues = z.infer<typeof profileUpdateSchema>;
 
@@ -81,6 +82,7 @@ export const UserPersonalInfo: React.FC<UserPersonalInfoProps> = ({
 			} else {
 				toast.error(response?.response?.data?.message || "Update failed");
 			}
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (error: any) {
 			console.error("Error updating user:", error);
 			toast.error(
@@ -277,9 +279,24 @@ export const UserPersonalInfo: React.FC<UserPersonalInfoProps> = ({
 									</TableCell>
 									<TableCell className="font-bold">
 										{user.isVerified ? (
-											<span className="text-green-400">Verified</span>
+											// <span className="text-green-400">Verified</span>
+											<Badge
+												variant="secondary"
+												className="bg-green-500 text-foreground dark:bg-green-600"
+											>
+												<BadgeCheckIcon className="h-3 w-3 mr-1" />
+												Enabled
+											</Badge>
 										) : (
-											<span className="text-red-400">Not Verified</span>
+											// <span className="text-red-400">Not Enabled</span>
+
+											<Badge
+												variant="secondary"
+												className="bg-red-300 text-foreground  dark:bg-red-400"
+											>
+												<BadgeInfoIcon className="h-3 w-3 mr-1" />
+												Disabled
+											</Badge>
 										)}
 									</TableCell>
 								</TableRow>
@@ -289,9 +306,25 @@ export const UserPersonalInfo: React.FC<UserPersonalInfoProps> = ({
 									</TableCell>
 									<TableCell className="font-bold">
 										{user.twoFactorEnabled ? (
-											<span className="text-green-400">Enabled</span>
+											// <span className="text-green-400">Enabled</span>
+
+											<Badge
+												variant="secondary"
+												className="bg-green-500 text-foreground dark:bg-green-600"
+											>
+												<BadgeCheckIcon className="h-3 w-3 mr-1" />
+												Enabled
+											</Badge>
 										) : (
-											<span className="text-red-400">Not Enabled</span>
+											// <span className="text-red-400">Not Enabled</span>
+
+											<Badge
+												variant="secondary"
+												className="bg-red-300 text-foreground  dark:bg-red-400"
+											>
+												<BadgeInfoIcon className="h-3 w-3 mr-1" />
+												Disabled
+											</Badge>
 										)}
 									</TableCell>
 								</TableRow>
