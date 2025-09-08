@@ -1,7 +1,5 @@
-import React from "react";
+import { UserAccountDeletion } from "@/components/user-account-management/UserAccountDeletion";
 
-type Props = {};
-
-export default function DeleteAccount({}: Props) {
-	return <div>DeleteAccount</div>;
+export default function DeleteAccount() {
+	return <UserAccountDeletion />;
 }

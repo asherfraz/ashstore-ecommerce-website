@@ -1,7 +1,5 @@
-import React from "react";
+import { UserPaymentMethods } from "@/components/user-account-management/UserPaymentsMethods";
 
-type Props = {};
-
-export default function UserPaymentMethods({}: Props) {
-	return <div>UserPaymentMethods</div>;
+export default function UserPaymentMethodPage() {
+	return <UserPaymentMethods />;
 }

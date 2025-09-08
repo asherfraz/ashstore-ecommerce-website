@@ -1,7 +1,5 @@
-import React from "react";
+import { UserPasswordChange } from "@/components/user-account-management/UserPasswordChange";
 
-type Props = {};
-
-export default function UserChangePassword({}: Props) {
-	return <div>UserChangePassword</div>;
+export default function UserChangePassword() {
+	return <UserPasswordChange />;
 }
