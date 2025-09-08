@@ -83,7 +83,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
+            domain: isProduction ? FRONTEND_URL?.split('/')[2] : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -92,7 +92,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
+            domain: isProduction ? FRONTEND_URL?.split('/')[2] : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -178,7 +178,7 @@ const UserController = {
                     sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
                     secure: isProduction, // Only send over HTTPS in production
                     maxAge: 3600 * 1000, // 1 hour
-                    domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
+                    domain: isProduction ? FRONTEND_URL?.split('/')[2] : 'localhost', // Set domain in production only
                     path: '/', // Optional but recommended
                 });
 
@@ -187,7 +187,7 @@ const UserController = {
                     sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
                     secure: isProduction,
                     maxAge: 3600 * 1000 * 24 * 7, // 7 days
-                    domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
+                    domain: isProduction ? FRONTEND_URL?.split('/')[2] : 'localhost', // Set domain in production only
                     path: '/', // Optional but recommended
                 });
 
@@ -235,7 +235,7 @@ const UserController = {
                 sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
                 secure: isProduction, // Only send over HTTPS in production
                 maxAge: 3600 * 1000, // 1 hour
-                domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
+                domain: isProduction ? FRONTEND_URL?.split('/')[2] : 'localhost', // Set domain in production only
                 path: '/', // Optional but recommended
             });
 
@@ -244,7 +244,7 @@ const UserController = {
                 sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
                 secure: isProduction,
                 maxAge: 3600 * 1000 * 24 * 7, // 7 days
-                domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
+                domain: isProduction ? FRONTEND_URL?.split('/')[2] : 'localhost', // Set domain in production only
                 path: '/', // Optional but recommended
             });
 
@@ -349,7 +349,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
+            domain: isProduction ? FRONTEND_URL?.split('/')[2] : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -358,7 +358,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
+            domain: isProduction ? FRONTEND_URL?.split('/')[2] : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -448,7 +448,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
+            domain: isProduction ? FRONTEND_URL?.split('/')[2] : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -457,7 +457,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
+            domain: isProduction ? FRONTEND_URL?.split('/')[2] : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -1101,7 +1101,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
+            domain: isProduction ? FRONTEND_URL?.split('/')[2] : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -1110,7 +1110,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            domain: isProduction ? FRONTEND_URL?.split('//')[1] : 'localhost', // Set domain in production only
+            domain: isProduction ? FRONTEND_URL?.split('/')[2] : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
