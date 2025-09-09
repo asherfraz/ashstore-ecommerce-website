@@ -17,12 +17,12 @@ connectToDatabase();
 const app: Express = express();
 
 // Help secure Express apps by setting HTTP response headers.
-app.use(
-    helmet({
-        crossOriginResourcePolicy: { policy: 'cross-origin' },
-        crossOriginOpenerPolicy: false,
-    })
-);
+// app.use(
+//     helmet({
+//         crossOriginResourcePolicy: { policy: 'cross-origin' },
+//         crossOriginOpenerPolicy: false,
+//     })
+// );
 app.use(morgan('dev'));
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
