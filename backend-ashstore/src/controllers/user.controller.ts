@@ -82,7 +82,6 @@ const UserController = {
             sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            domain: isProduction ? '/' : 'localhost',
         });
 
         res.cookie('refreshToken', refreshToken, {
@@ -90,7 +89,6 @@ const UserController = {
             sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            domain: isProduction ? '/' : 'localhost',
         });
 
 
@@ -175,9 +173,6 @@ const UserController = {
                     sameSite: isProduction ? 'none' : 'lax',
                     secure: isProduction, // Only send over HTTPS in production
                     maxAge: 3600 * 1000, // 1 hour
-                    domain: isProduction ? '/' : 'localhost',
-
-
                 });
 
                 res.cookie('refreshToken', refreshToken, {
@@ -185,9 +180,6 @@ const UserController = {
                     sameSite: isProduction ? 'none' : 'lax',
                     secure: isProduction,
                     maxAge: 3600 * 1000 * 24 * 7, // 7 days
-                    domain: isProduction ? '/' : 'localhost',
-
-
                 });
 
                 // Send login notification email
@@ -234,9 +226,6 @@ const UserController = {
                 sameSite: isProduction ? 'none' : 'lax',
                 secure: isProduction, // Only send over HTTPS in production
                 maxAge: 3600 * 1000, // 1 hour
-                domain: isProduction ? '/' : 'localhost',
-
-
             });
 
             res.cookie('refreshToken', refreshToken, {
@@ -244,9 +233,6 @@ const UserController = {
                 sameSite: isProduction ? 'none' : 'lax',
                 secure: isProduction,
                 maxAge: 3600 * 1000 * 24 * 7, // 7 days
-                domain: isProduction ? '/' : 'localhost',
-
-
             });
 
             // Send welcome email
@@ -350,7 +336,6 @@ const UserController = {
             sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            domain: isProduction ? '/' : 'localhost',
         });
 
         res.cookie('refreshToken', refreshToken, {
@@ -358,7 +343,6 @@ const UserController = {
             sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            domain: isProduction ? '/' : 'localhost',
         });
 
 
@@ -447,7 +431,6 @@ const UserController = {
             sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            domain: isProduction ? '/' : 'localhost',
         });
 
         res.cookie('refreshToken', newRefreshToken, {
@@ -455,7 +438,6 @@ const UserController = {
             sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            domain: isProduction ? '/' : 'localhost',
         });
 
         const user = await User.findById<IUser>(payload.userId);
@@ -1101,7 +1083,6 @@ const UserController = {
             sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            domain: isProduction ? '/' : 'localhost',
         });
 
         res.cookie('refreshToken', refreshToken, {
@@ -1109,7 +1090,6 @@ const UserController = {
             sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            domain: isProduction ? '/' : 'localhost',
         });
 
 
