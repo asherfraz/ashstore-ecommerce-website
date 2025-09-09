@@ -83,7 +83,7 @@ const UserController = {
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
 
-            path: '/', // Optional but recommended
+
         });
 
         res.cookie('refreshToken', refreshToken, {
@@ -92,7 +92,7 @@ const UserController = {
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
 
-            path: '/', // Optional but recommended
+
         });
 
 
@@ -178,7 +178,7 @@ const UserController = {
                     secure: isProduction, // Only send over HTTPS in production
                     maxAge: 3600 * 1000, // 1 hour
 
-                    path: '/', // Optional but recommended
+
                 });
 
                 res.cookie('refreshToken', refreshToken, {
@@ -187,7 +187,7 @@ const UserController = {
                     secure: isProduction,
                     maxAge: 3600 * 1000 * 24 * 7, // 7 days
 
-                    path: '/', // Optional but recommended
+
                 });
 
                 // Send login notification email
@@ -235,7 +235,7 @@ const UserController = {
                 secure: isProduction, // Only send over HTTPS in production
                 maxAge: 3600 * 1000, // 1 hour
 
-                path: '/', // Optional but recommended
+
             });
 
             res.cookie('refreshToken', refreshToken, {
@@ -244,7 +244,7 @@ const UserController = {
                 secure: isProduction,
                 maxAge: 3600 * 1000 * 24 * 7, // 7 days
 
-                path: '/', // Optional but recommended
+
             });
 
             // Send welcome email
@@ -349,7 +349,7 @@ const UserController = {
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
 
-            path: '/', // Optional but recommended
+
         });
 
         res.cookie('refreshToken', refreshToken, {
@@ -357,8 +357,6 @@ const UserController = {
             sameSite: 'none',
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-
-            path: '/', // Optional but recommended
         });
 
 
@@ -448,7 +446,7 @@ const UserController = {
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
 
-            path: '/', // Optional but recommended
+
         });
 
         res.cookie('refreshToken', newRefreshToken, {
@@ -457,7 +455,7 @@ const UserController = {
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
 
-            path: '/', // Optional but recommended
+
         });
 
         const user = await User.findById<IUser>(payload.userId);
@@ -1104,7 +1102,7 @@ const UserController = {
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
 
-            path: '/', // Optional but recommended
+
         });
 
         res.cookie('refreshToken', refreshToken, {
@@ -1113,7 +1111,7 @@ const UserController = {
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
 
-            path: '/', // Optional but recommended
+
         });
 
 
