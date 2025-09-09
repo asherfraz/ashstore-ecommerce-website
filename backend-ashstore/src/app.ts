@@ -17,7 +17,12 @@ connectToDatabase();
 const app: Express = express();
 
 // Help secure Express apps by setting HTTP response headers.
-app.use(helmet());
+app.use(
+    helmet({
+        crossOriginResourcePolicy: { policy: 'cross-origin' },
+        crossOriginOpenerPolicy: false,
+    })
+);
 // Enable this if you're behind a reverse proxy like Nginx or on Heroku/Vercel
 app.set('trust proxy', true);
 app.use(morgan('dev'));
