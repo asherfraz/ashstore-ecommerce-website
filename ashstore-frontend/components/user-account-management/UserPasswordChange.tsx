@@ -133,7 +133,7 @@ export const UserPasswordChange = () => {
 				// Update the local state with the actual response if needed
 				dispatch(
 					updateUser({
-						...response.data.user,
+						...user,
 						twoFactorEnabled: response?.data?.twoFactorEnabled,
 					})
 				);

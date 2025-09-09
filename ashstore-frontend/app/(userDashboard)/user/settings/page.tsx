@@ -6,17 +6,60 @@ import { Switch } from "@/components/ui/switch";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import toast from "react-hot-toast";
+import { newsletterHandlerForGuest } from "@/api/userApis";
+import { BackendResponse } from "@/types/types";
+import { useDispatch } from "react-redux";
+import { useAuth } from "@/hooks/useAuth";
+import { updateUser } from "@/redux/userSlice";
 
 export default function UserSettingsPage() {
 	const router = useRouter();
-	const [marketingEmails, setMarketingEmails] = useState(false);
+	const dispatch = useDispatch();
+	const { user } = useAuth();
+	const [marketingEmails, setMarketingEmails] = useState(
+		user?.newsletterSubscribed || false
+	);
 	const [orderUpdates, setOrderUpdates] = useState(false);
 	const [inventoryAlerts, setInventoryAlerts] = useState(false);
 	// const [smsNotifications, setSmsNotifications] = useState(false);
 
-	const handleNewsletterMarketingEmail = () => {
+	const handleNewsletterMarketingEmail = async () => {
 		setMarketingEmails(!marketingEmails);
-		toast.success("Newsletter changed!");
+		// toast.success("Newsletter changed!");
+
+		if (!user?.email) return;
+
+		try {
+			// Cast values to RegisterPayload to satisfy the API
+			const response = (await newsletterHandlerForGuest({
+				email: user?.email,
+				subscribedState: !marketingEmails,
+			})) as BackendResponse;
+
+			console.log("Response: ", response.data);
+
+			if (response?.data?.success) {
+				dispatch(
+					updateUser({
+						...user,
+						newsletterSubscribed: response?.data?.isSubscribed,
+					})
+				);
+				toast.success(response.data.message || "Newsletter Subscribed!");
+			} else {
+				toast.error(
+					response?.response?.data?.message ||
+						"Newsletter Subscription Failed. Please try again."
+				);
+			}
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		} catch (error: any) {
+			console.error("Newsletter Subscription Error:", error.message);
+			toast.error(
+				error.response?.data?.message ||
+					"An unexpected error occurred. Please try again."
+			);
+		}
 	};
 
 	return (
@@ -45,10 +88,10 @@ export default function UserSettingsPage() {
 					</div>
 					<div className="shrink-0">
 						<Switch
-							id="marketing-emails"
+							id="newsletter-and-marketing-emails"
 							checked={marketingEmails}
 							onCheckedChange={handleNewsletterMarketingEmail}
-							aria-label="Toggle marketing emails"
+							aria-label="Toggle newsletter and marketing emails"
 						/>
 					</div>
 				</div>

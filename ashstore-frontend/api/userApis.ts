@@ -7,6 +7,7 @@ import { PersonalInfoValues } from "@/components/user-account-management/UserPer
 import { AddressFormValues } from "@/components/user-account-management/UserAddressInfo";
 import { PaymentMethodFormValues } from "@/components/user-account-management/UserPaymentsMethods";
 import { ChangePasswordFormValues } from "@/components/user-account-management/UserPasswordChange";
+import { NewsletterApiData } from "@/types/types";
 
 
 export const register = async (data: RegisterValues) => {
@@ -203,4 +204,13 @@ export const deleteUserAccount = async (userId: string) => {
     }
 }
 
+// Newsletter Handling 
+export const newsletterHandlerForGuest = async (data: NewsletterApiData) => {
+    try {
+        const response = await axiosApi.post(`/user/newsletter`, data);
+        return response;
+    } catch (error) {
+        return error;
+    }
+}
 

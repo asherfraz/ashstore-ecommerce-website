@@ -29,6 +29,8 @@ router.post("/payment/:userId/", authenticateUser, UserController.addUserPayment
 router.patch("/update/:userId/payment/:paymentId", authenticateUser, UserController.updateUserPaymentMethod);
 router.delete("/:userId/payment/:paymentId", authenticateUser, UserController.deleteUserPaymentMethod);
 
+// Newsletter handling Api's
+router.post('/newsletter', UserController.handleNewsletterSubscription);
 
 router.delete("/delete/:id", authenticateUser, UserController.deleteUser);
 

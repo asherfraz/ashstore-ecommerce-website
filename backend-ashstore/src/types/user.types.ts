@@ -49,6 +49,7 @@ export interface IUser extends Document {
     paymentMethods: IPaymentMethod[];
     wishlist: Types.ObjectId[];
     orders: Types.ObjectId[];
+    newsletterSubscribed: boolean;
     createdAt: Date;
     updatedAt: Date;
 }

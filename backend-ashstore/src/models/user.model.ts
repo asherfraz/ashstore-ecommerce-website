@@ -121,6 +121,7 @@ const UserSchema = new Schema(
         paymentMethods: [PaymentMethodSchema],
         wishlist: [{ type: Schema.Types.ObjectId, ref: "Product" }],
         orders: [{ type: Schema.Types.ObjectId, ref: "Order" }],
+        newsletterSubscribed: { type: Boolean, default: false },
     },
     { timestamps: true }
 );

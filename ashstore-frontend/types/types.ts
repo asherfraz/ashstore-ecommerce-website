@@ -6,12 +6,13 @@ export interface BackendResponse {
         success: boolean;
         message: string;
         user: IUser;
-        auth: boolean,
+        auth: boolean;
         // if 2fa enabled
-        userId?: string
+        userId?: string;
         // checking if current password is not set
-        hasNoPassword?: boolean
-        twoFactorEnabled?: boolean
+        hasNoPassword?: boolean;
+        twoFactorEnabled?: boolean;
+        isSubscribed?: boolean;
     };
     response?: {
         data: {
@@ -21,6 +22,10 @@ export interface BackendResponse {
     }
 }
 
+export interface NewsletterApiData {
+    email: string;
+    subscribedState: boolean;
+}
 export interface IUser {
     _id: string;
     firstName: string;
@@ -44,6 +49,7 @@ export interface IUser {
     paymentMethods: IPaymentMethod[];
     wishlist: [IProduct],
     orders: [IOrder],
+    newsletterSubscribed: boolean;
     createdAt: Date;
     updatedAt: Date;
 }

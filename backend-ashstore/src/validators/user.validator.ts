@@ -183,6 +183,14 @@ const otpSchema = Joi.object({
     otp: Joi.string().length(6).pattern(/^[0-9]+$/).required()
 });
 
+const newsletterSubscriptionSchema = Joi.object({
+    email: Joi.string().email().required().trim().messages({
+        'string.email': 'Email must be a valid email address',
+        'string.empty': 'Email is required',
+        'any.required': 'Email is required',
+    }),
+});
+
 
 ////////////** Above Validation Schemas **////////////////// 
 
@@ -209,4 +217,8 @@ export function validatePaymentMethodSchema(data: Object) {
 }
 export function validateUserOTP(data: Object) {
     return otpSchema.validate(data, { abortEarly: false });
+}
+
+export function validateNewsletterSubscription(data: Object) {
+    return newsletterSubscriptionSchema.validate(data, { abortEarly: false });
 }

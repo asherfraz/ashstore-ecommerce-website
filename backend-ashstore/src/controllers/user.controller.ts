@@ -6,7 +6,7 @@ import { BCRYPT_SALT_ROUNDS, FRONTEND_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRE
 import bcrypt from 'bcrypt';
 import JWTService from '../services/JWT.service';
 import hasBlankPassword from '../middlewares/hasBlankPassword';
-import { validateAddressUpdateSchema, validateLogin, validatePassword, validatePaymentMethodSchema, validateRegistration, validateUpdateUser, validateUserOTP } from "../validators/user.validator";
+import { validateAddressUpdateSchema, validateLogin, validateNewsletterSubscription, validatePassword, validatePaymentMethodSchema, validateRegistration, validateUpdateUser, validateUserOTP } from "../validators/user.validator";
 import { tryCatch } from "../utils/tryCatch";
 import { IUser } from "../types";
 import { JwtPayload } from "jsonwebtoken";
@@ -14,10 +14,9 @@ import { sendAccountVerificationEmail, sendAddressAddedEmail, sendLoginNotificat
 import { OAuth2Client } from "google-auth-library";
 import { getCurrentReqLocation } from "../services/getCurrentReqLocation";
 import { generateTwoFactorOTP } from "../services/otp.service";
+import NewsletterSubscriptionModel from "../models/newsletter.model";
 
 
-// const { sendLoginNotificationEmail, sendWelcomeEmail, sendPasswordResetEmail, sendPasswordChangedNotificationEmail } = require('./email.controller');
-// const { validateRegistration[DONE], validateUpdateName, validateUpdateUser, validatePassword } = require('../validators/user.validator');
 
 const oAuth2Client = new OAuth2Client(
     GOOGLE_CLIENT_ID,
@@ -83,7 +82,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+            //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -92,7 +91,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+            //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -178,7 +177,7 @@ const UserController = {
                     sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
                     secure: isProduction, // Only send over HTTPS in production
                     maxAge: 3600 * 1000, // 1 hour
-                    domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+                    //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
                     path: '/', // Optional but recommended
                 });
 
@@ -187,7 +186,7 @@ const UserController = {
                     sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
                     secure: isProduction,
                     maxAge: 3600 * 1000 * 24 * 7, // 7 days
-                    domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+                    //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
                     path: '/', // Optional but recommended
                 });
 
@@ -235,7 +234,7 @@ const UserController = {
                 sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
                 secure: isProduction, // Only send over HTTPS in production
                 maxAge: 3600 * 1000, // 1 hour
-                domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+                //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
                 path: '/', // Optional but recommended
             });
 
@@ -244,7 +243,7 @@ const UserController = {
                 sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
                 secure: isProduction,
                 maxAge: 3600 * 1000 * 24 * 7, // 7 days
-                domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+                //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
                 path: '/', // Optional but recommended
             });
 
@@ -349,7 +348,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+            //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -358,7 +357,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+            //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -448,7 +447,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+            //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -457,7 +456,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+            //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -1104,7 +1103,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+            //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -1113,7 +1112,7 @@ const UserController = {
             sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+            //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
             path: '/', // Optional but recommended
         });
 
@@ -1194,8 +1193,86 @@ const UserController = {
             success: true,
             message: 'Account verified successfully!',
         });
-    })
+    }),
+
+    // Newsletter handling Api
+    handleNewsletterSubscription: tryCatch(async (req: Request, res: Response, next: NextFunction) => {
+        const { email, subscribedState } = req.body;
+
+        // Validate required fields
+        if (!email || typeof subscribedState !== 'boolean') {
+            return next({
+                status: 400,
+                message: 'Email and subscribedState (boolean) are required'
+            });
+        }
+
+        // Validate email format
+        const { error } = validateNewsletterSubscription({ email });
+        if (error) {
+            return next(error);
+        }
+
+        // Check if user exists
+        const user = await User.findOne({ email });
+        const existingSubscription = await NewsletterSubscriptionModel.findOne({ email });
+
+        if (subscribedState === true) {
+            // Handle subscription
+            if (existingSubscription) {
+                if (existingSubscription.isSubscribed) {
+                    return next({ status: 409, message: 'You are already subscribed to our newsletter.' });
+                }
+
+                existingSubscription.isSubscribed = true;
+                existingSubscription.userId = user?._id || null;
+                await existingSubscription.save();
+            } else {
+                await NewsletterSubscriptionModel.create({
+                    email,
+                    userId: user?._id || null,
+                    isSubscribed: true
+                });
+            }
+
+            // Update user preference if user exists
+            if (user) {
+                user.newsletterSubscribed = true;
+                await user.save();
+            }
+
+            return res.status(200).json({
+                success: true,
+                message: 'Thank you for subscribing to our newsletter!',
+                isSubscribed: true
+            });
+        } else {
+            // Handle unsubscription
+            if (!existingSubscription || !existingSubscription.isSubscribed) {
+                return next({ status: 404, message: 'You are not subscribed to our newsletter.' });
+            }
+
+            existingSubscription.isSubscribed = false;
+            await existingSubscription.save();
+
+            // Update user preference if user exists
+            if (user) {
+                user.newsletterSubscribed = false;
+                await user.save();
+            }
+
+            return res.status(200).json({
+                success: true,
+                message: 'You have been unsubscribed from our newsletter.',
+                isSubscribed: false
+            });
+        }
+    }),
+
 
 };
+
+
+
 
 export default UserController;
