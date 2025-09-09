@@ -28,7 +28,7 @@ app.use(cookieParser());
 app.use(express.static('public'));
 
 app.use(cors({
-    origin: [(FRONTEND_URL as string), (FRONTEND_URL as string).slice(0, -1), "http://localhost:3000"],
+    origin: [(FRONTEND_URL as string), ("https://*.vercel.app") as string, (FRONTEND_URL as string).slice(0, -1), "http://localhost:3000"],
     optionsSuccessStatus: 200,
     credentials: true,
 }));
