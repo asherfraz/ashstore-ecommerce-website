@@ -336,6 +336,7 @@ const UserController = {
             sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
+
         });
 
         res.cookie('refreshToken', refreshToken, {
@@ -343,6 +344,7 @@ const UserController = {
             sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
+            priority: 'high',
         });
 
 
