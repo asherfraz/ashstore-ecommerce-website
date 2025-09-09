@@ -79,19 +79,19 @@ const UserController = {
         // Set cookies for access and refresh tokens
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
+            sameSite: 'none',
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+
             path: '/', // Optional but recommended
         });
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
+            sameSite: 'none',
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+
             path: '/', // Optional but recommended
         });
 
@@ -174,19 +174,19 @@ const UserController = {
                 // Set cookies for access and refresh tokens
                 res.cookie('accessToken', accessToken, {
                     httpOnly: true,
-                    sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
+                    sameSite: 'none',
                     secure: isProduction, // Only send over HTTPS in production
                     maxAge: 3600 * 1000, // 1 hour
-                    //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+
                     path: '/', // Optional but recommended
                 });
 
                 res.cookie('refreshToken', refreshToken, {
                     httpOnly: true,
-                    sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
+                    sameSite: 'none',
                     secure: isProduction,
                     maxAge: 3600 * 1000 * 24 * 7, // 7 days
-                    //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+
                     path: '/', // Optional but recommended
                 });
 
@@ -231,19 +231,19 @@ const UserController = {
             // Set cookies for access and refresh tokens
             res.cookie('accessToken', accessToken, {
                 httpOnly: true,
-                sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
+                sameSite: 'none',
                 secure: isProduction, // Only send over HTTPS in production
                 maxAge: 3600 * 1000, // 1 hour
-                //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+
                 path: '/', // Optional but recommended
             });
 
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
-                sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
+                sameSite: 'none',
                 secure: isProduction,
                 maxAge: 3600 * 1000 * 24 * 7, // 7 days
-                //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+
                 path: '/', // Optional but recommended
             });
 
@@ -345,19 +345,19 @@ const UserController = {
         // Set cookies for access and refresh tokens
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
+            sameSite: 'none',
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+
             path: '/', // Optional but recommended
         });
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
+            sameSite: 'none',
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+
             path: '/', // Optional but recommended
         });
 
@@ -444,19 +444,19 @@ const UserController = {
         // Set cookies for new tokens
         res.cookie('accessToken', newAccessToken, {
             httpOnly: true,
-            sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
+            sameSite: 'none',
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+
             path: '/', // Optional but recommended
         });
 
         res.cookie('refreshToken', newRefreshToken, {
             httpOnly: true,
-            sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
+            sameSite: 'none',
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+
             path: '/', // Optional but recommended
         });
 
@@ -1100,19 +1100,19 @@ const UserController = {
         // Set cookies
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            sameSite: isProduction ? 'strict' : 'lax', // or 'none' if cross-site
+            sameSite: 'none',
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+
             path: '/', // Optional but recommended
         });
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            sameSite: isProduction ? 'strict' : 'lax', // or 'none' if needed
+            sameSite: 'none',
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            //  domain: isProduction ? 'ashstore-ecom.vercel.app' : 'localhost', // Set domain in production only
+
             path: '/', // Optional but recommended
         });
 
