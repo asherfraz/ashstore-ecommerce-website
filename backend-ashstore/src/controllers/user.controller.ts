@@ -79,20 +79,18 @@ const UserController = {
         // Set cookies for access and refresh tokens
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            sameSite: 'none',
+            sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-
-
+            domain: isProduction ? '.vercel.app' : 'localhost',
         });
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            sameSite: 'none',
+            sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-
-
+            domain: isProduction ? '.vercel.app' : 'localhost',
         });
 
 
@@ -174,18 +172,20 @@ const UserController = {
                 // Set cookies for access and refresh tokens
                 res.cookie('accessToken', accessToken, {
                     httpOnly: true,
-                    sameSite: 'none',
+                    sameSite: isProduction ? 'none' : 'lax',
                     secure: isProduction, // Only send over HTTPS in production
                     maxAge: 3600 * 1000, // 1 hour
+                    domain: isProduction ? '.vercel.app' : 'localhost',
 
 
                 });
 
                 res.cookie('refreshToken', refreshToken, {
                     httpOnly: true,
-                    sameSite: 'none',
+                    sameSite: isProduction ? 'none' : 'lax',
                     secure: isProduction,
                     maxAge: 3600 * 1000 * 24 * 7, // 7 days
+                    domain: isProduction ? '.vercel.app' : 'localhost',
 
 
                 });
@@ -231,18 +231,20 @@ const UserController = {
             // Set cookies for access and refresh tokens
             res.cookie('accessToken', accessToken, {
                 httpOnly: true,
-                sameSite: 'none',
+                sameSite: isProduction ? 'none' : 'lax',
                 secure: isProduction, // Only send over HTTPS in production
                 maxAge: 3600 * 1000, // 1 hour
+                domain: isProduction ? '.vercel.app' : 'localhost',
 
 
             });
 
             res.cookie('refreshToken', refreshToken, {
                 httpOnly: true,
-                sameSite: 'none',
+                sameSite: isProduction ? 'none' : 'lax',
                 secure: isProduction,
                 maxAge: 3600 * 1000 * 24 * 7, // 7 days
+                domain: isProduction ? '.vercel.app' : 'localhost',
 
 
             });
@@ -345,18 +347,18 @@ const UserController = {
         // Set cookies for access and refresh tokens
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            sameSite: 'none',
+            sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-
-
+            domain: isProduction ? '.vercel.app' : 'localhost',
         });
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            sameSite: 'none',
+            sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
+            domain: isProduction ? '.vercel.app' : 'localhost',
         });
 
 
@@ -442,20 +444,18 @@ const UserController = {
         // Set cookies for new tokens
         res.cookie('accessToken', newAccessToken, {
             httpOnly: true,
-            sameSite: 'none',
+            sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-
-
+            domain: isProduction ? '.vercel.app' : 'localhost',
         });
 
         res.cookie('refreshToken', newRefreshToken, {
             httpOnly: true,
-            sameSite: 'none',
+            sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-
-
+            domain: isProduction ? '.vercel.app' : 'localhost',
         });
 
         const user = await User.findById<IUser>(payload.userId);
@@ -1098,20 +1098,18 @@ const UserController = {
         // Set cookies
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            sameSite: 'none',
+            sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-
-
+            domain: isProduction ? '.vercel.app' : 'localhost',
         });
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
-            sameSite: 'none',
+            sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-
-
+            domain: isProduction ? '.vercel.app' : 'localhost',
         });
 
 
