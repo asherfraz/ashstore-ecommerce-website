@@ -82,7 +82,7 @@ const UserController = {
             sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            domain: isProduction ? 'ashstore-ecom.vercel.app, ashstore-backend.vercel.app' : 'localhost',
+            domain: isProduction ? '/' : 'localhost',
         });
 
         res.cookie('refreshToken', refreshToken, {
@@ -90,7 +90,7 @@ const UserController = {
             sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            domain: isProduction ? 'ashstore-ecom.vercel.app, ashstore-backend.vercel.app' : 'localhost',
+            domain: isProduction ? '/' : 'localhost',
         });
 
 
@@ -175,7 +175,7 @@ const UserController = {
                     sameSite: isProduction ? 'none' : 'lax',
                     secure: isProduction, // Only send over HTTPS in production
                     maxAge: 3600 * 1000, // 1 hour
-                    domain: isProduction ? 'ashstore-ecom.vercel.app, ashstore-backend.vercel.app' : 'localhost',
+                    domain: isProduction ? '/' : 'localhost',
 
 
                 });
@@ -185,7 +185,7 @@ const UserController = {
                     sameSite: isProduction ? 'none' : 'lax',
                     secure: isProduction,
                     maxAge: 3600 * 1000 * 24 * 7, // 7 days
-                    domain: isProduction ? 'ashstore-ecom.vercel.app, ashstore-backend.vercel.app' : 'localhost',
+                    domain: isProduction ? '/' : 'localhost',
 
 
                 });
@@ -234,7 +234,7 @@ const UserController = {
                 sameSite: isProduction ? 'none' : 'lax',
                 secure: isProduction, // Only send over HTTPS in production
                 maxAge: 3600 * 1000, // 1 hour
-                domain: isProduction ? 'ashstore-ecom.vercel.app, ashstore-backend.vercel.app' : 'localhost',
+                domain: isProduction ? '/' : 'localhost',
 
 
             });
@@ -244,7 +244,7 @@ const UserController = {
                 sameSite: isProduction ? 'none' : 'lax',
                 secure: isProduction,
                 maxAge: 3600 * 1000 * 24 * 7, // 7 days
-                domain: isProduction ? 'ashstore-ecom.vercel.app, ashstore-backend.vercel.app' : 'localhost',
+                domain: isProduction ? '/' : 'localhost',
 
 
             });
@@ -350,7 +350,7 @@ const UserController = {
             sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            domain: isProduction ? 'ashstore-ecom.vercel.app, ashstore-backend.vercel.app' : 'localhost',
+            domain: isProduction ? '/' : 'localhost',
         });
 
         res.cookie('refreshToken', refreshToken, {
@@ -358,7 +358,7 @@ const UserController = {
             sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            domain: isProduction ? 'ashstore-ecom.vercel.app, ashstore-backend.vercel.app' : 'localhost',
+            domain: isProduction ? '/' : 'localhost',
         });
 
 
@@ -447,7 +447,7 @@ const UserController = {
             sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            domain: isProduction ? 'ashstore-ecom.vercel.app, ashstore-backend.vercel.app' : 'localhost',
+            domain: isProduction ? '/' : 'localhost',
         });
 
         res.cookie('refreshToken', newRefreshToken, {
@@ -455,7 +455,7 @@ const UserController = {
             sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            domain: isProduction ? 'ashstore-ecom.vercel.app, ashstore-backend.vercel.app' : 'localhost',
+            domain: isProduction ? '/' : 'localhost',
         });
 
         const user = await User.findById<IUser>(payload.userId);
@@ -1101,7 +1101,7 @@ const UserController = {
             sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction, // Only send over HTTPS in production
             maxAge: 3600 * 1000, // 1 hour
-            domain: isProduction ? 'ashstore-ecom.vercel.app, ashstore-backend.vercel.app' : 'localhost',
+            domain: isProduction ? '/' : 'localhost',
         });
 
         res.cookie('refreshToken', refreshToken, {
@@ -1109,7 +1109,7 @@ const UserController = {
             sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            domain: isProduction ? 'ashstore-ecom.vercel.app, ashstore-backend.vercel.app' : 'localhost',
+            domain: isProduction ? '/' : 'localhost',
         });
 
 
