@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Removed - AshStore</title>
+    <!-- Internal CSS for Email -->
+    <style>
+        body {
+            background-color: #f3f4f6;
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(to right, #fee2e2, #fecaca, #fee2e2);
+            padding: 40px 24px;
+            text-align: center;
+        }
+
+        .hero-logo {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            background: #ffffff;
+            padding: 8px;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            margin-bottom: 16px;
+        }
+
+        .hero h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #111827;
+            margin: 0;
+        }
+
+        .hero p {
+            margin-top: 8px;
+            color: #4b5563;
+            font-size: 15px;
+        }
+
+        /* Body */
+        .body {
+            padding: 32px;
+            color: #1f2937;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .body p {
+            margin: 12px 0;
+        }
+
+        /* Notification Section */
+        .notification {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 0.5rem;
+            padding: 24px;
+            margin: 24px 0;
+            text-align: center;
+        }
+
+        .notification-icon {
+            font-size: 48px;
+            color: #dc2626;
+            margin-bottom: 16px;
+        }
+
+        .notification h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #dc2626;
+            margin-bottom: 8px;
+        }
+
+        .product-details {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .product-details h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+        }
+
+        .reason-section {
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            border-radius: 0.5rem;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .reason-section h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #92400e;
+            margin-bottom: 12px;
+        }
+
+        /* Alternative Products */
+        .alternatives {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 0.5rem;
+            padding: 24px;
+            margin: 24px 0;
+        }
+
+        .alternatives h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0369a1;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .product-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.375rem;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .product-card img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 0.25rem;
+            margin-bottom: 12px;
+        }
+
+        .product-card h5 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .product-card p {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 12px;
+        }
+
+        .product-card .price {
+            font-weight: 600;
+            color: #059669;
+        }
+
+        /* Support Section */
+        .support {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 24px;
+            margin: 24px 0;
+            text-align: center;
+        }
+
+        .support h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 16px;
+        }
+
+        .contact-info {
+            margin: 16px 0;
+        }
+
+        .contact-item {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .contact-item strong {
+            color: #374151;
+        }
+
+        .btn-support {
+            display: inline-block;
+            background: #8b5cf6;
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            font-size: 15px;
+            margin-top: 16px;
+        }
+
+        .btn-support:hover {
+            background: #7c3aed;
+        }
+
+        /* Footer */
+        .footer {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+            padding: 32px 32px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 16px;
+                padding: 0px;
+            }
+
+            .hero {
+                padding: 24px 16px;
+            }
+
+            .body {
+                padding: 16px;
+            }
+
+            .footer {
+                padding: 16px;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .notification,
+            .product-details,
+            .reason-section,
+            .alternatives,
+            .support {
+                padding: 16px;
+            }
+        }
+
+        .footer-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-align: center;
+        }
+
+        .footer-logo {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .footer-logo p {
+            color: #6b7280;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .footer-social {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-social img {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        .footer-contact {
+            font-size: 13px;
+            color: #6b7280;
+            text-align: center;
+        }
+
+        /* Rights */
+        .rights {
+            background: #111827;
+            color: #9ca3af;
+            text-align: center;
+            font-size: 12px;
+            padding: 24px;
+        }
+
+        .rights a {
+            color: #60a5fa;
+            text-decoration: underline;
+        }
+
+        /* Body */
+        .body {
+            padding: 32px;
+            color: #1f2937;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .body p {
+            margin: 12px 0;
+        }
+
+        .details-card {
+            margin-top: 24px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 20px;
+        }
+
+        .details-card p {
+            margin: 8px 0;
+        }
+
+        .product-image {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .product-image img {
+            max-width: 100%;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .features-list {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+
+        .features-list li {
+            margin-bottom: 8px;
+        }
+
+        .pricing {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .base-price {
+            text-decoration: line-through;
+            color: #6b7280;
+        }
+
+        .sale-price {
+            font-weight: bold;
+            color: #dc2626;
+            font-size: 1.2em;
+        }
+
+        .discount-badge {
+            background: #dc2626;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-logo">
+                <img src="https://raw.githubusercontent.com/asherfraz/asherfraz/refs/heads/main/media/3_htlogo.png"
+                    alt="AshStore Logo" height="64" />
+            </div>
+            <h2>Product Removal Notice</h2>
+            <p>Important information about a product you may be interested in</p>
+        </div>
+
+        <!-- Main Body -->
+        <div class="body">
+            <!-- Notification -->
+            <div class="notification">
+                <div class="notification-icon">⚠️</div>
+                <h3>Product No Longer Available</h3>
+                <p>We wanted to inform you that the following product has been permanently removed from our store.</p>
+            </div>
+
+            <!-- Main Body -->
+            <div class="body">
+                <!-- Product Details - Gmail Compatible Design -->
+                <table border="0" width="100%" cellpadding="0" cellspacing="0" role="presentation" align="center">
+                    <tbody>
+                        <tr>
+                            <td style="margin:0;margin-left:12px;margin-right:12px">
+                                <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0"
+                                    role="presentation"
+                                    style="max-width:37.5em;margin-left:auto;margin-right:auto;box-sizing:border-box;padding-top:1rem;padding-bottom:1rem">
+                                    <tbody>
+                                        <tr style="width:100%">
+                                            <td>
+                                                <table align="center" width="100%" border="0" cellpadding="0"
+                                                    cellspacing="0" role="presentation"
+                                                    style="margin-top:16px;margin-bottom:16px">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <table style="width:100%">
+                                                                    <tbody style="width:100%">
+                                                                        <tr style="width:100%">
+                                                                            <td
+                                                                                style="width:50%;padding-right:32px;box-sizing:border-box">
+                                                                                <img alt="{{title}}" height="220"
+                                                                                    src="{{mainImage}}"
+                                                                                    style="display:block;outline:none;border:none;text-decoration:none;border-radius:8px;width:100%;object-fit:cover" />
+                                                                            </td>
+                                                                            <td
+                                                                                style="width:50%;vertical-align:baseline">
+                                                                                <p>{{category}}</p>
+                                                                                <p
+                                                                                    style="font-size:20px;line-height:28px;margin:0px;margin-top:8px;font-weight:600;color:rgb(17,24,39);margin-bottom:0px;margin-left:0px;margin-right:0px">
+                                                                                    {{title}}
+                                                                                </p>
+                                                                                <p
+                                                                                    style="font-size:16px;line-height:24px;margin-top:8px;color:rgb(107,114,128);margin-bottom:16px">
+                                                                                    {{description}}
+                                                                                </p>
+
+                                                                                <p
+                                                                                    style="font-size:18px;line-height:28px;margin-top:8px;font-weight:600;color:rgb(17,24,39);margin-bottom:16px">
+                                                                                    ${{basePrice}}
+                                                                                </p>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Additional Product Information -->
+                <div class="details-card" style="width: 100%;">
+                    <p><strong>Brand: </strong> {{brand}}</p>
+                    <p><strong>Category: </strong> {{category}}</p>
+                    <p><strong>Availability: </strong>{{totalStock}}</p>
+
+                    <!-- Key Features -->
+                    <p><strong>Key Features: </strong>
+                        {{keyFeatures}}
+                    </p>
+
+                    <!-- Variants Table -->
+                    <p><strong>Available Variants:</strong></p>
+                    <table class="variant-table">
+                        <thead>
+                            <tr>
+                                <th>Size</th>
+                                <th>Color</th>
+                                <th>Stock</th>
+                                <th>Stock Keeping Unit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{size}}</td>
+                                <td>{{color}}</td>
+                                <td>{{stock}}</td>
+                                <td>{{sku}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Support Section -->
+            <div class="support">
+                <h4>Need Assistance?</h4>
+                <p>Our support team is here to help you find the perfect product or answer any questions.</p>
+
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <strong>Email:</strong> support@ashstore.com
+                    </div>
+                    <div class="contact-item">
+                        <strong>Phone:</strong> +92-314-9205220
+                    </div>
+                    <div class="contact-item">
+                        <strong>Hours:</strong> Mon-Fri, 9AM-6PM PKT
+                    </div>
+                </div>
+
+                <a href="mailto:support@ashstore.com" class="btn-support">Contact Support</a>
+            </div>
+
+            <p style="text-align: center; margin-top: 24px; color: #6b7280; font-size: 14px;">
+                Thank you for your understanding and continued support.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-inner">
+                <!-- Logo + Tagline -->
+                <div class="footer-logo">
+                    <img src="https://raw.githubusercontent.com/asherfraz/asherfraz/refs/heads/main/media/3_htlogo.png"
+                        alt="AshStore Logo" height="40" />
+                    <p>Premium Clothing • Think Different</p>
+                </div>
+
+                <!-- Social Icons -->
+                <div class="footer-social">
+                    <a href="https://facebook.com/ashstore" target="_blank" rel="noopener">
+                        <img src="https://react.email/static/facebook-logo.png" alt="Facebook" />
+                    </a>
+                    <a href="https://x.com/ashstore" target="_blank" rel="noopener">
+                        <img src="https://react.email/static/x-logo.png" alt="X" />
+                    </a>
+                    <a href="https://instagram.com/ashstore" target="blank" rel="noopener">
+                        <img src="https://react.email/static/instagram-logo.png" alt="Instagram" />
+                    </a>
+                </div>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="footer-contact">
+                <p>123 AshStore, Islamabad, PK 44000</p>
+                <p>asherfraz@gmail.com | +92-314-9205220</p>
+            </div>
+        </div>
+
+        <!-- Rights -->
+        <div class="rights">
+            <p>Developed by <a href="https://asherfraz.com/">asherfraz.com</a></p>
+            <p>© 2025 AshStore. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>

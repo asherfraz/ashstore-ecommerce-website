@@ -3,15 +3,16 @@ import { IUser } from "../types";
 import transporter from "../config/emailConfig";
 import path from "path";
 import fs from "fs"
+import { IProduct } from '@/types/product.types';
 
-const loginTemplatePath = path.join(__dirname, "../config/emailTemplates/loginNotificationEmail.html");
-const welcomeTemplatePath = path.join(__dirname, "../config/emailTemplates/welcomeEmail.html");
-const twoFactorAuthTemplatePath = path.join(__dirname, "../config/emailTemplates/2faVerifyOTPEmail.html");
-const accountVerificationTemplatePath = path.join(__dirname, "../config/emailTemplates/accountVerificationEmail.html");
-const passwordResetTemplatePath = path.join(__dirname, "../config/emailTemplates/passwordResetEmail.html");
-const passwordChangedNotificationTemplatePath = path.join(__dirname, "../config/emailTemplates/passwordChangedNotificationEmail.html");
-const newAddressAddedNotificationTemplatePath = path.join(__dirname, "../config/emailTemplates/newAddressAddedNotificationEmail.html");
-const newPaymentMethodAddedNotificationTemplatePath = path.join(__dirname, "../config/emailTemplates/newPaymentMethodAddedNotificationEmail.html");
+const loginTemplatePath = path.join(__dirname, "../config/emailTemplates/user/loginNotificationEmail.html");
+const welcomeTemplatePath = path.join(__dirname, "../config/emailTemplates/user/welcomeEmail.html");
+const twoFactorAuthTemplatePath = path.join(__dirname, "../config/emailTemplates/user/2faVerifyOTPEmail.html");
+const accountVerificationTemplatePath = path.join(__dirname, "../config/emailTemplates/user/accountVerificationEmail.html");
+const passwordResetTemplatePath = path.join(__dirname, "../config/emailTemplates/user/passwordResetEmail.html");
+const passwordChangedNotificationTemplatePath = path.join(__dirname, "../config/emailTemplates/user/passwordChangedNotificationEmail.html");
+const newAddressAddedNotificationTemplatePath = path.join(__dirname, "../config/emailTemplates/user/newAddressAddedNotificationEmail.html");
+const newPaymentMethodAddedNotificationTemplatePath = path.join(__dirname, "../config/emailTemplates/user/newPaymentMethodAddedNotificationEmail.html");
 
 function formatDateTime(date: Date): string {
   const options: any = {
@@ -158,7 +159,7 @@ function sendAddressAddedEmail(name: string, email: string, location: { ip?: str
 
   sendEmail(email, subject, html);
 }
-//** PENDING **//
+//** Done **//
 function sendPaymentMethodAddedEmail(name: string, email: string, location: { ip?: string; geo?: string; device?: string }, newPaymentMethod: any) {
   let paymentData: any;
 
@@ -201,6 +202,85 @@ function sendPaymentMethodAddedEmail(name: string, email: string, location: { ip
   sendEmail(email, subject, html);
 }
 
+
+const ProductEmails = {
+  addProductEmail: (name: string, email: string, product: IProduct) => {
+    const subject = "New Product Added - AshStore Ecommerce Website";
+    const newProductAddedEmailPath = path.join(__dirname, "../config/emailTemplates/product/newProductAdded.html");
+    const html = fs.readFileSync(newProductAddedEmailPath, "utf-8")
+      .replace("{{name}}", name)
+      .replace("{{time}}", currentDateTime)
+
+      .replace("{{mainImage}}", product.images[0])
+      .replaceAll("{{title}}", product.title)
+      .replaceAll("{{description}}", product.description)
+      .replaceAll("{{basePrice}}", product.basePrice.toString())
+      .replaceAll("{{brand}}", product.brand)
+      .replaceAll("{{category}}", product.category.join(", "))
+      .replace("{{productLink}}", `${FRONTEND_URL}/product/${product.slug}`)
+      .replaceAll("{{totalStock}}", product.totalStock.toString())
+      .replaceAll("{{keyFeatures}}", product.keyFeatures.join(", "))
+      .replaceAll("{{variants}}", product.variants.join(", "))
+      .replaceAll("{{size}}", product.variants[0].size)
+      .replaceAll("{{color}}", product.variants[0].color)
+      .replaceAll("{{stock}}", product.variants[0].stock.toString())
+      .replaceAll("{{sku}}", product.variants[0].sku)
+
+    sendEmail(email, subject, html);
+  },
+  updateProductEmail: (name: string, email: string, product: IProduct) => {
+    const subject = "Product Updated - AshStore Ecommerce Website";
+    const updateProductEmailPath = path.join(__dirname, "../config/emailTemplates/product/updateProductEmail.html");
+    const html = fs.readFileSync(updateProductEmailPath, "utf-8")
+      .replace("{{name}}", name)
+      .replace("{{time}}", currentDateTime)
+
+      .replace("{{mainImage}}", product.images[0])
+      .replaceAll("{{title}}", product.title)
+      .replaceAll("{{description}}", product.description)
+      .replaceAll("{{basePrice}}", product.basePrice.toString())
+      .replaceAll("{{brand}}", product.brand)
+      .replaceAll("{{category}}", product.category.join(", "))
+      .replace("{{productLink}}", `${FRONTEND_URL}/product/${product.slug}`)
+      .replaceAll("{{totalStock}}", product.totalStock.toString())
+      .replaceAll("{{keyFeatures}}", product.keyFeatures.join(", "))
+      .replaceAll("{{variants}}", product.variants.join(", "))
+      .replaceAll("{{size}}", product.variants[0].size)
+      .replaceAll("{{color}}", product.variants[0].color)
+      .replaceAll("{{stock}}", product.variants[0].stock.toString())
+      .replaceAll("{{sku}}", product.variants[0].sku)
+
+    sendEmail(email, subject, html);
+  },
+  deleteProductEmail: (name: string, email: string, product: IProduct) => {
+    const subject = "Product Deleted - AshStore Ecommerce Website";
+    const deleteProductEmailPath = path.join(__dirname, "../config/emailTemplates/product/deleteProductEmail.html");
+    const html = fs.readFileSync(deleteProductEmailPath, "utf-8")
+      .replace("{{name}}", name)
+      .replace("{{time}}", currentDateTime)
+
+      .replace("{{mainImage}}", product.images[0])
+      .replaceAll("{{title}}", product.title)
+      .replaceAll("{{description}}", product.description)
+      .replaceAll("{{basePrice}}", product.basePrice.toString())
+      .replaceAll("{{brand}}", product.brand)
+      .replaceAll("{{category}}", product.category.join(", "))
+      .replace("{{productLink}}", `${FRONTEND_URL}/product/${product.slug}`)
+      .replaceAll("{{totalStock}}", product.totalStock.toString())
+      .replaceAll("{{keyFeatures}}", product.keyFeatures.join(", "))
+      .replaceAll("{{variants}}", product.variants.join(", "))
+      .replaceAll("{{size}}", product.variants[0].size)
+      .replaceAll("{{color}}", product.variants[0].color)
+      .replaceAll("{{stock}}", product.variants[0].stock.toString())
+      .replaceAll("{{sku}}", product.variants[0].sku)
+
+    sendEmail(email, subject, html);
+  },
+
+
+}
+
+export default ProductEmails;
 
 export { sendEmail, sendPasswordResetEmail, sendWelcomeEmail, sendLoginNotificationEmail, sendPasswordChangedNotificationEmail, sendTwoFactorAuthOTPEmail, sendAccountVerificationEmail, sendAddressAddedEmail, sendPaymentMethodAddedEmail };
 

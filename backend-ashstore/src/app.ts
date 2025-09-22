@@ -6,6 +6,7 @@ import morgan from 'morgan';
 import connectToDatabase from './dbConnect';
 import errorHandler from './middlewares/errorHandler';
 import userRoutes from './routes/user.routes';
+import productRoutes from './routes/product.routes';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { getCurrentReqLocation } from './services/getCurrentReqLocation';
@@ -21,14 +22,14 @@ const app: Express = express();
 //         crossOriginResourcePolicy: { policy: 'cross-origin' },
 //         crossOriginOpenerPolicy: false,
 //     }));
-app.use(morgan('dev'));
+app.use(morgan("tiny"));
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static('public'));
 
 app.use(cors({
-    origin: [(FRONTEND_URL as string), ("https://*.vercel.app") as string, (FRONTEND_URL as string).slice(0, -1), "http://localhost:3000"],
+    origin: [(FRONTEND_URL as string), (FRONTEND_URL as string).slice(0, -1), "http://localhost:3000"],
     optionsSuccessStatus: 200,
     credentials: true,
 }));
@@ -51,11 +52,11 @@ const limiter = rateLimit({
 // // Apply the rate limiting middleware to all requests.
 // app.use(limiter)
 
-
 // REST API routes
-app.use('/api/v1/user', limiter, userRoutes);
+// app.use('/api/v1/user', limiter, userRoutes);
+app.use('/api/v1/user', userRoutes);
 // app.use('/api/v1/admin', adminRoutes);
-// app.use('/api/v1/product', productRoutes);
+app.use('/api/v1/product', productRoutes);
 // app.use('/api/v1/order', orderRoutes);
 // app.use('/api/v1/journal', journalRoutes);
 
@@ -63,6 +64,8 @@ app.use('/api/v1/user', limiter, userRoutes);
 
 // Error handling middleware
 app.use(errorHandler);
+
+
 
 // Api health check
 app.get('/', async (req: Request, res: Response) => {

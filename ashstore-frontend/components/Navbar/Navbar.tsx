@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ThemeToggle from "../common/ThemeToggle";
-import SearchBarInput from "../common/SearchBarInput";
 import { Button } from "../ui/button";
 
 import {
@@ -40,6 +39,7 @@ import { logout } from "@/api/userApis";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { useAuth } from "@/hooks/useAuth";
+import SearchBarInputComponent from "../common/SearchBarInput";
 
 type NavbarProps = {
 	isLoggedIn?: boolean;
@@ -213,14 +213,20 @@ export default function Navbar({
 						<Link href="/marketplace" className="hover:text-foreground">
 							Shop
 						</Link>
-						<Link href="/new-arrivals" className="hover:text-foreground">
+						<Link
+							href="/marketplace?page=1&sortBy=createdAt&sortOrder=desc"
+							className="hover:text-foreground"
+						>
 							New Arrivals
 						</Link>
-						<Link href="/sale" className="hover:text-foreground">
+						<Link
+							href="/marketplace?page=1&onSale=true"
+							className="hover:text-foreground"
+						>
 							Sale
 						</Link>
 						<ThemeToggle />
-						{isLoggedIn && <SearchBarInput />}
+						{isLoggedIn && <SearchBarInputComponent />}
 					</nav>
 					<hr className=" w-px h-6 bg-border hidden md:block" />
 					{!isLoggedIn ? (
@@ -350,10 +356,16 @@ export default function Navbar({
 					<Link href="/marketplace" className="block hover:text-foreground">
 						Shop
 					</Link>
-					<Link href="/new-arrivals" className="block hover:text-foreground">
+					<Link
+						href="/marketplace?page=1&sortBy=createdAt&sortOrder=desc"
+						className="block hover:text-foreground"
+					>
 						New Arrivals
 					</Link>
-					<Link href="/sale" className="block hover:text-foreground">
+					<Link
+						href="/marketplace?page=1&onSale=true"
+						className="block hover:text-foreground"
+					>
 						Sale
 					</Link>
 					<Link href="/wishlist" className="block hover:text-foreground">
@@ -366,7 +378,7 @@ export default function Navbar({
 						<Label>Theme:</Label>
 						<ThemeToggle />
 					</div>
-					{isLoggedIn && <SearchBarInput />}
+					{isLoggedIn && <SearchBarInputComponent />}
 
 					<hr className="my-4 border-border" />
 

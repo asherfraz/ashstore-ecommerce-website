@@ -1,6 +1,7 @@
 import { Document, Types } from "mongoose";
 
 export interface IProductVariant {
+    _id?: Types.ObjectId;
     size: string;
     color: string;
     stock: number;
@@ -8,27 +9,28 @@ export interface IProductVariant {
 }
 
 export interface IProductReview {
-    userId: string;
+    _id?: Types.ObjectId;
+    userId: Types.ObjectId;
     rating: number;
     comment: string;
     likes: number;
     dislikes: number;
-    createdAt: Date;
     replies: Array<{
-        userId: string;
+        userId: Types.ObjectId;
         comment: string;
         createdAt: Date;
     }>;
 }
 
 export interface IProduct extends Document {
+    _id: Types.ObjectId;
     // product main details
     psr: string;
     title: string;
     slug: string; // slug means URL-friendly version of the title
     images: string[]; // Array of image URLs
     brand: string;
-    category: string;
+    category: string[];
     description: string;
     keyFeatures: string[];
     // pricing details
@@ -36,16 +38,18 @@ export interface IProduct extends Document {
     salePrice: number;
     onSale: boolean;
     discount: number;
-    tax: number;
+    saleTax: number;
     totalStock: number;
     // other details
     variants: IProductVariant[];
     reviews: IProductReview[];
-    averageRating: number;
     totalReviews: number;
+    relatedProducts: Types.ObjectId[];
+    averageRating: number;
+    onFeatured: boolean;
     isActive: boolean;
     // user details
-    seller: Types.ObjectId[];
+    seller: Types.ObjectId;
     status: string;
 
     // timestamps

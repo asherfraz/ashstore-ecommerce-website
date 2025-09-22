@@ -24,6 +24,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import tlogo from "@/public/tlogo.png";
+import { useAuth } from "@/hooks/useAuth";
 
 // Sidebar data
 const data = {
@@ -32,7 +33,7 @@ const data = {
 		email: "asherfraz@gmail.com",
 		avatar: "/avatars/Asherfraz.jpg",
 	},
-	navMain: [
+	navMainForBuyer: [
 		{
 			title: "Overview",
 			url: "/user/dashboard",
@@ -75,6 +76,37 @@ const data = {
 		// 	],
 		// },
 	],
+	navMainForSeller: [
+		{
+			title: "Overview",
+			url: "/seller/dashboard",
+			icon: LayoutDashboard,
+			isActive: false,
+		},
+		{
+			title: "Products",
+			url: "/seller/dashboard/product/wishlist",
+			icon: Package,
+			isActive: true,
+			items: [
+				{ title: "Post Product", url: "/seller/dashboard/product/sell" },
+				{ title: "Manage Products", url: "/seller/dashboard/product/manage" },
+				{ title: "Update Product", url: "/seller/dashboard/product/update" },
+			],
+		},
+		{
+			title: "Orders",
+			url: "/seller/dashboard/orders",
+			icon: ShoppingBag,
+			items: [{ title: "Orders History", url: "/seller/dashboard/orders" }],
+		},
+		{
+			title: "Journals",
+			url: "/seller/dashboard/journals",
+			icon: NotebookText,
+			items: [{ title: "Journals", url: "/seller/dashboard/journals" }],
+		},
+	],
 	navSecondary: [
 		{
 			title: "Account & Profile",
@@ -96,6 +128,8 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+	const { userRole } = useAuth();
+
 	return (
 		<Sidebar collapsible="icon" {...props}>
 			<SidebarHeader>
@@ -128,7 +162,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			</SidebarHeader>
 
 			<SidebarContent>
-				<NavMain items={data.navMain} />
+				{userRole === "buyer" ? (
+					<NavMain items={data.navMainForBuyer} />
+				) : (
+					<NavMain items={data.navMainForSeller} />
+				)}
 				<hr className="mt-6 mb-2" />
 				<NavSecondary items={data.navSecondary} className="mt-auto" />
 			</SidebarContent>

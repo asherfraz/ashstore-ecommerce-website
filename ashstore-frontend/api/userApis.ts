@@ -214,3 +214,43 @@ export const newsletterHandlerForGuest = async (data: NewsletterApiData) => {
     }
 }
 
+
+// [WISHLIST] : Add to User Wishlist
+export const addToWishlistApi = async (productId: string) => {
+    try {
+        const response = await axiosApi.post(`/user/wishlist/${productId}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
+// [WISHLIST] : Get wishlist products of User 
+export const getWishlistApi = async () => {
+    try {
+        const response = await axiosApi.get(`/user/wishlist/`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
+// [WISHLIST] : Remove from User Wishlist
+export const removeFromWishlistApi = async (productId: string) => {
+    try {
+        const response = await axiosApi.delete(`/user/wishlist/${productId}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
+// [WISHLIST] : Clear User Wishlist
+export const clearWishlistApi = async () => {
+    try {
+        const response = await axiosApi.delete(`/user/wishlist/clear`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};

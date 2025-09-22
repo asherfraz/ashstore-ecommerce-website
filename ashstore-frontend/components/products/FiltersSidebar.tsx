@@ -1,18 +1,15 @@
 "use client";
 
 import * as React from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-
-export type FilterState = {
-	categories: string[];
-	sizes: string[];
-	color?: string | null;
-	priceMin?: number;
-	priceMax?: number;
-};
+import formatPrice from "@/helpers/formatPrice";
+import { RootState } from "@/redux/store";
+import { setFilters } from "@/redux/productSlice";
 
 const CATEGORY_OPTIONS = [
 	"Men",
@@ -20,70 +17,99 @@ const CATEGORY_OPTIONS = [
 	"Accessories",
 	"Men's Accessories",
 	"Women's Accessories",
-	"New Arrivals",
 	"Sale",
 ];
 const SIZE_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL"];
 const COLOR_OPTIONS = [
-	{ id: "black", label: "Black", className: "bg-[#141414]" },
-	{ id: "white", label: "White", className: "bg-white border" },
-	{ id: "green", label: "Green", className: "bg-emerald-600" },
-	{ id: "blue", label: "Blue", className: "bg-sky-600" },
-	{ id: "red", label: "Red", className: "bg-rose-600" },
+	{ id: "Black", label: "Black", className: "bg-black border" },
+	{ id: "White", label: "White", className: "bg-white border" },
+	{ id: "Green", label: "Green", className: "bg-green-600" },
+	{ id: "Blue", label: "Blue", className: "bg-blue-500" },
+	{ id: "Red", label: "Red", className: "bg-rose-600" },
 ];
 
 type Props = {
-	onChange?: (state: FilterState) => void;
-	initial?: Partial<FilterState>;
 	min?: number;
 	max?: number;
 	step?: number;
 };
 
 export default function FiltersSidebar({
-	onChange,
-	initial = {},
 	min = 0,
-	max = 500,
+	max = 100000,
 	step = 1,
 }: Props) {
-	const [selectedCategories, setSelectedCategories] = React.useState<string[]>(
-		initial.categories ?? []
-	);
-	const [selectedSizes, setSelectedSizes] = React.useState<string[]>(
-		initial.sizes ?? []
-	);
-	const [selectedColor, setSelectedColor] = React.useState<string | null>(
-		(initial.color as string) ?? null
+	const dispatch = useDispatch();
+	const filters = useSelector((state: RootState) => state.product.filters);
+
+	// Initialize local state from Redux filters
+	const [selectedCategories, setSelectedCategories] = useState<string[]>(
+		Array.isArray(filters.category)
+			? filters.category
+			: filters.category
+			? [filters.category]
+			: []
 	);
 
-	// price
-	const [priceMin, setPriceMin] = React.useState<number>(
-		initial.priceMin ?? min
-	);
-	const [priceMax, setPriceMax] = React.useState<number>(
-		initial.priceMax ?? max
+	const [selectedSizes, setSelectedSizes] = useState<string[]>(
+		filters.size ? [filters.size] : []
 	);
 
-	// debounce onChange for performance (especially for slider)
-	React.useEffect(() => {
-		const t = setTimeout(() => {
-			onChange?.({
-				categories: selectedCategories,
-				sizes: selectedSizes,
-				color: selectedColor,
-				priceMin,
-				priceMax,
-			});
-		}, 120);
-		return () => clearTimeout(t);
+	const [selectedColor, setSelectedColor] = useState<string | null>(
+		filters.color || null
+	);
+
+	const [priceMin, setPriceMin] = useState<number>(
+		filters.minPrice ? Number(filters.minPrice) : min
+	);
+
+	const [priceMax, setPriceMax] = useState<number>(
+		filters.maxPrice ? Number(filters.maxPrice) : max
+	);
+
+	// Track if filters have changed from their initial values
+	const [hasChanges, setHasChanges] = useState(false);
+
+	// Check if filters have changed
+	useEffect(() => {
+		const initialCategories = Array.isArray(filters.category)
+			? filters.category
+			: filters.category
+			? [filters.category]
+			: [];
+
+		const initialSizes = filters.size ? [filters.size] : [];
+		const initialColor = filters.color || null;
+		const initialMinPrice = filters.minPrice ? Number(filters.minPrice) : min;
+		const initialMaxPrice = filters.maxPrice ? Number(filters.maxPrice) : max;
+
+		const categoriesChanged =
+			selectedCategories.length !== initialCategories.length ||
+			selectedCategories.some((cat, i) => cat !== initialCategories[i]);
+
+		const sizesChanged =
+			selectedSizes.length !== initialSizes.length ||
+			selectedSizes.some((size, i) => size !== initialSizes[i]);
+
+		const colorChanged = selectedColor !== initialColor;
+		const minPriceChanged = priceMin !== initialMinPrice;
+		const maxPriceChanged = priceMax !== initialMaxPrice;
+
+		setHasChanges(
+			categoriesChanged ||
+				sizesChanged ||
+				colorChanged ||
+				minPriceChanged ||
+				maxPriceChanged
+		);
 	}, [
 		selectedCategories,
 		selectedSizes,
 		selectedColor,
 		priceMin,
 		priceMax,
-		onChange,
+		filters,
+		min,
 	]);
 
 	function toggleCategory(cat: string) {
@@ -98,31 +124,104 @@ export default function FiltersSidebar({
 		);
 	}
 
+	function applyFilters() {
+		const filterUpdates: any = {};
+
+		// Handle Sale category specially
+		if (selectedCategories.includes("Sale")) {
+			filterUpdates.onSale = "true";
+			// Remove Sale from categories for the category filter
+			const otherCategories = selectedCategories.filter(
+				(cat) => cat !== "Sale"
+			);
+			if (otherCategories.length > 0) {
+				filterUpdates.category = otherCategories.join(",");
+			} else {
+				filterUpdates.category = undefined;
+			}
+		} else {
+			// Regular category handling
+			if (selectedCategories.length > 0) {
+				filterUpdates.category = selectedCategories.join(",");
+			} else {
+				filterUpdates.category = undefined;
+			}
+			filterUpdates.onSale = undefined;
+		}
+
+		if (selectedCategories.includes("Accessories")) {
+			filterUpdates.category = ["Men's Accessories", "Women's Accessories"];
+		}
+
+		if (selectedSizes.length > 0) {
+			filterUpdates.size = selectedSizes.join(",");
+		} else {
+			filterUpdates.size = undefined;
+		}
+
+		if (selectedColor) {
+			filterUpdates.color = selectedColor;
+		} else {
+			filterUpdates.color = undefined;
+		}
+
+		if (priceMin !== min) {
+			filterUpdates.sortOrder = "asc";
+			filterUpdates.minPrice = priceMin.toString();
+		} else {
+			filterUpdates.minPrice = undefined;
+		}
+
+		if (priceMax !== max) {
+			filterUpdates.sortOrder = "desc";
+			filterUpdates.maxPrice = priceMax.toString();
+		} else {
+			filterUpdates.maxPrice = undefined;
+		}
+
+		dispatch(setFilters(filterUpdates) as any);
+		setHasChanges(false);
+	}
+
 	function clearFilters() {
 		setSelectedCategories([]);
 		setSelectedSizes([]);
 		setSelectedColor(null);
 		setPriceMin(min);
 		setPriceMax(max);
+
+		// Immediately clear filters in Redux
+		dispatch(
+			setFilters({
+				category: undefined,
+				size: undefined,
+				color: undefined,
+				minPrice: undefined,
+				maxPrice: undefined,
+				onSale: undefined,
+			}) as any
+		);
+
+		setHasChanges(false);
 	}
 
 	// Helpers for rendering slider background
 	const minPercent = ((priceMin - min) / (max - min)) * 100;
 	const maxPercent = ((priceMax - min) / (max - min)) * 100;
-	// const sliderTrackBackground = `linear-gradient(90deg, theme(colors.muted) 0%, theme(colors.muted) ${minPercent}%, var(--tw-ring-color, rgb(20 20 20 / 1)) ${minPercent}%, var(--tw-ring-color, rgb(20 20 20 / 1)) ${maxPercent}%, theme(colors.muted) ${maxPercent}%, theme(colors.muted) 100%)`;
 
 	// Ensure thumbs don't cross
 	function onMinChange(v: number) {
 		const newVal = Math.min(v, priceMax - step);
 		setPriceMin(newVal);
 	}
+
 	function onMaxChange(v: number) {
 		const newVal = Math.max(v, priceMin + step);
 		setPriceMax(newVal);
 	}
 
 	return (
-		<aside className="w-full max-w-[300px]  shrink-0 bg-background rounded-md border border-muted p-2">
+		<aside className="w-full max-w-[300px] shrink-0 bg-background rounded-md border border-muted p-2">
 			<div className="px-3 pt-3 pb-2">
 				<h3 className="text-lg font-bold leading-tight tracking-[-0.015em] text-foreground">
 					Filters
@@ -162,7 +261,7 @@ export default function FiltersSidebar({
 				</div>
 			</div>
 
-			<Separator className="mx-3 my-2" />
+			<Separator className="my-2" />
 
 			{/* Price Range - interactive twin-range */}
 			<div className="px-3 py-3">
@@ -171,15 +270,7 @@ export default function FiltersSidebar({
 				</p>
 
 				<div className="px-1">
-					<div
-						className="relative h-10"
-						aria-hidden
-						// Use a CSS variable fallback for the muted color; we style inline for cross-tailwind control
-						style={{
-							// compute a nicer-looking track using hard-coded colors that match semantic tokens
-							background: undefined,
-						}}
-					>
+					<div className="relative h-10" aria-hidden>
 						{/* Visual track */}
 						<div
 							className="absolute inset-0 top-4 h-1 rounded bg-[color:var(--muted-track,#e6e6e6)]"
@@ -204,7 +295,6 @@ export default function FiltersSidebar({
 							value={priceMin}
 							onChange={(e) => onMinChange(Number(e.target.value))}
 							className="absolute inset-x-0 top-0 -left-1 h-9 w-full appearance-none bg-transparent pointer-events-none "
-							// style the thumb by pseudo classes in global css, or inline with filter -- we'll use simple visible thumb wrapper below
 							style={{ pointerEvents: "auto" }}
 						/>
 
@@ -217,7 +307,7 @@ export default function FiltersSidebar({
 							step={step}
 							value={priceMax}
 							onChange={(e) => onMaxChange(Number(e.target.value))}
-							className="absolute inset-x-0 top-0 left-1  h-9 w-full appearance-none bg-transparent pointer-events-none "
+							className="absolute inset-x-0 top-0 left-1 h-9 w-full appearance-none bg-transparent pointer-events-none "
 							style={{ pointerEvents: "auto" }}
 						/>
 
@@ -226,26 +316,28 @@ export default function FiltersSidebar({
 							className="absolute -top-1 flex flex-col items-center gap-1"
 							style={{ left: `calc(${minPercent}% - 8px)` }}
 						>
-							<span className="text-xs text-foreground">${priceMin}</span>
-							{/* <span className="h-3 w-3 rounded-full bg-foreground" /> */}
+							<span className="text-xs text-foreground">
+								{formatPrice(priceMin)}
+							</span>
 						</div>
 						<div
 							className="absolute -top-1 flex flex-col items-center gap-1"
 							style={{ left: `calc(${maxPercent}% - 8px)` }}
 						>
-							<span className="text-xs text-foreground">${priceMax}</span>
-							{/* <span className="h-3 w-3 rounded-full bg-foreground" /> */}
+							<span className="text-xs text-foreground">
+								{formatPrice(priceMax)}
+							</span>
 						</div>
 					</div>
 
 					<div className="mt-1 flex items-center justify-between text-sm text-muted-foreground">
-						<span>${min}</span>
-						<span>${max}</span>
+						<span>{formatPrice(min)}</span>
+						<span>{formatPrice(max)}</span>
 					</div>
 				</div>
 			</div>
 
-			<Separator className="mx-3" />
+			<Separator />
 
 			{/* Size - button group (multi-select) */}
 			<div className="px-3 py-3">
@@ -274,7 +366,7 @@ export default function FiltersSidebar({
 				</div>
 			</div>
 
-			<Separator className="mx-3" />
+			<Separator />
 
 			{/* Colors - swatch buttons */}
 			<div className="px-3 py-3">
@@ -306,29 +398,16 @@ export default function FiltersSidebar({
 				</div>
 			</div>
 
-			<Separator className="mx-3 mb-4" />
+			{/* <Separator className="mx-3 mb-4" /> */}
 
-			{/* Actions */}
-			{/* if change in inital state then show buttons */}
-			{initial && (
+			{/* Actions - Only show if there are changes */}
+			{hasChanges && (
 				<div className="px-3 py-3">
 					<div className="flex gap-3">
 						<Button variant="ghost" onClick={clearFilters} className="flex-1">
 							Clear
 						</Button>
-						<Button
-							variant="default"
-							onClick={() =>
-								onChange?.({
-									categories: selectedCategories,
-									sizes: selectedSizes,
-									color: selectedColor,
-									priceMin,
-									priceMax,
-								})
-							}
-							className="flex-1"
-						>
+						<Button variant="default" onClick={applyFilters} className="flex-1">
 							Apply
 						</Button>
 					</div>

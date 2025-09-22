@@ -9,5 +9,8 @@ declare global {
     }
 }
 
+export interface AuthenticatedRequest extends Request {
+    user?: IUser;
+}
 
 export { };

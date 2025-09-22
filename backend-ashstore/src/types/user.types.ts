@@ -47,7 +47,8 @@ export interface IUser extends Document {
     twoFactorAttempts: number;
     addresses: IAddress[];
     paymentMethods: IPaymentMethod[];
-    wishlist: Types.ObjectId[];
+    // wishlist: Types.ObjectId[];
+    wishlist: string[];
     orders: Types.ObjectId[];
     newsletterSubscribed: boolean;
     createdAt: Date;

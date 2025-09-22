@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Updated - AshStore</title>
+    <!-- Internal CSS for Email -->
+    <style>
+        body {
+            background-color: #f3f4f6;
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 672px;
+            margin: 40px auto;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(to right, #dbeafe, #d1d5db, #dbeafe);
+            padding: 40px 24px;
+            text-align: center;
+        }
+
+        .hero-logo {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            background: #ffffff;
+            padding: 8px;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            margin-bottom: 16px;
+        }
+
+        .hero h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #111827;
+            margin: 0;
+        }
+
+        .hero p {
+            margin-top: 8px;
+            color: #4b5563;
+            font-size: 15px;
+        }
+
+        /* Body */
+        .body {
+            padding: 32px;
+            color: #1f2937;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .body p {
+            margin: 12px 0;
+        }
+
+        .details-card {
+            margin-top: 24px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            padding: 20px;
+        }
+
+        .details-card p {
+            margin: 8px 0;
+        }
+
+        .product-image {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .product-image img {
+            max-width: 100%;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .features-list {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+
+        .features-list li {
+            margin-bottom: 8px;
+        }
+
+        .pricing {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .base-price {
+            text-decoration: line-through;
+            color: #6b7280;
+        }
+
+        .sale-price {
+            font-weight: bold;
+            color: #dc2626;
+            font-size: 1.2em;
+        }
+
+        .discount-badge {
+            background: #dc2626;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .action {
+            margin-top: 24px;
+            text-align: center;
+        }
+
+        .action .btn {
+            color: white;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #2563eb;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 16px 0;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .action p {
+            margin: 8px 0;
+        }
+
+        .action .safe {
+            color: #374151;
+        }
+
+        .action .warn {
+            color: #dc2626;
+            font-weight: 500;
+        }
+
+        .action a {
+            color: #2563eb;
+            text-decoration: underline;
+        }
+
+        .variant-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+
+        .variant-table th,
+        .variant-table td {
+            border: 1px solid #e5e7eb;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .variant-table th {
+            background-color: #f3f4f6;
+        }
+
+        /* Footer */
+        .footer {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            background: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+            padding: 32px 32px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 16px;
+                padding: 0px;
+            }
+
+            .hero {
+                padding: 24px 16px;
+            }
+
+            .body {
+                padding: 16px;
+            }
+
+            .footer {
+                padding: 16px;
+            }
+
+            .pricing {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+
+        .footer-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-align: center;
+        }
+
+        .footer-logo {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .footer-logo p {
+            color: #6b7280;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .footer-social {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-social img {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        .footer-contact {
+            font-size: 13px;
+            color: #6b7280;
+            text-align: center;
+        }
+
+        /* Rights */
+        .rights {
+            background: #111827;
+            color: #9ca3af;
+            text-align: center;
+            font-size: 12px;
+            padding: 24px;
+        }
+
+        .rights a {
+            color: #60a5fa;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-logo">
+                <img src="https://raw.githubusercontent.com/asherfraz/asherfraz/refs/heads/main/media/3_htlogo.png"
+                    alt="AshStore Logo" height="64" />
+            </div>
+            <h2>Product Updated Successfully!</h2>
+            <p>The Product has been updated with latest information.</p>
+        </div>
+
+        <!-- Main Body -->
+        <div class="body">
+            <p>Hello <strong>{{name}}</strong>,</p>
+            <p>We're here to announce that a product has been updated with latest information to our collection at
+                <strong>AshStore</strong>!
+            </p>
+
+            <!-- Product Details - Gmail Compatible Design -->
+            <table border="0" width="100%" cellpadding="0" cellspacing="0" role="presentation" align="center">
+                <tbody>
+                    <tr>
+                        <td style="margin:0;margin-left:12px;margin-right:12px">
+                            <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0"
+                                role="presentation"
+                                style="max-width:37.5em;margin-left:auto;margin-right:auto;box-sizing:border-box;padding-top:1rem;padding-bottom:1rem">
+                                <tbody>
+                                    <tr style="width:100%">
+                                        <td>
+                                            <table align="center" width="100%" border="0" cellpadding="0"
+                                                cellspacing="0" role="presentation"
+                                                style="margin-top:16px;margin-bottom:16px">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <table style="width:100%">
+                                                                <tbody style="width:100%">
+                                                                    <tr style="width:100%">
+                                                                        <td
+                                                                            style="width:50%;padding-right:32px;box-sizing:border-box">
+                                                                            <img alt="{{title}}" height="220"
+                                                                                src="{{mainImage}}"
+                                                                                style="display:block;outline:none;border:none;text-decoration:none;border-radius:8px;width:100%;object-fit:cover" />
+                                                                        </td>
+                                                                        <td style="width:50%;vertical-align:baseline">
+                                                                            <p>{{category}}</p>
+                                                                            <p
+                                                                                style="font-size:20px;line-height:28px;margin:0px;margin-top:8px;font-weight:600;color:rgb(17,24,39);margin-bottom:0px;margin-left:0px;margin-right:0px">
+                                                                                {{title}}
+                                                                            </p>
+                                                                            <p
+                                                                                style="font-size:16px;line-height:24px;margin-top:8px;color:rgb(107,114,128);margin-bottom:16px">
+                                                                                {{description}}
+                                                                            </p>
+
+                                                                            <p
+                                                                                style="font-size:18px;line-height:28px;margin-top:8px;font-weight:600;color:rgb(17,24,39);margin-bottom:16px">
+                                                                                ${{basePrice}}
+                                                                            </p>
+                                                                            <a href="{{productLink}}"
+                                                                                style="line-height:100%;text-decoration:none;display:inline-block;max-width:100%;mso-padding-alt:0px;width:75%;border-radius:8px;background-color:rgb(79,70,229);padding-top:12px;padding-bottom:12px;padding-left:16px;padding-right:16px;text-align:center;font-weight:600;color:rgb(255,255,255)"
+                                                                                target="_blank"><span><!--[if mso]><i style="mso-font-width:400%;mso-text-raise:18" hidden>&#8202;&#8202;</i><![endif]--></span><span
+                                                                                    style="max-width:100%;display:inline-block;line-height:120%;mso-padding-alt:0px;mso-text-raise:9px">View
+                                                                                    Product</span><span><!--[if mso]><i style="mso-font-width:400%" hidden>&#8202;&#8202;&#8203;</i><![endif]--></span></a>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Additional Product Information -->
+            <div class="details-card">
+                <p><strong>Brand: </strong> {{brand}}</p>
+                <p><strong>Category: </strong> {{category}}</p>
+                <p><strong>Availability: </strong>{{totalStock}}</p>
+
+                <!-- Key Features -->
+                <p><strong>Key Features: </strong>
+                    {{keyFeatures}}
+                </p>
+
+                <!-- Variants Table -->
+                <p><strong>Available Variants:</strong></p>
+                <table class="variant-table">
+                    <thead>
+                        <tr>
+                            <th>Size</th>
+                            <th>Color</th>
+                            <th>Stock</th>
+                            <th>Stock Keeping Unit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{size}}</td>
+                            <td>{{color}}</td>
+                            <td>{{stock}}</td>
+                            <td>{{sku}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="width: 100%; text-align: center;">
+                                <a href="{{productLink}}">
+
+                                    <p style="font-style: italic; color: #6b7280; font-size: 12px"><strong>View Product
+                                            to
+                                            check
+                                            more!</strong></p>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="action">
+                <p class="safe">Explore our latest collection and be the first to get your hands on this product!</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-inner">
+
+                <!-- Logo + Tagline -->
+                <div class="footer-logo">
+                    <img src="https://raw.githubusercontent.com/asherfraz/asherfraz/refs/heads/main/media/3_htlogo.png"
+                        alt="AshStore Logo" height="40" />
+                    <p>Premium Clothing • Think Different</p>
+                </div>
+
+                <!-- Social Icons -->
+                <div class="footer-social">
+                    <a href="https://facebook.com/ashstore" target="_blank" rel="noopener">
+                        <img src="https://react.email/static/facebook-logo.png" alt="Facebook" />
+                    </a>
+                    <a href="https://x.com/ashstore" target="_blank" rel="noopener">
+                        <img src="https://react.email/static/x-logo.png" alt="X" />
+                    </a>
+                    <a href="https://instagram.com/ashstore" target="_blank" rel="noopener">
+                        <img src="https://react.email/static/instagram-logo.png" alt="Instagram" />
+                    </a>
+                </div>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="footer-contact">
+                <p>123 AshStore, Islamabad, PK 44000</p>
+                <p>asherfraz@gmail.com | +92-314-9205220</p>
+            </div>
+        </div>
+
+        <!-- Rights -->
+        <div class="rights">
+            <p>Developed by <a href="https://asherfraz.com/">asherfraz.com</a></p>
+            <p>© 2025 AshStore. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>

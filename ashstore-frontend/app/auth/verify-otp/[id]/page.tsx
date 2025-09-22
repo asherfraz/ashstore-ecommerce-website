@@ -11,6 +11,7 @@ import {
 } from "@/api/userApis";
 import { BackendResponse } from "@/types/types";
 import { useDispatch } from "react-redux";
+import { fetchProducts } from "@/redux/productSlice";
 
 const Verify2FACodePage: React.FC = () => {
 	const dispatch = useDispatch();
@@ -48,6 +49,8 @@ const Verify2FACodePage: React.FC = () => {
 					type: "user/setUser",
 					payload: response.data.user,
 				});
+				// Fetch Products after login
+				dispatch(fetchProducts({}) as any);
 				if (
 					response.data.user.userType === "admin" &&
 					response.data.user.isAdmin

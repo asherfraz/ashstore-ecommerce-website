@@ -25,6 +25,7 @@ import { login } from "@/api/userApis";
 import { useDispatch } from "react-redux";
 import { loginSchema } from "@/schemas/user.validations";
 import GoogleLoginButton from "@/components/auth/GoogleLoginButton";
+import { fetchProducts } from "@/redux/productSlice";
 
 export type LoginValues = z.infer<typeof loginSchema>;
 
@@ -81,6 +82,8 @@ export default function LoginPage() {
 						type: "user/setUser",
 						payload: response.data.user,
 					});
+					// Fetch Products after login
+					dispatch(fetchProducts({}) as any);
 					router.push("/admin/dashboard");
 				} else {
 					// You might want to redirect here after successful login
@@ -88,6 +91,8 @@ export default function LoginPage() {
 						type: "user/setUser",
 						payload: response.data.user,
 					});
+					// Fetch Products after login
+					dispatch(fetchProducts({}) as any);
 					router.push("/marketplace");
 				}
 

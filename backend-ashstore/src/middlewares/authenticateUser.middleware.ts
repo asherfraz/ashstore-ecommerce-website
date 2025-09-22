@@ -2,8 +2,9 @@ import User from "../models/user.model";
 import { Request, Response, NextFunction } from "express";
 import JWTService from "../services/JWT.service";
 import { IUser } from "../types/user.types";
+import { AuthenticatedRequest } from "@/types/express";
 
-const authenticateUser = async (req: Request, res: Response, next: NextFunction) => {
+export const authenticateUser = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     const { accessToken, refreshToken } = req.cookies;
 
     try {
@@ -54,4 +55,3 @@ const authenticateUser = async (req: Request, res: Response, next: NextFunction)
     }
 };
 
-export default authenticateUser;

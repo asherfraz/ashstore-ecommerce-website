@@ -28,7 +28,7 @@ export default function ThemeToggle() {
 		// 	/>
 		// 	{/* <Label htmlFor="theme-changer">Theme</Label> */}
 		// </div>
-		<div className="hidden md:flex items-center">
+		<div className="md:flex items-center">
 			{theme === "dark" ? (
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +36,7 @@ export default function ThemeToggle() {
 					viewBox="0 0 24 24"
 					strokeWidth={1.5}
 					stroke="currentColor"
-					className="size-6 hover:p-0.5 text-white cursor-pointer hover:bg-amber-200 hover:text-amber-500 rounded-full transition-bg duration-150 ease-in-out"
+					className="size-4 md:size-6 hover:p-0.5 text-white cursor-pointer hover:bg-amber-200 hover:text-amber-500 rounded-full transition-bg duration-150 ease-in-out"
 					onClick={handleToggle}
 				>
 					<path
@@ -52,7 +52,7 @@ export default function ThemeToggle() {
 					viewBox="0 0 24 24"
 					strokeWidth={1.5}
 					stroke="black"
-					className="size-6 hover:p-0.5 text-black/50 cursor-pointer hover:bg-gray-200 hover:text-gray-500 rounded-full transition-bg duration-150 ease-in-out"
+					className="size-4 md:size-6 hover:p-0.5 text-black/50 cursor-pointer hover:bg-gray-200 hover:text-gray-500 rounded-full transition-bg duration-150 ease-in-out"
 					onClick={handleToggle}
 				>
 					<path

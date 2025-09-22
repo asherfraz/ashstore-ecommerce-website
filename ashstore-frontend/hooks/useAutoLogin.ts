@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { refresh } from "@/api/userApis"
 import { BackendResponse } from "@/types/types";
+import { fetchProducts } from "@/redux/productSlice";
 
 function useAutoLogin() {
     const dispatch = useDispatch();
@@ -18,6 +19,7 @@ function useAutoLogin() {
                         type: "user/setUser",
                         payload: response?.data?.user,
                     });
+                    dispatch(fetchProducts({}) as any);
                 }
             } catch (error) {
                 console.error("Auto-login failed:", error);

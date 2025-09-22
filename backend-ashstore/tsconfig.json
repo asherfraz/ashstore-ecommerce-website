@@ -13,7 +13,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     // ... other options
-    "types": ["node"],
+    "types": ["node","express"],
     "typeRoots": ["./src/types/", "./node_modules/@types/"]
   },
   "include": ["src","src/*.ts","src/**/*.ts"],

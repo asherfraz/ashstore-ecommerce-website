@@ -13,6 +13,19 @@ export interface BackendResponse {
         hasNoPassword?: boolean;
         twoFactorEnabled?: boolean;
         isSubscribed?: boolean;
+
+        // Product Filters Responses
+        product: IProduct;
+        data: {
+            docs?: IProduct[];
+            totalDocs?: number;
+            limit?: number;
+            totalPages?: number;
+            page?: number;
+            pagingCounter?: number;
+            hasPrevPage?: boolean;
+            hasNextPage?: boolean;
+        }
     };
     response?: {
         data: {
@@ -47,7 +60,9 @@ export interface IUser {
     twoFactorAttempts: number;
     addresses: IAddress[];
     paymentMethods: IPaymentMethod[];
-    wishlist: [IProduct],
+    // wishlist is an array of products
+    // wishlist: IProduct[],
+    wishlist: string[],
     orders: [IOrder],
     newsletterSubscribed: boolean;
     createdAt: Date;
@@ -79,7 +94,9 @@ export interface IPaymentMethod {
 }
 
 ////////////////** Product **//////////////////
+
 export interface IProductVariant {
+    _id?: string;
     size: string;
     color: string;
     stock: number;
@@ -87,28 +104,33 @@ export interface IProductVariant {
 }
 
 export interface IProductReview {
-    userId: string;
+    // Add Product Review
+    _id?: string;
+    // userId: string;
+    userId: IUser;
     rating: number;
     comment: string;
     likes: number;
     dislikes: number;
     createdAt: Date;
+    // Add Product Reply
     replies: Array<{
-        userId: string;
+        _id?: string;
+        userId: IUser;
         comment: string;
         createdAt: Date;
     }>;
 }
 
 export interface IProduct {
-    // product main details
     _id: string;
+    // product main details
     psr: string;
     title: string;
     slug: string; // slug means URL-friendly version of the title
     images: string[]; // Array of image URLs
     brand: string;
-    category: string;
+    category: string[];
     description: string;
     keyFeatures: string[];
     // pricing details
@@ -116,22 +138,25 @@ export interface IProduct {
     salePrice: number;
     onSale: boolean;
     discount: number;
-    tax: number;
+    saleTax: number;
     totalStock: number;
     // other details
     variants: IProductVariant[];
     reviews: IProductReview[];
-    averageRating: number;
     totalReviews: number;
+    relatedProducts: string[];
+    averageRating: number;
+    onFeatured: boolean;
     isActive: boolean;
     // user details
-    seller: string;
+    seller: IUser;
     status: string;
 
     // timestamps
     createdAt: Date;
     updatedAt: Date;
 }
+
 
 
 ////////////////** Order **//////////////////

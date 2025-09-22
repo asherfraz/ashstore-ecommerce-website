@@ -15,6 +15,8 @@ import { OAuth2Client } from "google-auth-library";
 import { getCurrentReqLocation } from "../services/getCurrentReqLocation";
 import { generateTwoFactorOTP } from "../services/otp.service";
 import NewsletterSubscriptionModel from "../models/newsletter.model";
+import { Types } from "mongoose";
+import { AuthenticatedRequest } from "@/types/express";
 
 
 
@@ -344,7 +346,6 @@ const UserController = {
             sameSite: isProduction ? 'none' : 'lax',
             secure: isProduction,
             maxAge: 3600 * 1000 * 24 * 7, // 7 days
-            priority: 'high',
         });
 
 
@@ -1247,6 +1248,100 @@ const UserController = {
         }
     }),
 
+
+    // Wishlist handling Api Controllers
+    addToWishlist: tryCatch(async (req: Request, res: Response, next: NextFunction) => {
+        const { productId } = req.params;
+        const userId = (req.user as IUser)._id;
+
+        // Validate productId
+        if (!Types.ObjectId.isValid(productId)) {
+            return next({ status: 400, message: 'Invalid product ID' });
+        }
+
+        const user = await User.findByIdAndUpdate(
+            userId,
+            { $addToSet: { wishlist: productId } }, // Prevents duplicates
+            { new: true }
+        ).populate('wishlist');
+
+        if (!user) {
+            return next({ status: 404, message: 'User not found' });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Product added to wishlist',
+            // wishlist: user.wishlist
+        });
+    }),
+
+    getWishlist: tryCatch(async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+
+        const userId = req.user?._id;
+        if (!userId) {
+            return next({ status: 401, message: 'Unauthorized' });
+        }
+
+        const user = await User.findById(userId)
+            .populate('wishlist')
+            .select('wishlist');
+
+        if (!user) {
+            return next({ status: 404, message: 'User not found' });
+        }
+
+        res.status(200).json({
+            success: true,
+            wishlist: user.wishlist,
+        });
+    }),
+
+    removeFromWishlist: tryCatch(async (req: Request, res: Response, next: NextFunction) => {
+        const { productId } = req.params;
+        const userId = (req.user as IUser)._id;
+
+        // Validate productId
+        if (!Types.ObjectId.isValid(productId)) {
+            return next({ status: 400, message: 'Invalid product ID' });
+        }
+
+        const user = await User.findByIdAndUpdate(
+            userId,
+            { $pull: { wishlist: productId } },
+            { new: true }
+        ).populate('wishlist');
+
+        if (!user) {
+            return next({ status: 404, message: 'User not found' });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Product removed from wishlist',
+            // wishlist: user.wishlist
+        });
+    }),
+
+    clearWishlist: tryCatch(async (req: Request, res: Response, next: NextFunction) => {
+        const userId = (req.user as IUser)._id;
+
+        const user = await User.findByIdAndUpdate(
+            userId,
+            { $set: { wishlist: [] } },
+            { new: true }
+        );
+
+        if (!user) {
+            return next({ status: 404, message: 'User not found' });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Wishlist cleared successfully',
+            // wishlist: user.wishlist
+        });
+    }),
 
 };
 

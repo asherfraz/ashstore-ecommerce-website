@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AshStore - Weekly Marketing</title>
+    <!-- Internal CSS for Email -->
+    <style>
+        body {
+            background-color: #f3f4f6;
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(to right, #dbeafe, #d1d5db, #dbeafe);
+            padding: 40px 24px;
+            text-align: center;
+        }
+
+        .hero-logo {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            background: #ffffff;
+            padding: 8px;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            margin-bottom: 16px;
+        }
+
+        .hero h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #111827;
+            margin: 0;
+        }
+
+        .hero p {
+            margin-top: 8px;
+            color: #4b5563;
+            font-size: 15px;
+        }
+
+        /* Body */
+        .body {
+            padding: 32px;
+            color: #1f2937;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .body p {
+            margin: 12px 0;
+        }
+
+        /* Bento Grid Styles */
+        .bento-grid {
+            margin-top: 24px;
+        }
+
+        .bento-header {
+            background-color: #22292f;
+            border-collapse: separate;
+            border-spacing: 24px;
+            margin: 0px;
+            table-layout: fixed;
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .bento-header h1 {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .bento-header p {
+            font-size: 14px;
+            line-height: 20px;
+            color: #ffffff99;
+            margin: 0;
+        }
+
+        .bento-header a {
+            color: #ffffffcc;
+            text-decoration-line: none;
+            display: block;
+            font-size: 14px;
+            line-height: 20px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        .bento-products {
+            border-collapse: separate;
+            border-spacing: 12px;
+            table-layout: fixed;
+            width: 100%;
+            margin-top: 24px;
+        }
+
+        .product-column {
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 180px;
+            text-align: center;
+        }
+
+        .product-column img {
+            display: block;
+            outline: none;
+            border: none;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-bottom: 18px;
+            width: 100%;
+        }
+
+        .product-column h2 {
+            font-size: 14px;
+            line-height: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #111827;
+        }
+
+        .product-column p {
+            font-size: 12px;
+            line-height: 20px;
+            color: rgb(107, 114, 128);
+            margin: 0;
+            padding-right: 12px;
+        }
+
+        .action {
+            margin-top: 24px;
+            text-align: center;
+        }
+
+        .action p {
+            margin: 8px 0;
+        }
+
+        .action .safe {
+            color: #374151;
+        }
+
+        .action .warn {
+            color: #dc2626;
+            font-weight: 500;
+        }
+
+        .action a {
+            color: #2563eb;
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        .footer {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #f9fafb;
+            border-top: 1px solid #e5e7eb;
+            padding: 32px 32px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 16px;
+                padding: 0px;
+            }
+
+            .hero {
+                padding: 24px 16px;
+            }
+
+            .body {
+                padding: 16px;
+            }
+
+            .footer {
+                padding: 16px;
+            }
+
+            .bento-header {
+                border-spacing: 16px;
+            }
+
+            .bento-products {
+                border-spacing: 8px;
+            }
+
+            .product-column {
+                max-width: 100%;
+                margin-bottom: 24px;
+            }
+        }
+
+        .footer-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-align: center;
+        }
+
+        .footer-logo {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .footer-logo p {
+            color: #6b7280;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .footer-social {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-social img {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        .footer-contact {
+            font-size: 13px;
+            color: #6b7280;
+            text-align: center;
+        }
+
+        /* Rights */
+        .rights {
+            background: #111827;
+            color: #9ca3af;
+            text-align: center;
+            font-size: 12px;
+            padding: 24px;
+        }
+
+        .rights a {
+            color: #60a5fa;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-logo">
+                <img src="https://raw.githubusercontent.com/asherfraz/asherfraz/refs/heads/main/media/3_htlogo.png"
+                    alt="AshStore Logo" height="64" />
+            </div>
+            <h2>This Week's Featured Products 🎉</h2>
+            <p>Discover our latest collection and exclusive offers</p>
+        </div>
+
+        <!-- Main Body -->
+        <div class="body">
+            <p>Hello <strong>{{name}}</strong>,</p>
+            <p>We're excited to share this week's featured products with you! Check out our latest additions and
+                exclusive offers.</p>
+
+            <!-- Bento Grid Products -->
+            <div class="bento-grid">
+                <!-- Main Featured Product -->
+                <table class="bento-header">
+                    <tbody>
+                        <tr>
+                            <td style="padding-left:12px">
+                                <h1>Coffee Storage</h1>
+                                <!-- <h1>{{product1-title}}</h1> -->
+                                <p>Keep your coffee fresher for longer with innovative technology.</p>
+                                <a href="{{shopLink}}" target="_blank">Shop now →</a>
+                            </td>
+                            <td style="width:42%;height:250px">
+                                <img alt="Coffee Bean Storage" src="https://react.email/static/coffee-bean-storage.jpg"
+                                    style="display:block;outline:none;border:none;text-decoration:none;border-radius:4px;height:100%;margin-right:-6px;object-fit:cover;object-position:center;width:100%" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Product Grid -->
+                <table class="bento-products">
+                    <tbody>
+                        <tr>
+                            <td class="product-column">
+                                <img alt="Auto-Sealing Vacuum Canister"
+                                    src="https://react.email/static/atmos-vacuum-canister.jpg" />
+                                <div>
+                                    <h2>Auto-Sealing Vacuum Canister</h2>
+                                    <p>A container that automatically creates an airtight seal with a button press.</p>
+                                </div>
+                            </td>
+                            <td class="product-column">
+                                <img alt="3-Pack Vacuum Containers"
+                                    src="https://react.email/static/vacuum-canister-clear-glass-bundle.jpg" />
+                                <div>
+                                    <h2>3-Pack Vacuum Containers</h2>
+                                    <p>Keep your coffee fresher for longer with this set of high-performance vacuum
+                                        containers.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="action">
+                <p class="safe">Explore our complete collection and discover more amazing products!</p>
+                <p><a href="{{shopLink}}" class="btn">View All Products</a></p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-inner">
+
+                <!-- Logo + Tagline -->
+                <div class="footer-logo">
+                    <img src="https://raw.githubusercontent.com/asherfraz/asherfraz/refs/heads/main/media/3_htlogo.png"
+                        alt="AshStore Logo" height="40" />
+                    <p>Premium Clothing • Think Different</p>
+                </div>
+
+                <!-- Social Icons -->
+                <div class="footer-social">
+                    <a href="https://facebook.com/ashstore" target="_blank" rel="noopener">
+                        <img src="https://react.email/static/facebook-logo.png" alt="Facebook" />
+                    </a>
+                    <a href="https://x.com/ashstore" target="_blank" rel="noopener">
+                        <img src="https://react.email/static/x-logo.png" alt="X" />
+                    </a>
+                    <a href="https://instagram.com/ashstore" target="blank" rel="noopener">
+                        <img src="https://react.email/static/instagram-logo.png" alt="Instagram" />
+                    </a>
+                </div>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="footer-contact">
+                <p>123 AshStore, Islamabad, PK 44000</p>
+                <p>asherfraz@gmail.com | +92-314-9205220</p>
+            </div>
+        </div>
+
+        <!-- Rights -->
+        <div class="rights">
+            <p>Developed by <a href="https://asherfraz.com/">asherfraz.com</a></p>
+            <p>© 2025 AshStore. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>

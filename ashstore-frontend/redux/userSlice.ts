@@ -84,8 +84,32 @@ const userSlice = createSlice({
         setUserRole: (state, action: PayloadAction<'buyer' | 'seller' | 'both' | 'admin'>) => {
             state.userRole = action.payload;
         },
+
+        // User Wishlist Management
+        addToWishlist: (state, action: PayloadAction<string>) => {
+            if (state.user && !state.user.wishlist.includes(action.payload)) {
+                state.user.wishlist.push(action.payload);
+                localStorage.setItem('user', JSON.stringify(state.user));
+            }
+        },
+        removeFromWishlist: (state, action: PayloadAction<string>) => {
+            if (state.user) {
+                state.user.wishlist = state.user.wishlist.filter(id => id !== action.payload);
+                localStorage.setItem('user', JSON.stringify(state.user));
+            }
+        },
+        clearUserWishlist: (state) => {
+            if (state.user) {
+                state.user.wishlist = [];
+                localStorage.setItem("user", JSON.stringify(state.user));
+            }
+        },
+
     },
 })
 
-export const { setUser, clearUser, updateUser, syncAuth, setUserRole } = userSlice.actions
+export const {
+    setUser, clearUser, updateUser, syncAuth, setUserRole,
+    addToWishlist, removeFromWishlist, clearUserWishlist
+} = userSlice.actions
 export default userSlice.reducer
