@@ -25,7 +25,7 @@ import { login } from "@/api/userApis";
 import { useDispatch } from "react-redux";
 import { loginSchema } from "@/schemas/user.validations";
 import GoogleLoginButton from "@/components/auth/GoogleLoginButton";
-import { fetchProducts } from "@/redux/productSlice";
+import { fetchProducts } from "@/redux/productThunks";
 
 export type LoginValues = z.infer<typeof loginSchema>;
 

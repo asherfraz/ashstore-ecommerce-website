@@ -8,10 +8,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { setFilters, fetchProducts } from "@/redux/productSlice";
+import { setFilters } from "@/redux/productSlice";
 import { IProduct } from "@/types/types";
 import Link from "next/link";
 import Image from "next/image";
+import { fetchProducts } from "@/redux/productThunks";
 
 export default function SearchBarInputComponent() {
 	const id = useId();

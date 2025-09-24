@@ -1,11 +1,11 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { BackendResponse, IProduct } from '@/types/types'
-import { getAllProducts } from '@/api/productApis'
+import { IProduct } from '@/types/types'
 import toast from 'react-hot-toast';
 import { RootState } from './store';
+import { fetchProducts, fetchSellerProducts } from './productThunks';
 
-interface ProductsFilters {
+export interface ProductsFilters {
     page?: number;
     limit?: number | undefined;
     sortBy?: string;
@@ -23,44 +23,12 @@ interface ProductsFilters {
     size?: string;
     minRating?: number;
     maxRating?: number;
+    seller?: string; // Add seller filter for marketplace
 };
 
-
-
-// Get products createAsyncThunk()
-export const fetchProducts = createAsyncThunk(
-    "product/fetchProducts",
-    async (filters: ProductsFilters, { rejectWithValue }) => {
-        try {
-
-            // assign filters parameter to state.filters
-
-            // Convert filters object to query string
-            const queryParams = new URLSearchParams();
-            Object.entries(filters).forEach(([key, value]) => {
-                if (value !== undefined && value !== '') {
-                    // Handle array values (like category)
-                    if (Array.isArray(value)) {
-                        queryParams.set(key, value.join(','));
-                    } else {
-                        queryParams.set(key, value.toString());
-                    }
-                }
-            });
-            // console.log("Query Params: ", queryParams.toString())
-
-            const response = await getAllProducts(queryParams.toString());
-            return response.data;
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.message || error.message || "Failed to fetch products";
-            console.error("Error fetching products:", errorMessage);
-            return rejectWithValue(errorMessage);
-        }
-    });
-
-interface ProductState {
+// Interface for pagination data
+interface PaginationData {
     products: IProduct[];
-    currentProduct: IProduct | null;
     totalDocs: number;
     limit: number;
     totalPages: number;
@@ -68,6 +36,14 @@ interface ProductState {
     pagingCounter: number;
     hasPrevPage: boolean;
     hasNextPage: boolean;
+}
+
+interface ProductState {
+    products: IProduct[]; // Marketplace products
+    marketplacePagination: PaginationData; // Marketplace pagination data
+    sellerProducts: IProduct[]; // Seller's own products
+    sellerPagination: PaginationData; // Seller pagination data
+    currentProduct: IProduct | null;
     filters: ProductsFilters;
 }
 
@@ -99,14 +75,28 @@ const persistedState = loadState();
 
 const initialState: ProductState = {
     products: [],
+    marketplacePagination: {
+        products: [],
+        totalDocs: 0,
+        limit: 10,
+        totalPages: 0,
+        page: 1,
+        pagingCounter: 0,
+        hasPrevPage: false,
+        hasNextPage: false,
+    },
+    sellerProducts: [],
+    sellerPagination: {
+        products: [],
+        totalDocs: 0,
+        limit: 10,
+        totalPages: 0,
+        page: 1,
+        pagingCounter: 0,
+        hasPrevPage: false,
+        hasNextPage: false,
+    },
     currentProduct: null,
-    totalDocs: 0,
-    limit: 10,
-    totalPages: 0,
-    page: 1,
-    pagingCounter: 0,
-    hasPrevPage: false,
-    hasNextPage: false,
     filters: {},
     ...persistedState, // Override with persisted values
 }
@@ -117,17 +107,28 @@ const productSlice = createSlice({
     reducers: {
         setProducts: (state, action: PayloadAction<IProduct[]>) => {
             state.products = action.payload;
+            state.marketplacePagination.products = action.payload;
             // Persist relevant state
             saveState({
                 products: state.products,
+                marketplacePagination: state.marketplacePagination,
+                sellerProducts: state.sellerProducts,
+                sellerPagination: state.sellerPagination,
                 currentProduct: state.currentProduct,
                 ...state.filters,
-                totalDocs: state.totalDocs,
-                limit: state.limit,
-                totalPages: state.totalPages,
-                page: state.page,
-                hasPrevPage: state.hasPrevPage,
-                hasNextPage: state.hasNextPage,
+            });
+        },
+        setSellerProducts: (state, action: PayloadAction<IProduct[]>) => {
+            state.sellerProducts = action.payload;
+            state.sellerPagination.products = action.payload;
+            // Persist relevant state
+            saveState({
+                products: state.products,
+                marketplacePagination: state.marketplacePagination,
+                sellerProducts: state.sellerProducts,
+                sellerPagination: state.sellerPagination,
+                currentProduct: state.currentProduct,
+                ...state.filters,
             });
         },
         setCurrentProduct: (state, action: PayloadAction<IProduct>) => {
@@ -137,64 +138,100 @@ const productSlice = createSlice({
             if (state.currentProduct) {
                 state.currentProduct = { ...state.currentProduct, ...action.payload };
             }
+            // Also update in marketplace products array if exists
+            const productIndex = state.products.findIndex(p => p._id === state.currentProduct?._id);
+            if (productIndex !== -1) {
+                state.products[productIndex] = { ...state.products[productIndex], ...action.payload };
+                state.marketplacePagination.products[productIndex] = { ...state.marketplacePagination.products[productIndex], ...action.payload };
+            }
+            // Also update in sellerProducts array if exists
+            const sellerProductIndex = state.sellerProducts.findIndex(p => p._id === state.currentProduct?._id);
+            if (sellerProductIndex !== -1) {
+                state.sellerProducts[sellerProductIndex] = { ...state.sellerProducts[sellerProductIndex], ...action.payload };
+                state.sellerPagination.products[sellerProductIndex] = { ...state.sellerPagination.products[sellerProductIndex], ...action.payload };
+            }
         },
         setFilters: (state, action: PayloadAction<ProductState['filters']>) => {
             state.filters = { ...state.filters, ...action.payload };
             saveState({
                 products: state.products,
+                marketplacePagination: state.marketplacePagination,
+                sellerProducts: state.sellerProducts,
+                sellerPagination: state.sellerPagination,
                 currentProduct: state.currentProduct,
                 ...state.filters,
-                totalDocs: state.totalDocs,
-                limit: state.limit,
-                totalPages: state.totalPages,
-                page: state.page,
-                hasPrevPage: state.hasPrevPage,
-                hasNextPage: state.hasNextPage,
             });
         },
         clearFilters: (state) => {
             state.filters = {};
             saveState({
                 products: state.products,
+                marketplacePagination: state.marketplacePagination,
+                sellerProducts: state.sellerProducts,
+                sellerPagination: state.sellerPagination,
                 currentProduct: state.currentProduct,
                 ...state.filters,
-                totalDocs: state.totalDocs,
-                limit: state.limit,
-                totalPages: state.totalPages,
-                page: state.page,
-                hasPrevPage: state.hasPrevPage,
-                hasNextPage: state.hasNextPage,
             });
         },
     },
     extraReducers: (builder) => {
         builder
+            // Marketplace products
             .addCase(fetchProducts.fulfilled, (state, action) => {
                 if (action.payload && action.payload.data) {
                     const responseData = action.payload.data;
                     state.products = responseData.docs || [];
-                    state.totalDocs = responseData.totalDocs || 0;
-                    state.limit = responseData.limit || 10;
-                    state.totalPages = responseData.totalPages || 0;
-                    state.page = responseData.page || 1;
-                    state.pagingCounter = responseData.pagingCounter || 0;
-                    state.hasPrevPage = responseData.hasPrevPage || false;
-                    state.hasNextPage = responseData.hasNextPage || false;
+                    state.marketplacePagination = {
+                        products: responseData.docs || [],
+                        totalDocs: responseData.totalDocs || 0,
+                        limit: responseData.limit || 10,
+                        totalPages: responseData.totalPages || 0,
+                        page: responseData.page || 1,
+                        pagingCounter: responseData.pagingCounter || 0,
+                        hasPrevPage: responseData.hasPrevPage || false,
+                        hasNextPage: responseData.hasNextPage || false,
+                    };
                 }
                 // Persist after fetching products
                 saveState({
                     products: state.products,
+                    marketplacePagination: state.marketplacePagination,
+                    sellerProducts: state.sellerProducts,
+                    sellerPagination: state.sellerPagination,
                     currentProduct: state.currentProduct,
                     ...state.filters,
-                    totalDocs: state.totalDocs,
-                    limit: state.limit,
-                    totalPages: state.totalPages,
-                    page: state.page,
-                    hasPrevPage: state.hasPrevPage,
-                    hasNextPage: state.hasNextPage,
                 });
             })
             .addCase(fetchProducts.rejected, (state, action) => {
+                toast.error(action.payload as string);
+            })
+            // Seller products
+            .addCase(fetchSellerProducts.fulfilled, (state, action) => {
+                if (action.payload && action.payload.data) {
+                    const responseData = action.payload.data;
+                    state.sellerProducts = responseData.docs || [];
+                    state.sellerPagination = {
+                        products: responseData.docs || [],
+                        totalDocs: responseData.totalDocs || 0,
+                        limit: responseData.limit || 10,
+                        totalPages: responseData.totalPages || 0,
+                        page: responseData.page || 1,
+                        pagingCounter: responseData.pagingCounter || 0,
+                        hasPrevPage: responseData.hasPrevPage || false,
+                        hasNextPage: responseData.hasNextPage || false,
+                    };
+                }
+                // Persist after fetching seller products
+                saveState({
+                    products: state.products,
+                    marketplacePagination: state.marketplacePagination,
+                    sellerProducts: state.sellerProducts,
+                    sellerPagination: state.sellerPagination,
+                    currentProduct: state.currentProduct,
+                    ...state.filters,
+                });
+            })
+            .addCase(fetchSellerProducts.rejected, (state, action) => {
                 toast.error(action.payload as string);
             });
     }
@@ -202,6 +239,7 @@ const productSlice = createSlice({
 
 export const {
     setProducts,
+    setSellerProducts,
     setCurrentProduct,
     updateProduct,
     setFilters,
@@ -209,3 +247,8 @@ export const {
 } = productSlice.actions
 
 export default productSlice.reducer
+
+// Selectors
+export const selectSellerProducts = (state: RootState) => state.product.sellerProducts;
+export const selectSellerPagination = (state: RootState) => state.product.sellerPagination;
+export const selectMarketplacePagination = (state: RootState) => state.product.marketplacePagination;

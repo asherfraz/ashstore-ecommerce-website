@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { refresh } from "@/api/userApis"
 import { BackendResponse } from "@/types/types";
-import { fetchProducts } from "@/redux/productSlice";
+import { fetchProducts } from "@/redux/productThunks";
 
 function useAutoLogin() {
     const dispatch = useDispatch();

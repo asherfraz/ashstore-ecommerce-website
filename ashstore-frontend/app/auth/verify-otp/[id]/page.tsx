@@ -11,7 +11,7 @@ import {
 } from "@/api/userApis";
 import { BackendResponse } from "@/types/types";
 import { useDispatch } from "react-redux";
-import { fetchProducts } from "@/redux/productSlice";
+import { fetchProducts } from "@/redux/productThunks";
 
 const Verify2FACodePage: React.FC = () => {
 	const dispatch = useDispatch();

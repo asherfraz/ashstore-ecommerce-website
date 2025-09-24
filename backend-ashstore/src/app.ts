@@ -22,7 +22,7 @@ const app: Express = express();
 //         crossOriginResourcePolicy: { policy: 'cross-origin' },
 //         crossOriginOpenerPolicy: false,
 //     }));
-app.use(morgan("tiny"));
+app.use(morgan("dev"));
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -53,8 +53,7 @@ const limiter = rateLimit({
 // app.use(limiter)
 
 // REST API routes
-// app.use('/api/v1/user', limiter, userRoutes);
-app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/user', limiter, userRoutes);
 // app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/product', productRoutes);
 // app.use('/api/v1/order', orderRoutes);

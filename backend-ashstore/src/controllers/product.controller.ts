@@ -251,6 +251,166 @@ const ProductController = {
         });
     }),
 
+    // Add this function in your existing ProductController object
+    getSellerProducts: tryCatch(async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req?.user?._id;
+        const {
+            page = 1,
+            limit = 10,
+            sortBy = "createdAt",
+            sortOrder = "desc",
+            category,
+            brand,
+            minPrice,
+            maxPrice,
+            onSale,
+            onFeatured,
+            search,
+            // status = "all", // Changed to 'all' to show all products by seller
+            // isActive = "all",
+            color,
+            size,
+            minRating,
+            maxRating
+        } = req.query;
+
+        // Build filter object - only for current seller
+        const filter: any = {
+            seller: userId // This ensures only current user's products are returned
+        };
+
+        // Status filter (can be all or specific)
+        // if (status !== 'all') {
+        //     filter.status = status;
+        // }
+
+        // Active products filter
+        // if (isActive !== 'all') {
+        //     filter.isActive = isActive === 'true';
+        // }
+
+        // Category filter (can be array or string)
+        if (category) {
+            if (Array.isArray(category)) {
+                filter.category = { $in: category };
+            } else if (typeof category === 'string' && category.includes(',')) {
+                filter.category = { $in: category.split(',') };
+            } else {
+                filter.category = category;
+            }
+        }
+
+        // Brand filter (can be array or string)
+        if (brand) {
+            if (Array.isArray(brand)) {
+                filter.brand = { $in: brand };
+            } else if (typeof brand === 'string' && brand.includes(',')) {
+                filter.brand = { $in: brand.split(',') };
+            } else {
+                filter.brand = brand;
+            }
+        }
+
+        // On sale filter
+        if (onSale !== undefined) {
+            filter.onSale = onSale === 'true';
+        }
+
+        // Featured filter
+        if (onFeatured !== undefined) {
+            filter.onFeatured = onFeatured === 'true';
+        }
+
+        // Price range filter
+        if (minPrice || maxPrice) {
+            filter.basePrice = {};
+            if (minPrice) filter.basePrice.$gte = Number(minPrice);
+            if (maxPrice) filter.basePrice.$lte = Number(maxPrice);
+        }
+
+        // Rating range filter
+        if (minRating || maxRating) {
+            filter.averageRating = {};
+            if (minRating) filter.averageRating.$gte = Number(minRating);
+            if (maxRating) filter.averageRating.$lte = Number(maxRating);
+        }
+
+        // Variant filters (color and size)
+        if (color || size) {
+            filter['variants'] = { $elemMatch: {} };
+
+            if (color) {
+                if (typeof color === 'string' && color.includes(',')) {
+                    filter['variants'].$elemMatch.color = { $in: color.split(',') };
+                } else {
+                    filter['variants'].$elemMatch.color = color;
+                }
+            }
+
+            if (size) {
+                if (typeof size === 'string' && size.includes(',')) {
+                    filter['variants'].$elemMatch.size = { $in: size.split(',') };
+                } else {
+                    filter['variants'].$elemMatch.size = size;
+                }
+            }
+        }
+
+        // Text search using text index
+        if (search) {
+            filter.$text = { $search: search as string };
+        }
+
+        // Build sort object
+        const sort: any = {};
+        if (sortBy === 'popularity') {
+            sort.totalReviews = sortOrder === 'desc' ? -1 : 1;
+            sort.averageRating = sortOrder === 'desc' ? -1 : 1;
+        } else if (sortBy === 'price') {
+            if (onSale === 'true') {
+                sort.salePrice = sortOrder === 'desc' ? -1 : 1;
+            } else {
+                sort.basePrice = sortOrder === 'desc' ? -1 : 1;
+            }
+        } else if (sortBy === 'averageRating') {
+            sort.averageRating = sortOrder === 'desc' ? -1 : 1;
+        } else {
+            sort[sortBy as string] = sortOrder === 'desc' ? -1 : 1;
+        }
+
+        const options = {
+            page: Number(page),
+            limit: Number(limit),
+            sort,
+            populate: [
+                {
+                    path: 'seller',
+                    select: 'name username avatar'
+                },
+                {
+                    path: 'reviews.userId',
+                    select: 'name username avatar'
+                },
+                {
+                    path: 'reviews.replies.userId',
+                    select: 'name username avatar'
+                },
+                {
+                    path: 'relatedProducts',
+                }
+            ]
+        };
+
+        // Use paginate method from mongoose-paginate-v2
+        const products = await Product.paginate(filter, options);
+
+        res.status(200).json({
+            success: true,
+            message: 'Seller products fetched successfully',
+            data: products
+        });
+    }),
+
     // Get a single product by ID or slug
     getProductById: tryCatch(async (req: Request, res: Response, next: NextFunction) => {
         const { id } = req.params;
@@ -295,6 +455,27 @@ const ProductController = {
             });
         }
 
+        // Handle images update if new images are provided
+        if (updateData.images && Array.isArray(updateData.images) && updateData.images.length > 0) {
+            // Upload new images to Cloudinary
+            const uploadedImageUrls = await CloudinaryService.uploadBase64Images(updateData.images);
+
+            const imageValidateDomain = product.images[0].split('/')[2]
+            // console.log("imageValidateDomain: ", imageValidateDomain)
+            // Extract old public IDs for deletion
+            if (imageValidateDomain === "res.cloudinary.com") {
+                const oldPublicIds = CloudinaryService.extractPublicIdsFromUrls(product.images);
+
+                // Delete old images from Cloudinary
+                if (oldPublicIds.length > 0) {
+                    await CloudinaryService.deleteImages(oldPublicIds);
+                }
+            }
+
+            // Assign new image URLs to update data
+            updateData.images = uploadedImageUrls;
+        }
+
         // Validate update data if provided
         if (Object.keys(updateData).length > 0) {
             const { error } = validateUpdateProduct(updateData);
@@ -306,7 +487,9 @@ const ProductController = {
             updateData.variants.forEach((variant: IProductVariant, index: number) => {
                 if (!variant.sku) {
                     const brandPart = updateData.brand || product.brand;
-                    const categoryPart = (updateData.category || product.category)[0].substring(0, 3).toUpperCase();
+                    const categoryPart = Array.isArray(updateData.category || product.category)
+                        ? (updateData.category || product.category)[0].substring(0, 3).toUpperCase()
+                        : (updateData.category || product.category).substring(0, 3).toUpperCase();
                     const colorPart = variant.color.substring(0, 2).toUpperCase();
                     const sizePart = variant.size.substring(0, 2).toUpperCase();
                     const uniquePart = (index + 1).toString().padStart(2, '0');
@@ -315,12 +498,12 @@ const ProductController = {
             });
         }
 
+        // Update the product with new data
         const updatedProduct = await Product.findByIdAndUpdate(
             id,
             updateData,
             { new: true, runValidators: true }
         ).populate('seller', 'name username avatar');
-
 
         // Email Sender
         ProductEmails.updateProductEmail((req?.user?.name) as string, (req?.user?.email) as string, updatedProduct as IProduct);
@@ -355,14 +538,15 @@ const ProductController = {
 
         // Optional: Prevent re-archiving
         if (product.isActive === false) {
-            return next({
-                status: 400,
-                message: 'Product is already archived'
-            });
+            // return next({
+            //     status: 400,
+            //     message: 'Product is already archived'
+            // });
+            product.isActive = true;
+        } else {
+            // Soft delete: Set isActive to false
+            product.isActive = false;
         }
-
-        // Soft delete: Set isActive to false
-        product.isActive = false;
         await product.save();
 
         res.status(200).json({
@@ -391,8 +575,25 @@ const ProductController = {
                 message: 'Product not found'
             });
         }
-        // Delete product
+
+        // Check Images Array then delete
+        if (product.images && Array.isArray(product.images) && product.images.length > 0) {
+
+            const imageValidateDomain = product.images[0].split('/')[2]
+            if (imageValidateDomain === "res.cloudinary.com") {
+                // Extract public IDs from existing images for deletion
+                const publicIds = CloudinaryService.extractPublicIdsFromUrls(product.images);
+
+                // Delete images from Cloudinary after product deletion
+                if (publicIds.length > 0) {
+                    await CloudinaryService.deleteImages(publicIds);
+                }
+            }
+        }
+
+        // Delete product first
         await Product.findByIdAndDelete(id);
+
 
 
         // Email Sender

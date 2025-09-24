@@ -1259,20 +1259,36 @@ const UserController = {
             return next({ status: 400, message: 'Invalid product ID' });
         }
 
-        const user = await User.findByIdAndUpdate(
-            userId,
-            { $addToSet: { wishlist: productId } }, // Prevents duplicates
-            { new: true }
-        ).populate('wishlist');
-
+        // Get user
+        const user = await User.findById<IUser>(userId);
         if (!user) {
-            return next({ status: 404, message: 'User not found' });
+            return next({ status: 404, message: "User not found" });
         }
 
-        res.status(200).json({
+        // Check if product is already in wishlist
+        const alreadyInWishlist = user.wishlist.some(
+            (itemId) => itemId.toString() === productId
+        );
+
+        if (alreadyInWishlist) {
+            return res.status(200).json({
+                success: true,
+                message: "Product already in wishlist",
+                wishlist: user.wishlist,
+            });
+        }
+
+        // Add product to wishlist
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { $addToSet: { wishlist: productId } }, // Ensures uniqueness
+            { new: true }
+        ).populate("wishlist");
+
+        return res.status(200).json({
             success: true,
-            message: 'Product added to wishlist',
-            // wishlist: user.wishlist
+            message: "Product added to wishlist",
+            wishlist: updatedUser?.wishlist,
         });
     }),
 
@@ -1306,20 +1322,36 @@ const UserController = {
             return next({ status: 400, message: 'Invalid product ID' });
         }
 
-        const user = await User.findByIdAndUpdate(
+        // Find user
+        const user = await User.findById<IUser>(userId);
+        if (!user) {
+            return next({ status: 404, message: "User not found" });
+        }
+
+        // Check if product is in wishlist
+        const isInWishlist = user.wishlist.some(
+            (itemId) => itemId.toString() === productId
+        );
+
+        if (!isInWishlist) {
+            return res.status(200).json({
+                success: true,
+                message: "Product already removed!",
+                wishlist: user.wishlist,
+            });
+        }
+
+        // Pull product from wishlist
+        const updatedUser = await User.findByIdAndUpdate(
             userId,
             { $pull: { wishlist: productId } },
             { new: true }
-        ).populate('wishlist');
+        ).populate("wishlist");
 
-        if (!user) {
-            return next({ status: 404, message: 'User not found' });
-        }
-
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
-            message: 'Product removed from wishlist',
-            // wishlist: user.wishlist
+            message: "Product removed from wishlist",
+            wishlist: updatedUser?.wishlist,
         });
     }),
 

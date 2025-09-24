@@ -19,10 +19,20 @@ export const createProduct = async (data: CreateProductFormData) => {
 };
 
 // Get all products
-export const getAllProducts = async (query: string) => {
+export const getAllProducts = async (params: string) => {
     try {
         // Pass the query string directly to the URL
-        const response = await axiosApi.get(`/product?${query}`);
+        const response = await axiosApi.get(`/product?${params}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+// Get all Seller products
+export const fetchSellerProductsApi = async (params: string) => {
+    try {
+        // Pass the query string directly to the URL
+        const response = await axiosApi.get(`/product/seller${params ? `?${params}` : ''}`);
         return response;
     } catch (error) {
         throw error;
@@ -59,26 +69,36 @@ export const addReviewReply = async (productId: string, reviewId: string, replyD
     }
 };
 
+//  Delete a product
+export const archiveProduct = async (productId: string) => {
+    try {
+        const response = await axiosApi.delete(`/product/archive/${productId}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
 
-// // Update a product
-// export const updateProduct = async (productId: string, data: Partial<IProduct>) => {
-//     try {
-//         const response = await axiosApi.patch(`/ products / ${ productId }`, data);
-//         return response;
-//     } catch (error) {
-//         throw error;
-//     }
-// };
+//  Delete a product
+export const deleteProduct = async (productId: string) => {
+    try {
+        const response = await axiosApi.delete(`/product/${productId}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
 
-// // Delete a product
-// export const deleteProduct = async (productId: string) => {
-//     try {
-//         const response = await axiosApi.delete(`/ products / ${ productId }`);
-//         return response;
-//     } catch (error) {
-//         throw error;
-//     }
-// };
+// Update a product
+export const updateProduct = async (productId: string, data: Partial<IProduct>) => {
+    try {
+        const response = await axiosApi.put(`/product/${productId}`, data);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
 
 // // Get products by category
 // export const getProductsByCategory = async (category: string) => {

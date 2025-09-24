@@ -91,7 +91,6 @@ const data = {
 			items: [
 				{ title: "Post Product", url: "/seller/dashboard/product/sell" },
 				{ title: "Manage Products", url: "/seller/dashboard/product/manage" },
-				{ title: "Update Product", url: "/seller/dashboard/product/update" },
 			],
 		},
 		{
