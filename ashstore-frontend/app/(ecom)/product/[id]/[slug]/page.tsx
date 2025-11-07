@@ -1014,20 +1014,38 @@ export default function ProductDetailPage() {
 			}
 		});
 
-		// Convert to percentages
 		const total = reviews.length;
-		return Object.keys(distribution).map((rating) => ({
-			stars: parseInt(rating),
-			percent:
-				total > 0
-					? Math.round(
-							(distribution[rating as keyof typeof distribution] / total) * 100
-					  )
-					: 0,
+		return Object.entries(distribution).map(([key, value]) => ({
+			stars: Number(key),
+			percent: total > 0 ? Math.round((value / total) * 100) : 0,
 		}));
 	};
 
 	const ratingDistribution = calculateRatingDistribution();
+
+	// const calculateRatingDistribution = () => {
+	// 	const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+
+	// 	reviews.forEach((review) => {
+	// 		if (review.rating >= 1 && review.rating <= 5) {
+	// 			distribution[review.rating as keyof typeof distribution]++;
+	// 		}
+	// 	});
+
+	// 	// Convert to percentages
+	// 	const total = reviews.length;
+	// 	return Object.keys(distribution).map((rating) => ({
+	// 		stars: Number(rating),
+	// 		percent:
+	// 			total > 0
+	// 				? Math.round(
+	// 						(distribution[rating as keyof typeof distribution] / total) * 100
+	// 				  )
+	// 				: 0,
+	// 	}));
+	// };
+
+	// const ratingDistribution = calculateRatingDistribution();
 
 	// Helper function to get user display name
 	const getUserDisplayName = (userId: any) => {
@@ -1112,7 +1130,14 @@ export default function ProductDetailPage() {
 										));
 									})()
 								) : (
-									<span>{product.variants?.[0]?.color}</span>
+									// <span>{product.variants?.[0]?.color}</span>
+									<span>
+										{
+											(
+												product.variants as { color?: string }[] | undefined
+											)?.[0]?.color
+										}
+									</span>
 								)}
 							</div>
 
@@ -1128,7 +1153,13 @@ export default function ProductDetailPage() {
 										</span>
 									))
 								) : (
-									<span>{product.variants?.[0]?.size}</span>
+									// <span>{product.variants?.[0]?.size}</span>
+									<span>
+										{
+											(product.variants as { size?: string }[] | undefined)?.[0]
+												?.size
+										}
+									</span>
 								)}
 							</div>
 
@@ -1329,8 +1360,12 @@ export default function ProductDetailPage() {
 												variant="ghost"
 												size="sm"
 												onClick={() =>
+													// setReplyingTo(replyingTo === review._id ? null : review._id)
+
 													setReplyingTo(
-														replyingTo === review._id ? null : review._id
+														replyingTo === review._id
+															? null
+															: review._id ?? null
 													)
 												}
 											>
