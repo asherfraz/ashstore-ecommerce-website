@@ -20,6 +20,9 @@ router.post('/reset-password/:token', UserController.resetPassword);
 // Newsletter route
 router.post('/newsletter', UserController.handleNewsletterSubscription);
 
+// Products Reviews Reactions (likes/dislikes)
+router.get('/product-reactions/:productId', authenticateUser, UserController.getUserProductReactions);
+
 // WISHLIST ROUTES 
 router.post('/wishlist/:productId', authenticateUser, UserController.addToWishlist);
 router.get('/wishlist', authenticateUser, UserController.getWishlist);

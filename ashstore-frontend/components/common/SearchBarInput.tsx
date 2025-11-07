@@ -1,11 +1,6 @@
 import { useId, useState, useRef, useEffect } from "react";
 import { SearchIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setFilters } from "@/redux/productSlice";

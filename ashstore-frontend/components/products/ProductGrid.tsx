@@ -146,7 +146,6 @@ import Link from "next/link";
 import { IProduct } from "@/types/types";
 import { useDispatch } from "react-redux";
 import { setFilters } from "@/redux/productSlice";
-import { RootState } from "@/redux/store";
 
 type Props = {
 	products: IProduct[];

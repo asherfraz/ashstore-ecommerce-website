@@ -689,7 +689,6 @@ const PostProductComponent: React.FC = () => {
 		handleSubmit,
 		setValue,
 		watch,
-		reset,
 		control,
 		formState: { errors, isSubmitting },
 	} = useForm<CreateProductFormData>({

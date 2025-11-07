@@ -126,6 +126,8 @@ const UserSchema = new Schema(
     { timestamps: true }
 );
 
+// Add this to your existing UserSchema (before creating the model)
+UserSchema.add({ productReactions: [{ type: Schema.Types.ObjectId, ref: "UserProductReview" }] });
 
 // Auto-fill 'name' and Auto-generate avatar and set admin status before saving
 UserSchema.pre("save", function (next) {

@@ -254,3 +254,14 @@ export const clearWishlistApi = async () => {
         throw error;
     }
 };
+
+
+// Get User Reactions of the specific product reviews 
+export const getUserProductReactions = async (productId: string) => {
+    try {
+        const response = await axiosApi.get(`/user/product-reactions/${productId}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};

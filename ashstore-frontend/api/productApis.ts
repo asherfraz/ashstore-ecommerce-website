@@ -1,6 +1,7 @@
 import { CreateProductFormData } from "@/components/Seller/sell-product/PostProductComponent";
 import axiosApi from "./axiosInstance";
 import { IProduct, IProductReview } from "@/types/types";
+import { ReviewActionType } from "@/app/(ecom)/product/[id]/[slug]/page";
 
 
 export interface PostReview {
@@ -53,6 +54,17 @@ export const getProductById = async (productId: string) => {
 export const addProductReview = async (productId: string, reviewData: PostReview) => {
     try {
         const response = await axiosApi.post(`/product/${productId}/reviews`, reviewData);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
+// update Product Review Like Dislikes
+export const updateProductReviewLikeDislike = async (productId: string, reviewId: string, action: ReviewActionType) => {
+    try {
+        // action - like, dislike, removeLike, removeDislike
+        const response = await axiosApi.patch(`/product/${productId}/reviews/${reviewId}/like-dislike`, { action });
         return response;
     } catch (error) {
         throw error;

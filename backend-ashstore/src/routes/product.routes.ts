@@ -13,6 +13,9 @@ router.get('/:id/reviews', ProductController.getProductReviews);
 // Protected routes (require authentication)
 router.post('/:id/reviews', authenticateUser, ProductController.addProductReview);
 router.post('/:id/reviews/:reviewId/reply', authenticateUser, ProductController.addReviewReply);
+// Update product review likes/dislikes
+router.patch('/:id/reviews/:reviewId/like-dislike', authenticateUser, ProductController.updateProductReviewLikeDislike);
+
 
 // Seller and admin routes (require authentication & Authorization)
 router.post('/', authenticateUser, authorizeRoles('seller', 'both', 'admin'), ProductController.createProduct);
@@ -21,7 +24,9 @@ router.put('/:id', authenticateUser, authorizeRoles('seller', 'both', 'admin'), 
 router.delete('/archive/:id', authenticateUser, authorizeRoles('seller', 'both', 'admin'), ProductController.archiveProduct);
 router.delete('/:id', authenticateUser, authorizeRoles('seller', 'both', 'admin'), ProductController.deleteProduct);
 
+// [Not integrated to frontend]
 router.patch('/:id/stock', authenticateUser, authorizeRoles('seller', 'both', 'admin'), ProductController.updateProductStock);
+// [Not integrated to frontend]
 router.patch('/:id/status', authenticateUser, authorizeRoles('seller', 'both', 'admin'), ProductController.updateProductStatus);
 
 

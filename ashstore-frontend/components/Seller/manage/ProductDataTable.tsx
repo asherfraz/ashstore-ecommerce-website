@@ -31,7 +31,6 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge"; // Import Badge component
-import { MoreHorizontal } from "lucide-react";
 import Pagination from "@/components/common/Pagination";
 import { IProduct } from "@/types/types";
 import formatPrice from "@/helpers/formatPrice";
@@ -75,8 +74,6 @@ export const ProductDataTable = memo(
 		totalPages,
 		currentPage,
 		onPageChange,
-		hasPrevPage,
-		hasNextPage,
 		isLoading = false,
 	}: ProductDataTableProps) => {
 		const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -108,7 +105,7 @@ export const ProductDataTable = memo(
 						<Badge
 							variant={row.original.active ? "default" : "secondary"}
 							className={
-								row.original.active ? "bg-green-500 hover:bg-green-600" : ""
+								row.original.active ? "bg-blue-500 hover:bg-blue-600" : ""
 							}
 						>
 							{row.original.active ? "Yes" : "No"}
@@ -119,7 +116,7 @@ export const ProductDataTable = memo(
 					accessorKey: "brand",
 					header: "Brand",
 					cell: ({ row }) => (
-						<div className="lowercase">{row.original.brand}</div>
+						<div className="capitalize">{row.original.brand}</div>
 					),
 				},
 				{
@@ -135,7 +132,7 @@ export const ProductDataTable = memo(
 					header: () => <div className="text-right">Status</div>,
 					cell: ({ row }) => {
 						return (
-							<div className="text-right font-medium">
+							<div className="text-right font-medium capitalize">
 								{row.original.status}
 							</div>
 						);

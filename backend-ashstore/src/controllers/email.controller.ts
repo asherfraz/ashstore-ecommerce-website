@@ -277,7 +277,6 @@ const ProductEmails = {
     sendEmail(email, subject, html);
   },
 
-
 }
 
 export default ProductEmails;

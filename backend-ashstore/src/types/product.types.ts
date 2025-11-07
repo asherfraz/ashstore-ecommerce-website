@@ -22,6 +22,15 @@ export interface IProductReview {
     }>;
 }
 
+export interface IUserProductReview {
+    userId: Types.ObjectId;
+    productId: Types.ObjectId;
+    reviewId: Types.ObjectId;
+    reaction: "like" | "dislike" | null; // null means no reaction
+    createdAt: Date;
+    updatedAt: Date;
+}
+
 export interface IProduct extends Document {
     _id: Types.ObjectId;
     // product main details

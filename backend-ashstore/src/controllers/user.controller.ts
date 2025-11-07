@@ -1375,6 +1375,32 @@ const UserController = {
         });
     }),
 
+    // Get User Reactions related to Products review
+    getUserProductReactions: tryCatch(async (req: Request, res: Response, next: NextFunction) => {
+        const userId = req?.user?._id;
+        const { productId } = req.params;
+
+        // const user = await User.findById(userId).populate('productReactions', 'productId reviewId reaction createdAt');
+        const user = await User.findById(userId).populate('productReactions');
+        if (!user) {
+            return next({ status: 404, message: 'User not found' });
+        }
+
+        // Filter reactions for this specific product
+        // Since productReactions is an array of UserProductReview documents, we need to filter by productId
+        const productReactions = user.productReactions.filter(
+            (reaction: any) => reaction.productId.toString() === productId
+        );
+
+        // console.debug(`\n>>>:DEBUG	: Product Reactions Debugging!\n`);
+        // console.log(productReactions);
+
+        res.status(200).json({
+            success: true,
+            reactions: productReactions // Changed from 'data' to 'reactions' to match frontend expectation
+        });
+    }),
+
 };
 
 

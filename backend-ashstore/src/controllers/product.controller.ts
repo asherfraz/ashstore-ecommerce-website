@@ -6,6 +6,8 @@ import { validateCreateProduct, validateProductReview, validateUpdateProduct } f
 import { Types } from "mongoose";
 import ProductEmails from "./email.controller";
 import { CloudinaryService } from "../services/cloudinary.service";
+import UserProductReview from "../models/userProductReview.model";
+import { User } from "../models";
 
 const ProductController = {
     // Create a new product
@@ -673,6 +675,160 @@ const ProductController = {
         });
     }),
 
+    // Update Product Review likes and Dislikes
+    updateProductReviewLikeDislike: tryCatch(async (req: Request, res: Response, next: NextFunction) => {
+        const { id, reviewId } = req.params;
+        const { action } = req.body; // 'like' or 'dislike'
+        const userId = req?.user?._id;
+
+        // Validate action
+        if (!action || !['like', 'dislike', 'removeLike', 'removeDislike'].includes(action)) {
+            return next({ status: 400, message: 'Invalid action. Use: like, dislike, removeLike, removeDislike' });
+        }
+
+        // Check if product exists and is active
+        const product = await Product.findById<IProduct>(id);
+        if (!product || !product.isActive || product.status !== 'approved') {
+            return next({ status: 404, message: 'Product not found or not available for review' });
+        }
+
+        // Find the review
+        const review = product.reviews.find(
+            (r: IProductReview) => r._id?.toString() === reviewId
+        );
+
+        if (!review) {
+            return next({ status: 404, message: 'Review not found' });
+        }
+
+        // Check if the user is trying to like/dislike their own review
+        if (review.userId.toString() === userId?.toString()) {
+            return next({ status: 400, message: 'You cannot like or dislike your own review' });
+        }
+
+        // Find or create user's reaction record
+        let userProductReview = await UserProductReview.findOne({
+            userId: new Types.ObjectId(userId),
+            reviewId: new Types.ObjectId(reviewId)
+        });
+
+        let previousReaction: "like" | "dislike" | null = null;
+
+        if (userProductReview) {
+            previousReaction = userProductReview.reaction;
+            // Update existing reaction
+            if (action === 'like') {
+                userProductReview.reaction = 'like';
+            } else if (action === 'dislike') {
+                userProductReview.reaction = 'dislike';
+            } else if (action === 'removeLike' || action === 'removeDislike') {
+                userProductReview.reaction = null;
+            }
+            await userProductReview.save();
+        } else {
+            // Create new reaction record
+            if (action === 'like') {
+                userProductReview = await UserProductReview.create({
+                    userId: new Types.ObjectId(userId),
+                    productId: new Types.ObjectId(id),
+                    reviewId: new Types.ObjectId(reviewId),
+                    reaction: 'like'
+                });
+            } else if (action === 'dislike') {
+                userProductReview = await UserProductReview.create({
+                    userId: new Types.ObjectId(userId),
+                    productId: new Types.ObjectId(id),
+                    reviewId: new Types.ObjectId(reviewId),
+                    reaction: 'dislike'
+                });
+            } else if (action === 'removeLike' || action === 'removeDislike') {
+                // If removing and no record exists, do nothing
+                userProductReview = null;
+            }
+        }
+
+        // Find user and update their productReactions array
+        const user = await User.findById(userId);
+        if (!user) {
+            return next({ status: 404, message: 'User not found' });
+        }
+
+        // Check if reaction exists in user's productReactions array
+        const existingReactionIndex = user.productReactions.findIndex(
+            (reactionId: any) => reactionId.toString() === (userProductReview?._id?.toString() || '')
+        );
+
+        if (userProductReview) {
+            if (existingReactionIndex === -1) {
+                // Add new reaction if not exists
+                user.productReactions.push(userProductReview._id);
+            }
+        } else if (existingReactionIndex !== -1 && (action === 'removeLike' || action === 'removeDislike')) {
+            // Remove reaction if removing
+            user.productReactions.splice(existingReactionIndex, 1);
+        }
+
+        await user.save();
+
+        // Update the product review's like/dislike counts based on the action
+        switch (action) {
+            case 'like':
+                // If user previously disliked, remove that dislike
+                if (previousReaction === 'dislike') {
+                    review.dislikes = Math.max(0, review.dislikes - 1);
+                }
+                // Add like
+                review.likes = (review.likes || 0) + 1;
+                break;
+
+            case 'dislike':
+                // If user previously liked, remove that like
+                if (previousReaction === 'like') {
+                    review.likes = Math.max(0, review.likes - 1);
+                }
+                // Add dislike
+                review.dislikes = (review.dislikes || 0) + 1;
+                break;
+
+            case 'removeLike':
+                // Remove like
+                review.likes = Math.max(0, (review.likes || 0) - 1);
+                break;
+
+            case 'removeDislike':
+                // Remove dislike
+                review.dislikes = Math.max(0, (review.dislikes || 0) - 1);
+                break;
+
+            default:
+                return next({ status: 400, message: 'Invalid action' });
+        }
+
+        await product.save();
+
+        // Populate response
+        await product.populate([
+            {
+                path: 'seller',
+                select: 'name username avatar',
+            },
+            {
+                path: 'reviews.userId',
+                select: 'name username avatar',
+            },
+            {
+                path: 'reviews.replies.userId',
+                select: 'name username avatar',
+            },
+        ]);
+
+        res.status(200).json({
+            success: true,
+            message: `Review ${action} updated successfully`,
+            data: product
+        });
+    }),
+
     // Get product reviews with pagination
     getProductReviews: tryCatch(async (req: Request, res: Response, next: NextFunction) => {
         const { id } = req.params;
@@ -748,11 +904,6 @@ const ProductController = {
         const review = product.reviews.find(r => r._id?.toString() === reviewId);
         if (!review) {
             return next({ status: 404, message: 'Review not found' });
-        }
-
-        // Check if user is the seller or admin (only sellers/admins can reply to reviews)
-        if (!product.seller.equals(userId) && req?.user?.userType !== 'admin') {
-            return next({ status: 403, message: 'Not authorized to reply to reviews' });
         }
 
         // Add the reply
